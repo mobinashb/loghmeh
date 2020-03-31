@@ -3,6 +3,7 @@ import logo from './Assets/LOGO.png'
 import cover from './Assets/cover.jpg'
 import './CSS/styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
 
 function Header() {
   return (

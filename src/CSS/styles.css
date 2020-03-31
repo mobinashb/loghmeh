@@ -8,6 +8,7 @@ body {
 
 div {
     position: relative;
+    font-size: 1vw;
 }
 
 * {
@@ -181,19 +182,29 @@ h1, h2 {
     padding-bottom: 1em;
 }
 
-.btn {
+button {
+    font-size: 1vw !important;
+}
+
+.cyan-btn {
     background-color: #4ECDC4 !important;
     border-radius: 0.3em !important;
     color: white !important;
     min-width: 8em !important;
+    border: 0.1em solid #4ECDC4 !important;
 }
 
-form#credit .btn {
+.cyan-btn:hover {
+    background-color: rgb(46, 142, 135) !important;
+    border: 0.1em solid rgb(46, 142, 135) !important;
+}
+
+form#credit .cyan-btn {
     margin-right: 2em !important;
 }
 
 .col-bordered {
-      border: 0.05em solid lightgray;
+    border: 0.05em solid lightgray;
 }
 
 .col-1 {
@@ -247,7 +258,7 @@ form#credit .btn {
 footer {
     background: #1A535C;
     color: white;
-    font-size: 1em;
+    font-size: 1vw;
     font-weight: 100;
     padding: 0.8em;
     text-align: center;
@@ -255,17 +266,19 @@ footer {
 }
 
 .card img {
-    height: 5.2em;
-    width: 5.4em;
+    height: 5em;
+    width: 5em;
     border-radius: 0.5em;
+    margin-right: 0.5em;
 }
 
 .shadow-box {
     box-shadow: 0.01em 0.01em 0.4em 0.01em #00000034;
 }
+
 .card {
     align-items: center;
-    padding: 1em;
+    padding: 2em;
     border-radius: 0.5em;
     background: white;
 }
@@ -280,25 +293,27 @@ footer {
 }
 
 .rating img {
-    width: 0.8em;
-    height: 0.8em;
+    width: 1em !important;
+    height: 1em !important;
 }
 
 .food-title {
     padding: 0.2em;
-    font-weight: bold;
-    font-size: 1.4em;
+    font-size: 1.5em;
+}
+
+.inline {
+    display: inline-block;
 }
 
 .rating {
-    display: inline-block;
     padding-right: 1em;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 100;
 }
 
 .menu .card {
-    width: 90%;
+    /* width: 90%; */
 }
 
 .menu .card h6 {
@@ -315,8 +330,9 @@ footer {
     color: #313131de;
 }
 
-.menu .card .yellow-btn:disabled {
-    background: lightgray;
+.yellow-btn:disabled, .cyan-btn:disabled {
+    background: lightgray !important;
+    border: 0.1em solid lightgray !important;
 }
 
 #restaurant-div {
@@ -373,18 +389,24 @@ footer {
 
 .plus-minus{
     float: left;
+    font-size: 1.5em;
 }
 
-.plus-minus i:nth-child(2) {
+.plus-minus a, .plus-minus a:hover {
+    text-decoration: none;
+}
+
+.plus-minus a i.flaticon-plus {
     color: #1A535C;
     font-weight: 100;
     padding-left: 0;
     text-align: left;
 }
 
-.plus-minus i:nth-child(1) {
+.plus-minus a i.flaticon-minus {
     color: #ff6b6b;
     font-weight: 100;
+    padding-right: 10%;
 }
 
 .dashed-div .price {
@@ -497,10 +519,6 @@ form#login .btn, form#signup .btn {
     margin-bottom: 5vh;
 }
 
-.scrolling-wrapper .card {
-    display: inline-block;
-}
-
 .centered-flex {
     display: flex;
     justify-content: center;
@@ -523,7 +541,7 @@ form#login .btn, form#signup .btn {
     color: #1A535C !important;
     font-weight: 500 !important;
     font-size: 1em !important;
-    padding: 0.46em 0em;
+    padding: 1vh 2vh;
 }
 
 .search input, .search input::placeholder {
@@ -539,6 +557,8 @@ form#login .btn, form#signup .btn {
 
 .scrolling-wrapper .card {
     margin-left: 5vh;
+    display: inline-block;
+    padding: 1em !important;
 }
 
 .scrolling-wrapper::-webkit-scrollbar {
@@ -572,14 +592,80 @@ form#login .btn, form#signup .btn {
     border-top: 0.5vh dashed rgba(62, 62, 62, 0.313);
 }
 
+.menu button {
+    font-size: 1.2em !important;
+    padding: 0.2em 2em;
+    margin-left: 1vh;
+    min-width: fit-content !important;
+    border-radius: 0.5em !important;
+}
+
+.scrolling-wrapper button {
+    font-size: 0.8em !important;
+}
+
 .in-stock {
-    padding: 0.2em 0.5em;
-    color: rgba(69, 69, 69, 0.694);
+    color: rgba(69, 69, 69, 0.694) !important;
     border: 0.1em solid rgba(94, 94, 94, 0.217);
-    border-radius: 0.5em;
-    width: fit-content;
+    background: #F7FFF7 !important;
+}
+
+.striked-through {
+    text-decoration: line-through;
+    text-decoration-color: red;
+}
+
+.price-old-new {
+    display: flex;
+    align-items: right;
+    list-style-type: none;
+    color: darkgray;
+    font-size: 1.5em;
+    padding-right: 0%;
+}
+
+.price-old-new li:nth-child(2) {
+    display: inline;
+    margin-right: 4vh;
+    color: black;
+}
+
+.card span {
     position: relative;
-    margin-top: 3em;
-    background: #F7FFF7;
-    font-size: 0.9em
+    display: block;
+}
+
+.modal h3, .modal p {
+    font-weight: lighter;
+}
+
+.modal {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.modal-content {
+    border-radius: 1.5em !important;
+}
+
+#foodDetails img {
+    width: 20vmin;
+    height: 20vmin;
+    border-radius: 0.7em;
+}
+
+#foodDetails button {
+    font-size: 0.8rem !important;
+}
+
+.col-sm-2 .col-sm-2:nth-child(2) {
+    margin-right: 3em !important;
+}
+
+#foodDetails .col-sm-6:nth-child(2){
+    text-align: right !important;
+    margin-right: -10% !important;
+    float: right !important;
+    font-size: 2vmin !important;
 }

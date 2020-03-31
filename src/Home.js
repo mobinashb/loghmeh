@@ -1,5 +1,8 @@
 import React from 'react';
-import {Header, Footer} from './Utils'
+import {Header, Footer, toPersianNum} from './Utils'
+import star from './Assets/star.png'
+import pizza from "./Assets/pizza.jpg"
+import FoodDetails from './FoodDetails'
 
 function Search() {
   return (
@@ -25,23 +28,23 @@ class Home extends React.Component {
     };
   }
   render() {
-    const { error, isLoaded, restaurants } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
+    // const { error, isLoaded, restaurants } = this.state;
+    // if (error) {
+    //   return <div>Error: {error.message}</div>;
+    // } else if (!isLoaded) {
+    //   return <div>Loading...</div>;
+    // } else {
       return (
       <body>
         <Header/>
         <Search/>
-        <ul>
+        {/* <ul>
         {restaurants.map(item => (
           <li key={item.id}>
             {item.name}
           </li>
         ))}
-      </ul>
+      </ul> */}
         <div class="menu">
           <div class="title">
             جشن غذا!
@@ -58,278 +61,56 @@ class Home extends React.Component {
                   پیتزا نیمه اعلا
                   <span class="rating">
                       ۴
-                      <img src="Assets/star.png"  alt=""/>
+                      <img src={star}  alt=""/>
                   </span>
               </div>
               <h6>۲۹۰۰۰ تومان</h6>
 
               <button disabled class="in-stock">
-                موجودی: 3
+                موجودی: 0
               </button>
-              <button disabled class="small-btn yellow-btn">ناموجود</button>
+              <button class="cyan-btn" disabled >خرید</button>
               <hr class="dashed-top"></hr>
               رستوران خامس
             </div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
-            <div class="card shadow-box col-sm-2"><img src="Assets/pizza.jpg" alt="pizza"/>
-                        <div class="food-title">
-                            پیتزا نیمه اعلا
-                            <span class="rating">
-                                ۴
-                                <img src="Assets/star.png"  alt=""/>
-                            </span>
-                        </div>
-                        <h6>۲۹۰۰۰ تومان</h6>
-                        <button disabled class="small-btn yellow-btn">ناموجود</button></div>
+            <div class="card shadow-box col-sm-2">
+              <div class="row">
+                <div class="col-sm-2">
+                  <img src={pizza} alt="pizza"/>
+                </div>
+                <div class="col-sm-2">
+                  <div class="food-title">
+                  پیتزا نیمه اعلا
+                  </div>
+                  <span class="rating inline">
+                    ۴
+                    <img src={star}  alt=""/>
+                  </span>
+                </div>
+              </div>
+              <ul class="price-old-new">
+              <li h6 class="striked-through">
+                  ۲۹۰۰۰
+                </li>
+                <li>
+                  ۲۹۰۰۰
+                </li>
+              </ul>
+              <button disabled class="in-stock">
+                موجودی: 3
+              </button>
+              <button class="cyan-btn" data-toggle="modal" data-target="#foodDetails">خرید</button>
+              <hr class="dashed-top"></hr>
+              رستوران خامس
+            </div>
+            <FoodDetails name="پیتزای اعلاء" restaurantName="رستوران خامس" restaurantId="abc"
+            description="تهیه شده از بهترین مواد اولیه"
+            price="29000"
+            rating="5"
+            count="3"
+            oldPrice="39000"
+            img={pizza}
+            />
           </div>
         </div>
         <div class="menu container">
@@ -406,8 +187,9 @@ class Home extends React.Component {
         </div>
         <Footer/>
       </body>
-    )
-        };
+    );
+    // }
+    //     ;
   }
 
   componentDidMount() {

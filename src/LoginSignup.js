@@ -1,6 +1,4 @@
 import React from 'react';
-// import './CSS/styles.css';
-// import 'bootstrap/dist/css/bootstrap.css';
 import {Header, Footer, Form} from './Utils'
 
 class LoginSignup extends React.Component {
@@ -37,7 +35,7 @@ class LoginSignup extends React.Component {
                   </div>
               </div>
           </div>
-          <button class="btn" type="submit">ورود</button>
+          <button class="btn cyan-btn" type="submit">ورود</button>
         </form>
       );
     }
@@ -72,7 +70,7 @@ class LoginSignup extends React.Component {
           <input type="text" id="phonenumber" class="form-control mb-4" placeholder="شماره تماس" onChange={this.myChangeHandler}/>
           <input type="password" id="password" class="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
           <input type="password" id="passwordrepeat" class="form-control mb-4" placeholder="تکرار رمز عبور"/>
-          <button class="btn" type="submit">ثبت نام</button>
+          <button class="btn cyan-btn" type="submit">ثبت نام</button>
         </form>
       );
     }
