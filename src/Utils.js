@@ -49,9 +49,32 @@ function toPersianNum(inp) {
   return res;
 }
 
+function toPersianTime(seconds) {
+  var hours = 0,
+  minutes = 0,
+  res = '';
+  while (seconds >= 60) {
+    seconds -= 60;
+    minutes += 1;
+  }
+  while (minutes >= 60) {
+    minutes -= 60;
+    hours += 1;
+  }
+  if (hours > 0) {
+    res += toPersianNum(hours) + ':';
+  }
+  if (minutes > 0) {
+    res += toPersianNum(minutes) + ':';
+  }
+  res += toPersianNum(seconds)
+  return res;
+}
+
 export {
     Header,
     Footer,
     Form,
-    toPersianNum
+    toPersianNum,
+    toPersianTime
 }
