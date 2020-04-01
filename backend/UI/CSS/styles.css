@@ -1,0 +1,480 @@
+@import "normalize.css";
+@import "../Assets/Fonts/vazir-fonts/fonts.css";
+
+body {
+    background: #F7FFF7;
+}
+
+div {
+    position: relative;
+}
+
+* {
+    box-sizing: border-box;
+    direction: rtl;
+    font-family: Vazir;
+}
+
+.logo {
+    width: 1.7em;
+    height: 1.7em;
+}
+
+.navbar-expand-sm {
+    padding: 0.1em;
+}
+
+.navbar-nav {
+    padding-top: 0.1em;
+    padding-left: 2em;
+}
+
+.navbar-nav li a {
+    color:  #363636;
+}
+
+.navbar-nav li a.logout {
+    color:  #FF6B6B !important;
+}
+
+.navbar-nav li i{
+    display: inline-block;
+    position: relative;
+    padding-right: 0.6em;
+    padding-top: 0.2em;
+}
+
+.count-badge {
+    background-color: #4ECDC4;
+    border-radius: 100%;
+    color: white;
+    padding: 0.1em 0.5em;
+    font-size: 0.5em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-0.3em, 0.3em);
+}
+
+header {
+    background:  #ff6b6b;
+    color: white;
+    position: relative;
+    width: 100%;
+    min-height: 14em;
+    overflow: hidden;
+}
+
+.banner div {
+    float: right;
+    font-size: 1.8em;
+    text-align: right;
+    position: relative;
+    padding: 3em 1em 1em 4em;
+}
+
+.banner div ul{
+    padding-bottom: 0%;
+    font-weight: 100;
+    font-size: 0.6em;
+    list-style-type: none;
+    text-align: right;
+}
+
+.banner div:nth-child(1) {
+    width: 60%;
+}
+
+.banner div:nth-child(2) {
+    width: 40%;
+}
+
+.flaticon-account::before {
+    font-size: 1.8em !important;
+    padding: 0% !important;
+    display: inline !important;
+}
+
+
+.bold {
+    font-weight: bold;
+}
+
+h1, h2 {
+   text-align: center;
+}
+
+.warpper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5em;
+    padding-bottom: 10em;
+}
+
+.tab{
+    cursor: pointer;
+    padding: 1em 0%;
+    text-align: center;
+    background:#fff;
+    display: inline-block;
+    position: relative;
+    color:#000;
+    border-radius: 0.3em;
+    box-shadow: 0 0.02em 0.1em 0.01em #00000084;
+    width: 12em;
+    transform: translateY(2em);
+    z-index: 1;
+    font-size: 1em;
+}
+
+.panels{
+    background:#fffffff6;
+    border: 0.05em solid rgba(120, 120, 120, 0.428);
+    width: 100%;
+    max-width: 40em;
+    border-radius: 1.5em;
+    overflow: hidden;
+    padding: 4em;
+}
+
+.panel{
+    display:none;
+    animation: fadein .8s;
+}
+
+@keyframes fadein {
+      from {
+          opacity:0;
+      }
+      to {
+          opacity:1;
+      }
+}
+
+.panel-title{
+    font-size:1.5em;
+    font-weight:bold
+}
+
+.radio{
+    display:none;
+}
+
+#one:checked ~ .panels #one-panel,
+#two:checked ~ .panels #two-panel {
+    display:block
+}
+
+#one:checked ~ .tabs #one-tab,
+#two:checked ~ .tabs #two-tab {
+    background:#ff6b6b;
+    color:#fff;
+    border-radius: 0.3em;
+    left: 0%;
+    right: 0%;
+}
+
+.form-inline {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.btn {
+    background-color: #4ECDC4 !important;
+    border-radius: 0.3em !important;
+    color: white !important;
+    min-width: 8em !important;
+}
+
+form#credit .btn {
+    margin-right: 2em !important;
+}
+
+.col-bordered {
+      border: 0.05em solid lightgray;
+}
+
+.col-1 {
+    border-top-right-radius: 0.5em !important;
+    border-bottom-right-radius: 0.5em !important;
+    border-left: none;
+}
+
+.col-4 {
+    border-top-left-radius: 0.5em !important;
+    border-bottom-left-radius: 0.5em !important;
+    border-right: none;
+}
+
+.col-bordered {
+    padding: 0.4em;
+    text-align: center;
+}
+
+.row {
+    padding-bottom: 1.2em;
+}
+
+.small-btn {
+    border-radius: 0.5em;
+    font-size: 0.7em;
+    border: none;
+    padding: 0.5em 1.4em;
+    text-align: center;
+}
+
+.green-btn {
+    background: #ccffc7;
+    color: darkgreen;
+}
+
+.blue-btn {
+    background: #d2fffc;
+    color: darkcyan;
+}
+
+.yellow-btn {
+    box-shadow: 0 0.02em 0.1em 0.01em #00000084;
+    background: #FFE66D;
+}
+
+footer {
+    background: #1A535C;
+    color: white;
+    font-size: 1em;
+    font-weight: 100;
+    padding: 0.8em;
+    text-align: center;
+    box-shadow:0 0 0.5em rgba(0, 0, 0, 0.8);
+}
+
+.card img {
+    height: 5.2em;
+    width: 5.4em;
+    border-radius: 0.5em;
+}
+
+.shadow-box {
+    box-shadow: 0.01em 0.01em 0.4em 0.01em #00000034;
+}
+.card {
+    align-items: center;
+    padding: 1em;
+    border-radius: 0.5em;
+}
+
+#menu {
+    border-right: 0.2em dashed #36363637;
+    padding-right: 2em;
+    text-align: center;
+}
+
+.rating img {
+    width: 0.8em;
+    height: 0.8em;
+}
+
+.food-title {
+    padding: 0.2em;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+.rating {
+    display: inline-block;
+    padding-right: 1em;
+    font-size: 0.8em;
+    font-weight: 100;
+}
+
+#menu .card {
+    width: 90%;
+}
+
+#menu .card h6 {
+    font-weight: 200;
+    font-size: 1.2em;
+    padding-bottom: 0.8em;
+}
+
+#menu .card .yellow-btn {
+    box-shadow: none;
+    padding: 0.4em 0.9em;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #313131de;
+}
+
+#menu .card .yellow-btn:disabled {
+    background: lightgray;
+}
+
+#restaurant-div {
+    padding: 2em 4em 10em 2em;
+}
+
+#restaurant-div #cart {
+    padding-left: 2em;
+}
+
+#menu .title {
+    font-size: 2.5em;
+    color: #1A535C;
+    font-weight: bold;
+    border-bottom: 0.08em solid #1A535C;
+    display: inline-block;
+    padding-right: 0.8em;
+    padding-left: 0.8em;
+}
+
+#restaurant-div #cart {
+    padding-top: 5.5em;
+}
+
+#restaurant-div #cart .title {
+    font-size: 1.4em;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-bottom: 0.08em solid rgba(66, 66, 66, 0.36);
+    display: inline-block;
+    padding-right: 0.8em;
+    padding-left: 0.8em;
+}
+
+#cart .card-body {
+    width: 100%;
+    padding-top: 1em;
+    text-align: center;
+}
+
+.dashed-div {
+    border: 0.1em dashed #36363647;
+    border-radius: 1.5em;
+    text-align: center;
+    padding: 1em;
+    font-weight: 300;
+    font-size: 1.5em;
+}
+
+.dashed-div div {
+    border-bottom: 0.08em solid rgba(54, 54, 54, 0.442);
+    padding-top: 0.4em;
+}
+
+.plus-minus{
+    float: left;
+}
+
+.plus-minus i:nth-child(2) {
+    color: #1A535C;
+    font-weight: 100;
+    padding-left: 0;
+    text-align: left;
+}
+
+.plus-minus i:nth-child(1) {
+    color: #ff6b6b;
+    font-weight: 100;
+}
+
+.dashed-div .price {
+    font-size: 0.7em;
+    font-weight: 100;
+    text-align: left;
+    padding-left: 1.2em;
+}
+
+#cart .card-body .sum {
+    font-size: 1.5em;
+    padding-top: 0.6em;
+}
+
+.sum p {
+    display: inline;
+    padding-right: 0%;
+}
+
+#cart button {
+    font-size: 1.6em !important;
+    margin-right: 0% !important;
+    font-weight: 500 !important;
+    width: auto !important;
+    padding: 0.2em 1em !important;
+}
+
+#menu .col-sm-4 {
+    padding: 0.5em 0.1em !important;
+}
+
+#menu .row {
+    padding: 1em;
+}
+
+.restaurant-logo {
+    display: flex;
+    align-items: center;
+    margin-right: 50%;
+    text-align: center;
+    transform: translateY(-5em);
+}
+
+.restaurant-logo figure {
+    margin-right: -6em;
+}
+
+.restaurant-logo img {
+    z-index: 1;
+    border: 0.4em solid white;
+    width: 10em;
+    height: 10em;
+    border-radius: 1em;
+    text-align: center;
+}
+
+.restaurant-logo figcaption {
+    font-weight: bold;
+    font-size: 2em;
+    color: black;
+    padding-top: 0.5em;
+}
+
+header .cover {
+    opacity: 0.5;
+    object-fit: cover;
+    width: 100%;
+    max-height: 14em;
+    position: relative;
+}
+
+.title-description {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+}
+
+.title-description figcaption {
+    text-shadow: 0px 2px 2px rgba(0,0,0,0.4),
+    0px 8px 10px rgba(0,0,0,0.1),
+    0px 5px 23px rgba(0,0,0,0.1);
+    color: white;
+}
+
+.title-description figure {
+    position: relative;
+    text-align: center;
+}
+
+.title-description .figure-img {
+    width: 4em;
+    height: 4em;
+}
+
+form#login .btn, form#signup .btn {
+    margin-top: 2em !important;
+}

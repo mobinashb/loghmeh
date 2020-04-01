@@ -1,0 +1,29 @@
+{
+  "id": "6",
+  "name": "tirajeh",
+  "location": {
+    "x": 1,
+    "y": 1
+  },
+  "logo": "https://static.snapp-food.com/media/cache/vendor_logo/ uploads/images/vendors/logos/5d15f42838d79.jpg",
+  "menu": [
+    {
+      "count": 3,
+      "oldPrice": 21000,
+      "name": "gharch",
+      "description": "khoobeh",
+      "popularity": 0.7,
+      "price": 11000,
+      "image": "0"
+    },
+    {
+      "count": 2,
+      "oldPrice": 15000,
+      "name": "sib",
+      "description": "inm khoobeh",
+      "popularity": 0.9,
+      "price": 9000,
+      "image": "0"
+    }
+  ]
+}

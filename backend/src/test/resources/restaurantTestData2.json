@@ -1,0 +1,22 @@
+{
+  "id": "2",
+  "name":  "Sabalan",
+  "logo":  "2",
+  "location":  {"x":  9, "y":  11},
+  "menu": [
+    {
+      "name":  "KababNegini",
+      "description": "Sangak",
+      "popularity": 0.1,
+      "price": 37000,
+      "image": "0"
+    },
+    {
+      "name":  "KababSoltani",
+      "description": "Sangak - Sabzijat",
+      "popularity": 0.2,
+      "price": 61000,
+      "image": "1"
+    }
+  ]
+}

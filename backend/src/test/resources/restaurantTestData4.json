@@ -1,0 +1,29 @@
+{
+  "id": "4",
+  "name":  "Lamiz",
+  "logo":  "4",
+  "location":  {"x":  81, "y":  72},
+  "menu": [
+    {
+      "name":  "Espresso",
+      "description": "Bitter taste of Espresso coffee",
+      "popularity": 0.91,
+      "price": 14500,
+      "image": "0"
+    },
+    {
+      "name":  "Caramel Macciato",
+      "description": "Freshly steamed milk with vanilla-flavored syrup",
+      "popularity": 0.96,
+      "price": 18000,
+      "image": "1"
+    },
+    {
+      "name":  "Latte",
+      "description": "Espresso and steamed milk",
+      "popularity": 0.99,
+      "price": 17000,
+      "image": "2"
+    }
+  ]
+}
