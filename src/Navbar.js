@@ -1,10 +1,11 @@
 import React from 'react';
-// import './CSS/styles.css';
-// import 'bootstrap/dist/css/bootstrap.css';
 import logo from './Assets/LOGO.png'
 import {toPersianNum} from './Utils'
 
 class Navbar extends React.Component {
+  showCart() {
+    this.props.func("cart");
+  }
   render() {
     let profileNavlink = null;
     if (this.props.inProfile === "false") {
@@ -14,19 +15,17 @@ class Navbar extends React.Component {
     }
     return (
       <div>
-      <nav class="navbar-expand-sm bg-white fixed-top">
-        <a href="/" class="navbar-brand float-right">
-          <img class="logo" src={logo} alt="لقمه" />
+      <nav className="navbar-expand-sm bg-white fixed-top">
+        <a href="/" className="navbar-brand float-right">
+          <img className="logo" src={logo} alt="لقمه" />
         </a>
-        <ul class="navbar-nav float-left">
-          <li class="nav-item">
-            <a href="cart.js">
-              <i class="flaticon-smart-cart"><span class="count-badge">{toPersianNum(this.props.cartCount)}</span></i>
-            </a>
+        <ul className="navbar-nav float-left">
+          <li className="nav-item">
+            <i className="flaticon-smart-cart" onClick={this.showCart.bind(this)}><span className="count-badge">{toPersianNum(this.props.cartCount)}</span></i>
           </li>
           {profileNavlink}
-          <li class="nav-item">
-            <a class="nav-link logout" href="/">خروج</a>
+          <li className="nav-item">
+            <a className="nav-link logout" href="/">خروج</a>
           </li>
         </ul>
       </nav>

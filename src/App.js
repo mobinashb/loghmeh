@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import LoginSignup from './LoginSignup';
 import Profile from './Profile';
+import json from './test.json'
+import {Footer} from './Utils'
 
 class App extends React.Component {
   render() {
@@ -12,9 +14,14 @@ class App extends React.Component {
             <Switch>
              <Route path="/" component={Home} exact/>
              <Route path="/login" component={LoginSignup}/>
-             <Route path="/profile" component={() => <Profile firstname="احسان" lastname="خامس پناه" email="ekhamespanah@yahoo.com" phonenumber="09123456789" credit="100000" />}/>
+             <Route path="/profile" component={() => <Profile firstname="احسان" lastname="خامس پناه"
+             email="ekhamespanah@yahoo.com" phonenumber="09123456789" credit={100000}
+             orders={json.orders}
+             cart={json.cart}
+             />}/>
            </Switch>
         </div>
+        <Footer/>
       </BrowserRouter>
     );
   }

@@ -4,11 +4,11 @@
 
 body {
     background-color: #F7FFF7 !important;
+    font-size: 2vmin !important;
 }
 
 div {
     position: relative;
-    font-size: 1vw;
 }
 
 * {
@@ -99,7 +99,7 @@ header {
 
 
 .bold {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 h1, h2 {
@@ -201,6 +201,7 @@ button {
 
 form#credit .cyan-btn {
     margin-right: 2em !important;
+    font-size: 1em !important;
 }
 
 .col-bordered {
@@ -230,7 +231,7 @@ form#credit .cyan-btn {
 
 .small-btn {
     border-radius: 0.5em;
-    font-size: 0.7em;
+    font-size: 0.7em !important;
     border: none;
     padding: 0.5em 1.4em;
     text-align: center;
@@ -281,6 +282,7 @@ footer {
     padding: 2em;
     border-radius: 0.5em;
     background: white;
+    border: none;
 }
 
 .menu {
@@ -387,26 +389,23 @@ footer {
     padding-top: 0.4em;
 }
 
-.plus-minus{
+.plus-minus {
     float: left;
-    font-size: 1.5em;
+    font-size: 1em;
 }
 
-.plus-minus a, .plus-minus a:hover {
-    text-decoration: none;
-}
-
-.plus-minus a i.flaticon-plus {
+.plus-minus i.flaticon-plus {
     color: #1A535C;
     font-weight: 100;
     padding-left: 0;
     text-align: left;
+    display: inline;
 }
 
-.plus-minus a i.flaticon-minus {
+.plus-minus i.flaticon-minus {
     color: #ff6b6b;
     font-weight: 100;
-    padding-right: 10%;
+    display: inline;
 }
 
 .dashed-div .price {
@@ -635,18 +634,26 @@ form#login .btn, form#signup .btn {
     display: block;
 }
 
-.modal h3, .modal p {
-    font-weight: lighter;
-}
-
-.modal {
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+.modal h2 {
+    font-weight: normal !important;
 }
 
 .modal-content {
-    border-radius: 1.5em !important;
+    border-radius: 1.8em !important;
+}
+
+tr th, tr td {
+    padding: 0.2em !important;
+}
+
+thead tr th {
+    color: #383838 !important;
+    font-weight: lighter !important;
+}
+
+.thin {
+    border-top: 0.05em solid #56565634;
+    width: 80%;
 }
 
 #foodDetails img {

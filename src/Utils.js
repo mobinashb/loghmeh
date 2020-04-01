@@ -1,9 +1,9 @@
 import React from 'react';
 import logo from './Assets/LOGO.png'
 import cover from './Assets/cover.jpg'
-import './CSS/styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import './CSS/styles.css';
 
 function Header() {
   return (
@@ -71,10 +71,21 @@ function toPersianTime(seconds) {
   return res;
 }
 
+async function post(body, path) {
+  const response = await fetch(path, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+}
+
 export {
     Header,
     Footer,
     Form,
     toPersianNum,
-    toPersianTime
+    toPersianTime,
+    post
 }
