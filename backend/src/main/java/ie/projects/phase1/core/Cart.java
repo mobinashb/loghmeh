@@ -63,21 +63,21 @@ public class Cart {
 
     public void setRemainingTimeToDeliver(double remainingTimeToDeliver) { this.remainingTimeToDeliver = remainingTimeToDeliver; }
 
-    public void addNewOrder(String foodName, String restaurantId, boolean isParty) {
-        if(isParty){
-            if (this.partyOrders.containsKey(foodName))
-                this.partyOrders.put(foodName, this.partyOrders.get(foodName) + 1);
-            else
-                this.partyOrders.put(foodName, 1);
-        }
-        else {
-            if (this.orders.containsKey(foodName))
-                this.orders.put(foodName, this.orders.get(foodName) + 1);
-            else
-                this.orders.put(foodName, 1);
-        }
+    public String addNewOrder(String foodName, int number, String restaurantId, boolean isParty) {
+        if(isParty)
+            this.partyOrders.put(foodName, number);
+        else
+            this.orders.put(foodName, number);
         this.restaurantId = restaurantId;
-        System.out.println("Order added.");
+        return "Order added";
+    }
+
+    public String editCart(String foodName, int number, boolean isParty){
+        if(isParty)
+            this.partyOrders.put(foodName, this.partyOrders.get(foodName) + number);
+        else
+            this.orders.put(foodName, this.orders.get(foodName) + number);
+        return "Order edited";
     }
 
     public void clearOrders(){

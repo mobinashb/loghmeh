@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.Utils;
 import ie.projects.phase1.requestSender.HttpRequester;
+import ie.projects.phase1.services.repeatedTasks.AddPartyRestaurants;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class Loghmeh {
 
@@ -18,7 +20,6 @@ public class Loghmeh {
 
     private static Loghmeh instance;
 
-    private long lastFoodPartyReceiveTime;
 
     private ArrayList<Restaurant> restaurants;
     private ArrayList<DeliveryMan> deliveryMen;
@@ -31,16 +32,11 @@ public class Loghmeh {
         restaurants = new ArrayList<Restaurant>();
         deliveryMen = new ArrayList<DeliveryMan>();
         restaurantsInParty = new ArrayList<Restaurant>();
-        lastFoodPartyReceiveTime = 0;
         users= new ArrayList<User>();
         User testUser = new User("1", "Ehsan", "khamespanah", "09124820194", "ekhamespanah@yahoo.com", 100000.0);
         users.add(testUser);
         addAllToLoghmeh("http://138.197.181.131:8080/restaurants", "restaurant");
-        addAllToLoghmeh("http://138.197.181.131:8080/foodparty", "party");
     }
-
-    public long getLastFoodPartyReceiveTime() { return lastFoodPartyReceiveTime; }
-    public void setLastFoodPartyReceiveTime(long lastFoodPartyReceiveTime) { this.lastFoodPartyReceiveTime = lastFoodPartyReceiveTime; }
 
     public static Loghmeh getInstance(){
         if(instance == null)
@@ -71,8 +67,6 @@ public class Loghmeh {
         }
         return null;
     }
-
-    public ArrayList<Restaurant> getRestaurants() { return restaurants; }
 
     public ArrayList<Restaurant> getRestaurantsInArea()
     {
@@ -135,38 +129,6 @@ public class Loghmeh {
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    private boolean validateOrder(Restaurant restaurant, String foodName){
-        if(restaurant == null)
-            return false;
-        else if(restaurant.findFood(foodName) == null)
-            return false;
-        return true;
-    }
-
-    public boolean addToCart(String foodName, String restaurantId){
-        Restaurant restaurant = findRestaurantInPartyById(restaurantId);
-
-        if(validateOrder(restaurant, foodName)) {
-            if(restaurant.findFood(foodName).getCount() <= 0){
-                System.out.println("This food isn't in party anymore.");
-                return false;
-            }
-            return users.get(0).addToCart(foodName, restaurantId, true);
-        }
-
-        else {
-            restaurant = findRestaurantById(restaurantId);
-            if (restaurant == null) return false;
-            else if(validateOrder(restaurant, foodName)) {
-                return users.get(0).addToCart(foodName, restaurantId, false);
-            }
-            else System.out.println("Can't add to cart. Check your request.");
-        }
-
-        return false;
-    }
-
-
     public Cart getCart() { return users.get(0).getCart(); }
 
     public boolean addAllToLoghmeh(String url, String inputType){
@@ -192,16 +154,8 @@ public class Loghmeh {
         return true;
     }
 
-    public String finalizeOrder(){
-        return users.get(0).finalizeOrder();
-    }
-
     public DeliveryMan selectBestDeliveryMan(Restaurant restaurant, GeoLocation userLocation){
         return Utils.selectBestDeliveryMan(restaurant, deliveryMen, userLocation.getx(), userLocation.gety());
-    }
-
-    public boolean isInArea(String restaurantId) {
-        return getRestaurantsInArea().contains(findRestaurantById(restaurantId));
     }
 
     public ArrayList<Restaurant> getRestaurantsInParty() { return restaurantsInParty; }

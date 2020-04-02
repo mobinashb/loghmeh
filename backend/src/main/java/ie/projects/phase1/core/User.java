@@ -77,15 +77,12 @@ public class User {
         return null;
     }
 
-    public boolean addToCart(String foodName, String restaurantId, Boolean isParty){
+    public String addToCart(String foodName, int number, String restaurantId, Boolean isParty){
         String cartResId = cart.getRestaurantId();
         if((cartResId == null) || (cartResId.equals(restaurantId)))
-            cart.addNewOrder(foodName, restaurantId, isParty);
-        else {
-            System.out.println("You have ordered from another restaurant first");
-            return false;
-        }
-        return true;
+            return cart.addNewOrder(foodName, number, restaurantId, isParty);
+
+        return "You have ordered from another restaurant first";
     }
 
     private String validateCart(){
@@ -142,7 +139,7 @@ public class User {
                     Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
                     this.undeliveredOrders.add(newCart);
                     cart.clearOrders();
-                    return "Your order has been submitted successfully";
+                    return "";
                 }
                 else
                     return "You don't have enough credit";
@@ -150,7 +147,7 @@ public class User {
             else
                 return cartValidation;
         }
-        return "Your order has been submitted before";
+        return "There isn't order to finalize";
     }
 
     public void checkStates(){
@@ -162,7 +159,6 @@ public class User {
     }
 
     private boolean orderState(Cart cart, Iterator cartItr){
-        cart.setRemainingTimeToDeliver(cart.getDeliveryManTimeToReach() - ((System.currentTimeMillis() - cart.getDeliveryManFoundedTime()) / 1000));
         if(cart.getOrderStatus() == DELIVERYMANFINDING){
             Loghmeh loghmeh = Loghmeh.getInstance();
             if(!loghmeh.addAllToLoghmeh("http://138.197.181.131:8080/deliveries", "deliveryMan"))
@@ -185,6 +181,7 @@ public class User {
             }
         }
         else if(cart.getOrderStatus() == DELIVERYMANCOMING) {
+            cart.setRemainingTimeToDeliver(cart.getDeliveryManTimeToReach() - ((System.currentTimeMillis() - cart.getDeliveryManFoundedTime()) / 1000));
             if ((System.currentTimeMillis() - cart.getDeliveryManFoundedTime()) > (cart.getDeliveryManTimeToReach() * 1000))
                 cart.setOrderStatus(ORDERDELIVERED);
         }

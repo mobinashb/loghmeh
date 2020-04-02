@@ -1,10 +1,6 @@
-package ie.projects.phase1.services.user;
+package ie.projects.phase1.services.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.User;
 import org.springframework.web.bind.annotation.*;
