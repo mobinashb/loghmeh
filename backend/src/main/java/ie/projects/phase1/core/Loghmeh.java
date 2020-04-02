@@ -92,7 +92,6 @@ public class Loghmeh {
             if(findRestaurantById(restaurant.getId()) == null) {
                 restaurants.add(restaurant);
                 restaurant.deleteSame();
-                System.out.println("Restaurant with the id " + restaurant.getId() + " has been successfully added");
             }
         }
         catch (JsonParseException e) { e.printStackTrace();}
@@ -118,38 +117,18 @@ public class Loghmeh {
         ObjectMapper mapper = new ObjectMapper();
         try{
             Restaurant restaurant = mapper.readValue(jsonData, Restaurant.class);
-            if(findRestaurantById(restaurant.getId()) == null) {
-                Restaurant restaurant1 = new Restaurant();
-                restaurant1 = restaurant;
+            Restaurant foundedRestaurant = findRestaurantById(restaurant.getId());
+            if(foundedRestaurant == null) {
+                Restaurant restaurant1 = restaurant;
                 restaurant1.convertPartyMenuToMenu(restaurant);
                 this.restaurants.add(restaurant1);
             }
+            else
+                foundedRestaurant.convertPartyMenuToMenu(restaurant);
 
-            findRestaurantById(restaurant.getId()).convertPartyMenuToMenu(restaurant);
 
-            if(findRestaurantInPartyById(restaurant.getId()) == null) {
+            if(findRestaurantInPartyById(restaurant.getId()) == null)
                 this.restaurantsInParty.add(restaurant);
-                System.out.println("Restaurant with the id " + restaurant.getId() + " has been successfully added to party");
-            }
-        }
-        catch (JsonParseException e) { e.printStackTrace();}
-        catch (JsonMappingException e) { e.printStackTrace(); }
-        catch (IOException e) { e.printStackTrace(); }
-    }
-
-    public void addFood(String jsonData){
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            Food food = mapper.readValue(jsonData, Food.class);
-            Restaurant restaurant = findRestaurantById(food.getRestaurantId());
-            if(restaurant == null)
-                System.out.println("Restaurant with the id " + food.getRestaurantId() +" does not exist");
-            else{
-                if(restaurant.findFood(food.getName()) == null){
-                    restaurant.addFood(food);
-                    System.out.println(food.getName() + " has been successfully added to " + food.getRestaurantId() + " restaurant");
-                }
-            }
         }
         catch (JsonParseException e) { e.printStackTrace();}
         catch (JsonMappingException e) { e.printStackTrace(); }
@@ -207,10 +186,8 @@ public class Loghmeh {
         }
         else if(inputType.equals("party")){
             restaurantsInParty.clear();
-            for (String party : strings) {
-                System.out.println(party);
+            for (String party : strings)
                 addToParty(party);
-            }
         }
         return true;
     }

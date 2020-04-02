@@ -17,6 +17,6 @@
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving
         up static resources in the ${webappRoot}/resources directory -->
 
-    <context:component-scan base-package="ie.projects.phase1" />
+    <context:component-scan base-package="ie.projects.phase1.services" />
 
 </beans:beans>

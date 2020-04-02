@@ -34,7 +34,9 @@ public class Restaurant
 
     public int getEstimatedDeliverTime() { return estimatedDeliverTime; }
 
-    public void addFood(Food food){ this.menu.add(food); }
+    public void addFood(Food food){
+        this.menu.add(food);
+    }
 
     public Food findFood(String foodName){
         for(Food food : this.menu){
@@ -65,10 +67,8 @@ public class Restaurant
         ArrayList<Food> foodsMenu = new ArrayList<Food>();
         int i;
         for(i=0; i<menu.size()-1; i++){
-            System.out.println(menu.get(i).getName());
-            if(!menu.get(i).getName().equals(menu.get(i+1).getName())) {
+            if(!menu.get(i).getName().equals(menu.get(i+1).getName()))
                 foodsMenu.add(menu.get(i));
-            }
         }
         foodsMenu.add(menu.get(i));
         menu = foodsMenu;
@@ -106,9 +106,12 @@ public class Restaurant
 
     public void convertPartyMenuToMenu(Restaurant restaurant){
         for(Food food : restaurant.getMenu()){
+            food.setRestaurantId(restaurant.getId());
             if(findFood(food.getName()) == null){
                 Food newFood = Utils.deepCopyFood(food);
                 newFood.setPrice(food.getOldPrice());
+                newFood.setOldPrice(null);
+                newFood.setCount(null);
                 addFood(newFood);
             }
         }
