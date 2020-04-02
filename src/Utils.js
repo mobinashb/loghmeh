@@ -81,11 +81,33 @@ async function post(body, path) {
   });
 }
 
+function Panels(props) {
+  return (
+    <div class="warpper">
+      <input class="radio" id="one" name="group" type="radio" defaultChecked={true}/>
+      <input class="radio" id="two" name="group" type="radio"/>
+      <div class="tabs">
+      <label class="tab" id="one-tab" htmlFor="one">{props.name1}</label>
+      <label class="tab" id="two-tab" htmlFor="two">{props.name2}</label>
+      </div>
+      <div class="panels">
+          <div class="panel row-sm-5" id="one-panel">
+          {props.one}
+          </div>
+          <div class="panel row-sm-5" id="two-panel">
+          {props.two}
+          </div>
+      </div>
+    </div>
+  );
+}
+
 export {
     Header,
     Footer,
     Form,
     toPersianNum,
     toPersianTime,
-    post
+    post,
+    Panels
 }
