@@ -5,12 +5,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.Utils;
 import ie.projects.phase1.requestSender.HttpRequester;
-import ie.projects.phase1.services.repeatedTasks.AddPartyRestaurants;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class Loghmeh {
 
@@ -33,7 +31,7 @@ public class Loghmeh {
         deliveryMen = new ArrayList<DeliveryMan>();
         restaurantsInParty = new ArrayList<Restaurant>();
         users= new ArrayList<User>();
-        User testUser = new User("1", "Ehsan", "khamespanah", "09124820194", "ekhamespanah@yahoo.com", 100000.0);
+        User testUser = new User("1", "احسان", "خامس‌ پناه", "09124820194", "ekhamespanah@yahoo.com", 100000.0);
         users.add(testUser);
         addAllToLoghmeh("http://138.197.181.131:8080/restaurants", "restaurant");
     }

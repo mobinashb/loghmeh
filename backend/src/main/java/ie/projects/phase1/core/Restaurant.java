@@ -6,6 +6,7 @@ import ie.projects.phase1.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @JsonFilter("restaurant")
 public class Restaurant
@@ -75,7 +76,9 @@ public class Restaurant
     }
 
     public double getFoodPrices(HashMap<String, Integer> orders){
-        double totalPrice = orders.entrySet().stream().mapToDouble(entry -> findFood(entry.getKey()).getPrice() * entry.getValue()).sum();
+        double totalPrice = 0;
+        for(Map.Entry element: orders.entrySet())
+            totalPrice += findFood((String) element.getKey()).getPrice() * ((int) element.getValue());
         return totalPrice;
     }
 

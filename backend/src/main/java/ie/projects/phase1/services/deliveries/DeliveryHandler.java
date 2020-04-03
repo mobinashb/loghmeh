@@ -17,9 +17,12 @@ public class DeliveryHandler {
     ObjectMapper mapper = new ObjectMapper();
 
 
-    @RequestMapping(value = "/v1/carts", method = RequestMethod.GET)
-    public String getAllCarts(@RequestBody CartRequest request) throws IOException {
+    @RequestMapping(value = "/v1/carts", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    public String getAllCarts() throws IOException {
         User user = loghmeh.getUsers().get(0);
+        System.out.println("++++++++++++++++++++++++++++++++++++");
+        System.out.println(user.getAllOrders().size());
+        System.out.println(mapper.writeValueAsString(user.getAllOrders()));
         return mapper.writeValueAsString(user.getAllOrders());
     }
 }

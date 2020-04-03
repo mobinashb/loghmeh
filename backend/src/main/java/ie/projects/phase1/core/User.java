@@ -99,17 +99,14 @@ public class User {
     }
 
     private double checkUserCredit(){
-        Restaurant restaurant;
         double totalPrice = 0;
         Loghmeh loghmeh = Loghmeh.getInstance();
 
-        restaurant = loghmeh.findRestaurantInPartyById(cart.getRestaurantId());
-        if(restaurant != null)
-            totalPrice = restaurant.getFoodPrices(cart.getPartyOrders());
+        if(cart.getPartyOrders().isEmpty() == false)
+            totalPrice = loghmeh.findRestaurantInPartyById(cart.getRestaurantId()).getFoodPrices(cart.getPartyOrders());
 
-        restaurant = loghmeh.findRestaurantById(cart.getRestaurantId());
-        if(restaurant != null)
-            totalPrice += restaurant.getFoodPrices(cart.getOrders());
+        if(cart.getOrders().isEmpty() == false)
+            totalPrice += loghmeh.findRestaurantById(cart.getRestaurantId()).getFoodPrices(cart.getOrders());
 
         if(totalPrice > this.credit)
             totalPrice = 0.0;
@@ -131,9 +128,10 @@ public class User {
                 double price = checkUserCredit();
                 if (price > 0) {
                     doOrder(price);
-                    Restaurant restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
-                    if (restaurant != null)
+                    if (cart.getPartyOrders().isEmpty() == false){
+                        Restaurant restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
                         restaurant.setPartyFoodNum(cart.getPartyOrders());
+                    }
                     cart.setOrderStatus(DELIVERYMANFINDING);
 
                     Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());

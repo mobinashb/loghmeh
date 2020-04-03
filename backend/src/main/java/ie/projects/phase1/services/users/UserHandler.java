@@ -13,13 +13,13 @@ public class UserHandler {
     ObjectMapper mapper = new ObjectMapper();
 
 
-    @RequestMapping(value = "/v1/profile", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/profile", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getUserProfile() throws IOException {
         User user = loghmeh.getUsers().get(0);
         return mapper.writeValueAsString(user);
     }
 
-    @RequestMapping(value = "/v1/credit", method = RequestMethod.POST)
+    @RequestMapping(value = "/v1/credit", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String getRestaurant(@RequestBody AddCreditRequest request) throws IOException{
         User user = loghmeh.getUsers().get(0);
         user.addCredit(request.getAmount());

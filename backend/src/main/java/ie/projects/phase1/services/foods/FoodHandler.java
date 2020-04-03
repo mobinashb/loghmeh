@@ -22,14 +22,14 @@
 //    ObjectMapper mapper = new ObjectMapper();
 //
 //
-//    @RequestMapping(value = "/v1/restaurants/{restaurantId}/{foodId}", method = RequestMethod.GET)
+//    @RequestMapping(value = "/v1/restaurants/{restaurantId}/{foodId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 //    public String getFood(@PathVariable(value = "restaurantId") String restaurantId, @PathVariable(value = "foodId") String foodId) throws IOException{
 //        String[] foodFilterParams = {"count", "oldPrice"};
 //        Restaurant restaurant = loghmeh.findRestaurantById(restaurantId);
 //        return foodJsonCreator(restaurant, foodFilterParams, restaurantId, foodId);
 //    }
 //
-//    @RequestMapping(value = "/v1/partyRestaurants/{restaurantId}/{foodId}", method = RequestMethod.GET)
+//    @RequestMapping(value = "/v1/partyRestaurants/{restaurantId}/{foodId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 //    public String getFoodInParty(@PathVariable(value = "restaurantId") String restaurantId, @PathVariable(value = "foodId") String foodId) throws IOException{
 //        String[] foodFilterParams = {};
 //        Restaurant restaurant = loghmeh.findRestaurantInPartyById(restaurantId);

@@ -18,18 +18,18 @@ public class CartHandler {
     ObjectMapper mapper = new ObjectMapper();
 
 
-    @RequestMapping(value = "/v1/cart", method = RequestMethod.POST)
+    @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String addOrder(@RequestBody CartRequest request) throws IOException {
         return "{\"msg\": " + "\"" + loghmeh.getUsers().get(0).addToCart(request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty()) + "\"}";
     }
 
-    @RequestMapping(value = "/v1/cart", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/cart", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getcart() throws IOException{
         User user = loghmeh.getUsers().get(0);
         return mapper.writeValueAsString(user.getCart());
     }
 
-    @RequestMapping(value = "/v1/cart", method = RequestMethod.PUT)
+    @RequestMapping(value = "/v1/cart", method = RequestMethod.PUT, produces = "text/plain;charset=UTF-8")
     public String editCart(@RequestBody CartRequest request) throws IOException{
         return "{\"msg\": " + "\"" + loghmeh.getUsers().get(0).getCart().editCart(request.getFoodName(), request.getNumber(), request.isParty()) + "\"}";
     }
@@ -38,7 +38,7 @@ public class CartHandler {
 //    public String editCart(@RequestBody CartRequest request) throws IOException{
 //        hnooz moonde
 //    }
-    @RequestMapping(value = "/v1/cart/finalize", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/cart/finalize", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String finalizeOrder(){
         User user = loghmeh.getUsers().get(0);
         String result = user.finalizeOrder();

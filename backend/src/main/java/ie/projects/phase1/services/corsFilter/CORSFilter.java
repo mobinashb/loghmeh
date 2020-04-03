@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebFilter(filterName="cors", urlPatterns="/*")
 public class CORSFilter implements Filter {
+    private String encoding;
     public CORSFilter() {
     }
 
@@ -23,26 +24,33 @@ public class CORSFilter implements Filter {
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
+
+        if (servletRequest.getCharacterEncoding() == null)
+            servletRequest.setCharacterEncoding(encoding);
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         System.out.println("CORSFilter HTTP Request: " + request.getMethod());
-        // Authorize (allow) all domains to consume the content
+
+
+
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", "*");
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST, DELETE");
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers","content-type");
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers","Authorization");
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
-        // For HTTP OPTIONS verb/method reply with ACCEPTED status code -- per CORS handshake
+
+        servletResponse.setContentType("text/html; charset=UTF-8");
+        servletResponse.setCharacterEncoding("UTF-8");
+
         if (request.getMethod().equals("OPTIONS")) {
             resp.setStatus(HttpServletResponse.SC_ACCEPTED);
             return;
         }
-        // pass the request along the filter chain
         chain.doFilter(request, servletResponse);
     }
-    /**
-     * @see Filter#init(FilterConfig)
-     */
-    public void init(FilterConfig fConfig) throws ServletException {
 
+    public void init(FilterConfig fConfig) throws ServletException {
+        encoding = fConfig.getInitParameter("requestEncoding");
+        if (encoding == null) encoding = "UTF-8";
     }
 }
