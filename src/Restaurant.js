@@ -56,7 +56,8 @@ class Restaurant extends CartBasedComponent {
       menu: [],
       logo: '',
       name: '',
-      cart: {}
+      cart: {},
+      toShow: null
     };
   }
 
@@ -67,7 +68,8 @@ class Restaurant extends CartBasedComponent {
     menu,
     logo,
     name,
-    cart} = this.state;
+    cart,
+    toShow} = this.state;
     var cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length
@@ -98,6 +100,22 @@ class Restaurant extends CartBasedComponent {
             <Menu menu={menu} />
           </div>
         </div>
+        <Modal className="modal fade" role="dialog"
+          show={toShow === "cart"}
+          onHide={this.handleHide}>
+          <Modal.Body>
+            <div id="cart">
+              <div className="card">
+              {cartOrdersLen > 0 &&
+              this.Cart
+              }
+              {
+                <h1>سبد خرید شما خالی است</h1>
+              }
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     );
   }

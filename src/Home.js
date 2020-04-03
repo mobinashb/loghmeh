@@ -4,6 +4,7 @@ import FoodDetails from './FoodDetails'
 import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
+import Modal from "react-bootstrap/Modal";
 
 function Search() {
   return (
@@ -47,7 +48,6 @@ function RestaurantCard(params) {
             </div>
           </div>
           <Link to={url} className="btn yellow-btn">نمایش منو</Link>
-            {/* <button className="small-btn yellow-btn">نمایش منو</button> */}
         </div>
       </div>
   )
@@ -61,11 +61,15 @@ class Home extends CartBasedComponent {
       isLoaded: false,
       restaurants: [],
       partyRestaurants: [],
-      timeLeft: 0
+      timeLeft: 0,
+      cart: []
     };
   }
   render() {
-    const { error, isLoaded, restaurants, partyRestaurants, timeLeft} = this.state;
+    const { error, isLoaded, restaurants, partyRestaurants, timeLeft, toShow, cart} = this.state;
+    let cartOrdersLen = 0;
+    if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
+      cartOrdersLen = cart.orders.length
     var foodPartyList = [];
     partyRestaurants.map((restaurant) => {
       restaurant.menu.map((food) => {
@@ -79,7 +83,7 @@ class Home extends CartBasedComponent {
     } else {
       return (
       <div>
-        <Navbar whereAmI="home" cartCount={0} func={this.handleShow}/>
+        <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow}/>
         <Header/>
         <Search/>
         <div className="menu">
@@ -113,6 +117,22 @@ class Home extends CartBasedComponent {
           </div>
           <RestaurantList restaurants={restaurants}/>
         </div>
+        <Modal className="modal fade" role="dialog"
+          show={toShow === "cart"}
+          onHide={this.handleHide}>
+          <Modal.Body>
+            <div id="cart">
+              <div className="card">
+              {cartOrdersLen > 0 &&
+              this.Cart
+              }
+              {
+                <h1>سبد خرید شما خالی است</h1>
+              }
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     );
     }
@@ -145,6 +165,26 @@ class Home extends CartBasedComponent {
           this.setState({
             isLoaded: true,
             partyRestaurants: result
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error: error
+          });
+        }
+      )
+      fetch("http://localhost:8080/v1/cart")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          this.setState({
+            isLoaded: true,
+            cart: result
           });
         },
         // Note: it's important to handle errors here

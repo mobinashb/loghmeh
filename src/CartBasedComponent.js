@@ -1,5 +1,5 @@
 import React from 'react';
-import {post, toPersianNum} from './Utils'
+import {post, toPersianNum} from './Utils';
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
