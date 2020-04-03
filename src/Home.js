@@ -1,8 +1,9 @@
 import React from 'react';
-import {Header, Footer, toPersianTime} from './Utils'
+import {Header, toPersianTime} from './Utils'
 import FoodDetails from './FoodDetails'
 import CartBasedComponent from './CartBasedComponent';
-import Navbar from './Navbar'
+import Navbar from './Navbar';
+import {Link} from 'react-router-dom';
 
 function Search() {
   return (
@@ -35,6 +36,7 @@ function RestaurantList(props) {
 }
 
 function RestaurantCard(params) {
+  var url = "restaurant?id=".concat(params.item.id);
   return (
     <div className="col-sm-3">
         <div className="card shadow-box">
@@ -44,7 +46,8 @@ function RestaurantCard(params) {
               {params.item.name}
             </div>
           </div>
-            <button className="small-btn yellow-btn">نمایش منو</button>
+          <Link to={url} className="btn yellow-btn">نمایش منو</Link>
+            {/* <button className="small-btn yellow-btn">نمایش منو</button> */}
         </div>
       </div>
   )
@@ -69,7 +72,6 @@ class Home extends CartBasedComponent {
         foodPartyList.push(food)
       })
     });
-    // return <p>{foodPartyList.length}</p>
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {

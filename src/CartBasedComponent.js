@@ -1,5 +1,5 @@
 import React from 'react';
-import {post} from './Utils'
+import {post, toPersianNum} from './Utils'
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
@@ -8,6 +8,9 @@ class CartBasedComponent extends React.Component {
       cart: {},
       toShow: null
     }
+    this.handleShow = this.handleShow.bind(this);
+    this.handleHide = this.handleHide.bind(this);
+    this.changeCart = this.changeCart.bind(this);
   }
 
   handleShow(id) {
@@ -16,6 +19,13 @@ class CartBasedComponent extends React.Component {
 
   handleHide() {
     this.setState({toShow: null});
+  }
+
+  getSum(orders) {
+    let sum = orders.reduce(function(prev, current) {
+      return prev + +(current.price * current.count)
+    }, 0);
+    return sum
   }
 
   changeCart(i, num) {
@@ -44,6 +54,37 @@ class CartBasedComponent extends React.Component {
       return element.name === name;
     });
     return food.count;
+  }
+
+  Cart(props) {
+    return (
+    <div>
+      <div className="title">
+          سبد خرید
+      </div>
+      <div className="card-body">
+        <div className="dashed-div">
+          {props.cart.orders.map((food, i) => (
+          <div key={food.name}>
+              {food.name}
+              <span className="plus-minus">
+                <i className="flaticon-minus" onClick={this.changeCart(i, -1)}></i>
+                &nbsp;&nbsp;
+                {toPersianNum(this.getFoodCount(food.name))}
+                <i className="flaticon-plus" onClick={this.changeCart(i, +1)}></i>
+              </span>
+              <p className="price">{toPersianNum(food.price * food.count)} تومان</p>
+          </div>
+        ))}
+        </div>
+        <div className="sum">
+            جمع کل:
+            <p className="bold">{toPersianNum(this.getSum(props.cart.orders))} تومان</p>
+        </div>
+      </div>
+      <button className="btn cyan-btn">تأیید نهایی</button>
+    </div>
+    );
   }
 }
 

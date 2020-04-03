@@ -4,7 +4,7 @@
 
 body {
     background-color: #F7FFF7 !important;
-    font-size: 2vmin !important;
+    font-size: 1vw !important;
 }
 
 div {
@@ -29,6 +29,7 @@ div {
 .navbar-nav {
     padding-top: 0.1em;
     padding-left: 2em;
+    font-size: 2vh;
 }
 
 .navbar-nav li a {
@@ -184,7 +185,7 @@ h1, h2 {
 }
 
 button {
-    font-size: 1vw !important;
+    font-size: 1em !important;
 }
 
 .cyan-btn {
@@ -227,7 +228,7 @@ form#credit .cyan-btn {
 }
 
 .row {
-    padding-bottom: 1.2em;
+    padding-bottom: 0em !important;
 }
 
 .small-btn {
@@ -322,7 +323,6 @@ footer {
 }
 
 .menu .card {
-    /* width: 90%; */
     height: 90%;
 }
 
@@ -349,10 +349,6 @@ footer {
     padding: 2em 4em 10em 2em;
 }
 
-#restaurant-div #cart {
-    padding-left: 2em;
-}
-
 .menu .title {
     font-size: 2.5em;
     color: #1A535C;
@@ -365,6 +361,7 @@ footer {
 
 #restaurant-div #cart {
     padding-top: 5.5em;
+    padding-left: 0%;
 }
 
 #restaurant-div #cart .title {
@@ -446,19 +443,12 @@ footer {
 }
 
 .menu .row {
-    padding: 1em;
-}
-
-.restaurant-logo {
-    display: flex;
-    align-items: center;
-    margin-right: 50%;
-    text-align: center;
-    transform: translateY(-5em);
+    padding: 1em 0%;
 }
 
 .restaurant-logo figure {
-    margin-right: -6em;
+    text-align: center;
+    margin-top: 4em;
 }
 
 .restaurant-logo img {
@@ -483,7 +473,7 @@ header .cover {
     width: 100%;
     max-height: 17em;
     position: relative;
-    margin-top: 2em;
+    margin-top: 1.5em;
 }
 
 .title-description {
@@ -603,7 +593,6 @@ form#login .btn, form#signup .btn {
 .menu button {
     font-size: 1.2em !important;
     padding: 0.2em 2em;
-    margin-left: 1vh;
     min-width: fit-content !important;
     border-radius: 0.5em !important;
 }
@@ -684,4 +673,19 @@ thead tr th {
     margin-right: -10% !important;
     float: right !important;
     font-size: 2vmin !important;
+}
+
+#restaurant-div .card {
+    width: 90% !important;
+    padding: 1em !important;
+}
+
+#restaurant-div .card img {
+    height: 12vmin;
+    width: 12vmin;
+}
+
+#restaurant-div .rating {
+    font-size: 1em;
+    padding: 0.8em;
 }
