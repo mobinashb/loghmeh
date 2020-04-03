@@ -1,14 +1,33 @@
 import React from 'react';
-import {Header, Footer, Form, Panels} from './Utils'
+import {Header, Footer, Form} from './Utils'
 
+function Panels(props) {
+  return (
+    <div class="warpper">
+      <input class="radio" id="one" name="group" type="radio" defaultChecked={true}/>
+      <input class="radio" id="two" name="group" type="radio"/>
+      <div class="tabs">
+      <label class="tab" id="one-tab" htmlFor="one">ورود</label>
+      <label class="tab" id="two-tab" htmlFor="two">ثبت نام</label>
+      </div>
+      <div class="panels">
+          <div class="panel row-sm-5" id="one-panel">
+          <LoginForm/>
+          </div>
+          <div class="panel row-sm-5" id="two-panel">
+          <SignupForm/>
+          </div>
+      </div>
+    </div>
+  );
+}
 class LoginSignup extends React.Component {
   render() {
     return (
-      <body>
+      <div>
         <Header/>
-        <Panels name1="ورود" name2="ثبت نام" one={LoginForm} two={SignupForm} />
-        <Footer/>
-      </body>
+        <Panels/>
+      </div>
     );
   }
 }
@@ -20,6 +39,7 @@ class LoginForm extends Form {
       email: '',
       password: ''
     };
+    this.myChangeHandler = this.myChangeHandler.bind(this);
   }
   render() {
     return(
@@ -51,6 +71,7 @@ class SignupForm extends Form {
       phonenumber: '',
       password: ''
     };
+    this.myChangeHandler = this.myChangeHandler.bind(this);
   }
   mySubmitHandler = (event) => {
     let password = event.target.password;

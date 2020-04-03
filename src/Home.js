@@ -1,6 +1,7 @@
 import React from 'react';
 import {Header, Footer, toPersianTime} from './Utils'
 import FoodDetails from './FoodDetails'
+import CartBasedComponent from './CartBasedComponent';
 
 function Search() {
   return (
@@ -41,7 +42,7 @@ function RestaurantList(props) {
   return restaurantList;
 }
 
-class Home extends React.Component {
+class Home extends CartBasedComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -101,10 +102,11 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:8080/restaurants")
+    fetch("http://localhost:8080/v1/restaurants")
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result);
           this.setState({
             isLoaded: true,
             restaurants: result.restaurants,
