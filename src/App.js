@@ -5,6 +5,7 @@ import LoginSignup from './LoginSignup';
 import Profile from './Profile';
 import json from './test.json'
 import {Footer} from './Utils'
+import Restaurant from './Restaurant'
 
 class App extends React.Component {
   render() {
@@ -19,6 +20,7 @@ class App extends React.Component {
              orders={json.orders}
              cart={json.cart}
              />}/>
+             <Route path="/restaurant" component={Restaurant} exact/>
            </Switch>
         </div>
         <Footer/>

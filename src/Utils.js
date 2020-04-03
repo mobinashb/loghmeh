@@ -7,12 +7,12 @@ import './CSS/styles.css';
 
 function Header() {
   return (
-    <header class="row-sm-12">
-      <img src={cover} class="cover" alt="لقمه"/>
-      <div class="title-description">
-        <figure class="figure">
-          <img src={logo} class="figure-img" alt="لقمه"/>
-          <figcaption class="figure-caption">اولین و بزرگترین وب‌سایت سفارش آنلاین غذا در دانشگاه تهران</figcaption>
+    <header className="row-sm-12">
+      <img src={cover} className="cover" alt="لقمه"/>
+      <div className="title-description">
+        <figure className="figure">
+          <img src={logo} className="figure-img" alt="لقمه"/>
+          <figcaption className="figure-caption">اولین و بزرگترین وب‌سایت سفارش آنلاین غذا در دانشگاه تهران</figcaption>
         </figure>
       </div>
     </header>

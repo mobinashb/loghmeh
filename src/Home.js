@@ -2,16 +2,17 @@ import React from 'react';
 import {Header, Footer, toPersianTime} from './Utils'
 import FoodDetails from './FoodDetails'
 import CartBasedComponent from './CartBasedComponent';
+import Navbar from './Navbar'
 
 function Search() {
   return (
-    <div class="search centered-flex">
-      <form class="form-inline justify-content-center shadow-box" action="search">
-        <div class="form-group">
-          <input type="text" class="form-control bg-light" id="foodname" placeholder="نـــام غـــذا" />
-          <input type="text" class="form-control bg-light" id="restaurantname" placeholder="نـــام رســـتـــوران" />
+    <div className="search centered-flex">
+      <form className="form-inline justify-content-center shadow-box" action="search">
+        <div className="form-group">
+          <input type="text" className="form-control bg-light" id="foodname" placeholder="نـــام غـــذا" />
+          <input type="text" className="form-control bg-light" id="restaurantname" placeholder="نـــام رســـتـــوران" />
         </div>
-        <button type="submit" class="btn btn-default">جســـت‌و‌جـــو</button>
+        <button type="submit" className="btn btn-default">جســـت‌و‌جـــو</button>
       </form>
     </div>
   );
@@ -20,26 +21,33 @@ function Search() {
 function RestaurantList(props) {
   let restaurantList = [];
   let rowContent = [];
-  props.restaurants.forEach((item, i) =>{
-    if ((i+1) % 3 === 0) {
-      restaurantList.push(<div className="row">{rowContent}</div>);
+  props.restaurants.map((item, i) => {
+    if ((i % 4 === 0) && i !== 0) {
+      restaurantList.push(<div className="row" key={"row".concat(i)}>{rowContent}</div>);
       rowContent = [];
     }
-    else {
-      rowContent.push(
-        <div class="col-sm-3">
-          <div class="card shadow-box">
-              <img src={item.logo} alt={item.name}/>
-              <div class="food-title">
-                {item.name}
-              </div>
-              <button class="small-btn yellow-btn">نمایش منو</button>
-          </div>
-        </div>
-      )
-    }
+    rowContent.push(
+      <RestaurantCard item={item} key={item.id}/>
+    )
   })
+  restaurantList.push(<div className="row">{rowContent}</div>);
   return restaurantList;
+}
+
+function RestaurantCard(params) {
+  return (
+    <div className="col-sm-3">
+        <div className="card shadow-box">
+          <div className="card-body">
+            <img src={params.item.logo} alt={params.item.name}/>
+            <div className="restaurant-title">
+              {params.item.name}
+            </div>
+          </div>
+            <button className="small-btn yellow-btn">نمایش منو</button>
+        </div>
+      </div>
+  )
 }
 
 class Home extends CartBasedComponent {
@@ -49,33 +57,41 @@ class Home extends CartBasedComponent {
       error: null,
       isLoaded: false,
       restaurants: [],
-      foodPartyList: [],
+      partyRestaurants: [],
       timeLeft: 0
     };
   }
   render() {
-    const { error, isLoaded, restaurants, foodPartyList, timeLeft} = this.state;
+    const { error, isLoaded, restaurants, partyRestaurants, timeLeft} = this.state;
+    var foodPartyList = [];
+    partyRestaurants.map((restaurant) => {
+      restaurant.menu.map((food) => {
+        foodPartyList.push(food)
+      })
+    });
+    // return <p>{foodPartyList.length}</p>
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
       return (
-      <body>
+      <div>
+        <Navbar whereAmI="home" cartCount={0} func={this.handleShow}/>
         <Header/>
         <Search/>
-        <div class="menu">
-          <div class="title">
+        <div className="menu">
+          <div className="title">
             جشن غذا!
           </div>
-          <div class="centered-flex">
-            <div class="timer">
+          <div className="centered-flex">
+            <div className="timer">
               زمان باقی مانده: {toPersianTime(timeLeft)}
             </div>
           </div>
-          <div class="scrolling-wrapper shadow-box">
+          <div className="scrolling-wrapper shadow-box">
             {foodPartyList.map(item => (
-              <div>
+              <div key={item.restaurantId+'-'+item.name}>
                 <FoodDetails expand="false" />
                 <FoodDetails expand="true" name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
                 description={item.description}
@@ -89,14 +105,13 @@ class Home extends CartBasedComponent {
           ))}
           </div>
         </div>
-        <div class="menu container">
-          <div class="title">
+        <div className="menu container">
+          <div className="title">
             رستوران ها
           </div>
           <RestaurantList restaurants={restaurants}/>
         </div>
-        <Footer/>
-      </body>
+      </div>
     );
     }
   }
@@ -106,12 +121,28 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
             isLoaded: true,
-            restaurants: result.restaurants,
-            foodPartyList: result.foodparty,
-            timeLeft: result.time
+            restaurants: result
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error: error
+          });
+        }
+      )
+      fetch("http://localhost:8080/v1/partyRestaurants")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            partyRestaurants: result
           });
         },
         // Note: it's important to handle errors here

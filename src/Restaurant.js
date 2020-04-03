@@ -8,3 +8,5 @@ import CartBasedComponent from './CartBasedComponent';
 class Restaurant extends CartBasedComponent {
 
 }
+
+export default Restaurant;

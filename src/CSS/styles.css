@@ -58,13 +58,14 @@ div {
     transform: translate(-0.3em, 0.3em);
 }
 
-header {
+header{
     background:  #ff6b6b;
     color: white;
     position: relative;
     width: 100%;
     min-height: 14em;
     overflow: hidden;
+    margin-top: 1em;
 }
 
 .banner div {
@@ -304,6 +305,12 @@ footer {
     font-size: 1.5em;
 }
 
+.restaurant-title {
+    padding: 1em;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 .inline {
     display: inline-block;
 }
@@ -316,6 +323,7 @@ footer {
 
 .menu .card {
     /* width: 90%; */
+    height: 90%;
 }
 
 .menu .card h6 {
@@ -473,8 +481,9 @@ header .cover {
     opacity: 0.5;
     object-fit: cover;
     width: 100%;
-    max-height: 14em;
+    max-height: 17em;
     position: relative;
+    margin-top: 2em;
 }
 
 .title-description {
