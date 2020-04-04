@@ -127,7 +127,17 @@ public class Loghmeh {
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    public Cart getCart() { return users.get(0).getCart(); }
+    public String addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty){
+        Restaurant restaurant;
+        if(isParty == true)
+            restaurant = findRestaurantInPartyById(restaurantId);
+        else
+            restaurant = findRestaurantById(restaurantId);
+
+        if(restaurant.containFood(foodName))
+            return user.addToCart(foodName, number, restaurantId, isParty);
+        return "Restaurant doesn't contain food " + foodName;
+    }
 
     public boolean addAllToLoghmeh(String url, String inputType){
         String response = new HttpRequester().getRequest(url);

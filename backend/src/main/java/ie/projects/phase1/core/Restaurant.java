@@ -75,6 +75,14 @@ public class Restaurant
         menu = foodsMenu;
     }
 
+    public boolean containFood(String foodName){
+        for(Food food: this.getMenu()){
+            if(food.getName().equals(foodName))
+                return true;
+        }
+        return false;
+    }
+
     public double getFoodPrices(HashMap<String, Integer> orders){
         double totalPrice = 0;
         for(Map.Entry element: orders.entrySet())

@@ -20,18 +20,13 @@ public class CartHandler {
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String addOrder(@RequestBody CartRequest request) throws IOException {
-        return "{\"msg\": " + "\"" + loghmeh.getUsers().get(0).addToCart(request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty()) + "\"}";
+        return "{\"msg\": " + "\"" + loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty()) + "\"}";
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getcart() throws IOException{
         User user = loghmeh.getUsers().get(0);
         return mapper.writeValueAsString(user.getCart());
-    }
-
-    @RequestMapping(value = "/v1/cart", method = RequestMethod.PUT, produces = "text/plain;charset=UTF-8")
-    public String editCart(@RequestBody CartRequest request) throws IOException{
-        return "{\"msg\": " + "\"" + loghmeh.getUsers().get(0).getCart().editCart(request.getFoodName(), request.getNumber(), request.isParty()) + "\"}";
     }
 
 //    @RequestMapping(value = "/v1/cart", method = RequestMethod.DELETE)
