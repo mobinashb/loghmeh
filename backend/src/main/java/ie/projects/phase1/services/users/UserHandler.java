@@ -3,6 +3,7 @@ package ie.projects.phase1.services.users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.User;
+import ie.projects.phase1.exceptions.NegativeCreditAmount;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class UserHandler {
     }
 
     @RequestMapping(value = "/v1/credit", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String getRestaurant(@RequestBody AddCreditRequest request) throws IOException{
+    public String getRestaurant(@RequestBody AddCreditRequest request) throws IOException, NegativeCreditAmount {
         User user = loghmeh.getUsers().get(0);
         user.addCredit(request.getAmount());
         return mapper.writeValueAsString(user);

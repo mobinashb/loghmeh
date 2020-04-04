@@ -1,5 +1,8 @@
 package ie.projects.phase1.core;
 
+import ie.projects.phase1.exceptions.DifferentRestaurantsForCart;
+import ie.projects.phase1.exceptions.NegativeCreditAmount;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -55,7 +58,9 @@ public class User {
         return temp;
     }
 
-    public void addCredit(double amount){
+    public void addCredit(double amount) throws NegativeCreditAmount{
+        if(amount <= 0)
+            throw new NegativeCreditAmount("Amount of add credit should be positive");
         credit += amount;
     }
 
@@ -77,12 +82,14 @@ public class User {
         return null;
     }
 
-    public String addToCart(String foodName, int number, String restaurantId, Boolean isParty){
+    public void addToCart(String foodName, int number, String restaurantId, Boolean isParty) throws DifferentRestaurantsForCart {
         String cartResId = cart.getRestaurantId();
-        if((cartResId == null) || (cartResId.equals(restaurantId)))
-            return cart.addNewOrder(foodName, number, restaurantId, isParty);
+        if((cartResId == null) || (cartResId.equals(restaurantId))) {
+            cart.addNewOrder(foodName, number, restaurantId, isParty);
+            return;
+        }
 
-        return "You have ordered from another restaurant first";
+        throw new DifferentRestaurantsForCart("{\"msg\": " + "\"You have ordered from another restaurant first" + "\"}");
     }
 
     private String validateCart(){

@@ -3,6 +3,8 @@ package ie.projects.phase1.services.carts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.User;
+import ie.projects.phase1.exceptions.DifferentRestaurantsForCart;
+import ie.projects.phase1.exceptions.FoodNotInRestaurant;
 import ie.projects.phase1.services.repeatedTasks.CheckOrderStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,20 +21,17 @@ public class CartHandler {
 
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String addOrder(@RequestBody CartRequest request) throws IOException {
-        return "{\"msg\": " + "\"" + loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty()) + "\"}";
+    public String addOrder(@RequestBody CartRequest request) throws IOException, FoodNotInRestaurant, DifferentRestaurantsForCart, OrderBadNumber {
+        loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty());
+        return "{\"msg\": " + "\"" + "Your order saved successfully" + "\"}";
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    public String getcart() throws IOException{
+    public String getCart() throws IOException{
         User user = loghmeh.getUsers().get(0);
         return mapper.writeValueAsString(user.getCart());
     }
 
-//    @RequestMapping(value = "/v1/cart", method = RequestMethod.DELETE)
-//    public String editCart(@RequestBody CartRequest request) throws IOException{
-//        hnooz moonde
-//    }
     @RequestMapping(value = "/v1/cart/finalize", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String finalizeOrder(){
         User user = loghmeh.getUsers().get(0);

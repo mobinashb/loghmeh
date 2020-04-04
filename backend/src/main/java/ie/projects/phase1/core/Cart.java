@@ -63,30 +63,31 @@ public class Cart {
 
     public void setRemainingTimeToDeliver(double remainingTimeToDeliver) { this.remainingTimeToDeliver = remainingTimeToDeliver; }
 
-    public String addNewOrder(String foodName, int number, String restaurantId, boolean isParty) {
+    public void addNewOrder(String foodName, int number, String restaurantId, boolean isParty){
         if(isParty) {
-            if(number < 1){
-                if(this.partyOrders.containsKey(foodName)) {
+            if (this.partyOrders.containsKey(foodName)) {
+                int foodNum = this.partyOrders.get(foodName);
+                if (foodNum + number == 0)
                     this.partyOrders.remove(foodName);
-                    return "Order deleted";
-                }
                 else
-                    return "You should enter positive number";
+                    this.partyOrders.put(foodName, foodNum + number);
             }
-            this.partyOrders.put(foodName, number);
+            else
+                this.partyOrders.put(foodName, number);
         }
-        else
-            if(number < 1){
-                if(this.orders.containsKey(foodName)) {
+        else {
+            if (this.orders.containsKey(foodName)){
+                int foodNum = this.orders.get(foodName);
+                if(foodNum + number == 0)
                     this.orders.remove(foodName);
-                    return "Order deleted";
-                }
                 else
-                    return "You should enter positive number";
+                    this.orders.put(foodName, foodNum + number);
             }
-            this.orders.put(foodName, number);
+            else
+                this.orders.put(foodName, number);
+
+        }
         this.restaurantId = restaurantId;
-        return "Order added";
     }
 
     public void clearOrders(){

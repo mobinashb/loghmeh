@@ -1,7 +1,9 @@
 package ie.projects.phase1.core;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ie.projects.phase1.Utils;
 
 import java.util.ArrayList;
@@ -20,6 +22,15 @@ public class Restaurant
     private static final double FINDDELIVERYMANTIME = 60.0;
     private static final double AVGDDELIVERYMANVELOCITY = 5.0;
     private static final double DISTANCERATIO = 2;
+
+    @JsonCreator
+    public Restaurant(@JsonProperty("id") String id, @JsonProperty("name") String name, @JsonProperty("location") GeoLocation location, @JsonProperty("logo") String logo, @JsonProperty("menu")ArrayList<Food> menu){
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.logo = logo;
+        this.menu = menu;
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

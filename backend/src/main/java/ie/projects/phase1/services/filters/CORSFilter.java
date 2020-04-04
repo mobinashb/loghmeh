@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.corsFilter;
+package ie.projects.phase1.services.filters;
 
 import java.io.IOException;
 import javax.servlet.Filter;

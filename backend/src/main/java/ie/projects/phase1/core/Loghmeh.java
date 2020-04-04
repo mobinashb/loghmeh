@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.Utils;
+import ie.projects.phase1.exceptions.DifferentRestaurantsForCart;
+import ie.projects.phase1.exceptions.FoodNotInRestaurant;
 import ie.projects.phase1.requestSender.HttpRequester;
 
 
@@ -111,7 +113,7 @@ public class Loghmeh {
             Restaurant restaurant = mapper.readValue(jsonData, Restaurant.class);
             Restaurant foundedRestaurant = findRestaurantById(restaurant.getId());
             if(foundedRestaurant == null) {
-                Restaurant restaurant1 = restaurant;
+                Restaurant restaurant1 = new Restaurant(restaurant.getId(), restaurant.getName(), restaurant.getLocation(), restaurant.getLogo(), restaurant.getMenu());
                 restaurant1.convertPartyMenuToMenu(restaurant);
                 this.restaurants.add(restaurant1);
             }
@@ -127,16 +129,18 @@ public class Loghmeh {
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    public String addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty){
+    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty) throws FoodNotInRestaurant, DifferentRestaurantsForCart {
         Restaurant restaurant;
         if(isParty == true)
             restaurant = findRestaurantInPartyById(restaurantId);
         else
             restaurant = findRestaurantById(restaurantId);
 
-        if(restaurant.containFood(foodName))
-            return user.addToCart(foodName, number, restaurantId, isParty);
-        return "Restaurant doesn't contain food " + foodName;
+        if(restaurant.containFood(foodName)) {
+            user.addToCart(foodName, number, restaurantId, isParty);
+            return;
+        }
+        throw new FoodNotInRestaurant("{\"msg\": " + "\"Restaurant doesn't contain food " + foodName + "\"}");
     }
 
     public boolean addAllToLoghmeh(String url, String inputType){

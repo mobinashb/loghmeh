@@ -6,7 +6,7 @@
     <display-name>Loghmeh Spring</display-name>
     <filter>
         <filter-name>cors</filter-name>
-        <filter-class>ie.projects.phase1.services.corsFilter.CORSFilter</filter-class>
+        <filter-class>ie.projects.phase1.services.filters.CORSFilter</filter-class>
         <init-param>
             <param-name>requestEncoding</param-name>
             <param-value>UTF-8</param-value>
@@ -14,6 +14,10 @@
     </filter>
     <filter-mapping>
         <filter-name>cors</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>delay</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <servlet>
@@ -30,6 +34,5 @@
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
-        <page-encoding>UTF-8</page-encoding>
     </servlet-mapping>
 </web-app>
