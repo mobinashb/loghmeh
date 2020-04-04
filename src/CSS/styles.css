@@ -438,7 +438,7 @@ footer {
     padding: 0.2em 1em !important;
 }
 
-.menu .col-sm-4, .scrolling-wrapper .col-sm-2 {
+.menu .col-sm-4 {
     padding: 0.5em 0.1em !important;
 }
 
@@ -556,7 +556,24 @@ form#login .btn, form#signup .btn {
 .scrolling-wrapper .card {
     margin-left: 5vh;
     display: inline-block;
-    padding: 1em !important;
+    padding: 0% !important;
+    overflow: hidden;
+}
+
+.scrolling-wrapper .container-fluid {
+    width: 20%;
+}
+
+.scrolling-wrapper .col-sm-2:nth-child(2) {
+    margin-right: 3em;
+}
+
+.scrolling-wrapper .price-old-new {
+    margin-right: 25%;
+}
+
+.scrolling-wrapper .food-title {
+    font-size: 1.2em;
 }
 
 .scrolling-wrapper::-webkit-scrollbar {
@@ -605,6 +622,7 @@ form#login .btn, form#signup .btn {
     color: rgba(69, 69, 69, 0.694) !important;
     border: 0.1em solid rgba(94, 94, 94, 0.217);
     background: #F7FFF7 !important;
+    border-radius: 0.3em;
 }
 
 .striked-through {
@@ -655,9 +673,22 @@ thead tr th {
 }
 
 #foodDetails img {
-    width: 20vmin;
-    height: 20vmin;
+    width: 7rem;
+    height: 7rem;
     border-radius: 0.7em;
+}
+
+#foodDetails h3 {
+    text-align: center !important;
+}
+
+#foodDetails .col-sm-9 {
+    padding-right: 3rem !important;
+    text-align: right !important;
+}
+
+#foodDetails .food-title {
+    margin: 0 auto;
 }
 
 #foodDetails button {

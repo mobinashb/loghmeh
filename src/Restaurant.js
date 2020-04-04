@@ -17,6 +17,7 @@ function Menu(props) {
     rowContent.push(
       <FoodCard item={item} key={item.id}/>
     )
+    return item;
   })
   Menu.push(<div className="row">{rowContent}</div>);
   return Menu;
@@ -24,22 +25,22 @@ function Menu(props) {
 
 function FoodCard(params) {
   return (
-    <div class="col-sm-4">
-      <div class="card shadow-box">
-        <div class="card-body">
+    <div className="col-sm-4">
+      <div className="card shadow-box">
+        <div className="card-body">
           <img src={params.item.image} alt={params.item.name}/>
-          <div class="row">
-            <div class="food-title">
+          <div className="row">
+            <div className="food-title">
               {params.item.name}
             </div>
-            <span class="rating inline">
+            <span className="rating inline">
             {toPersianNum(params.item.popularity * 5)}
               <img src={star} alt=""/>
             </span>
           </div>
           <h6>{toPersianNum(params.item.price)} تومان</h6>
         </div>
-        <button class="small-btn yellow-btn">افزودن به سبد خرید</button>
+        <button className="small-btn yellow-btn">افزودن به سبد خرید</button>
       </div>
     </div>
   );
@@ -76,16 +77,16 @@ class Restaurant extends CartBasedComponent {
     return (
       <div>
         <Navbar whereAmI="restaurant" cartCount={0} func={this.handleShow}/>
-        <header class="container-fluid banner row-sm-12">
+        <header className="container-fluid banner row-sm-12">
         </header>
-        <div class="restaurant-logo centered-flex">
-            <figure class="figure">
-                <img src={logo} class="figure-img shadow-box" alt={name} />
-                <figcaption class="figure-caption">{name}</figcaption>
+        <div className="restaurant-logo centered-flex">
+            <figure className="figure">
+                <img src={logo} className="figure-img shadow-box" alt={name} />
+                <figcaption className="figure-caption">{name}</figcaption>
             </figure>
         </div>
-        <div class="row container-fluid" id="restaurant-div">
-          <div class="col-sm-3" id="cart">
+        <div className="row container-fluid" id="restaurant-div">
+          <div className="col-sm-3" id="cart">
             <div className="card shadow-box">
             {cartOrdersLen > 0 &&
             this.Cart
@@ -96,7 +97,7 @@ class Restaurant extends CartBasedComponent {
             </div>
           </div>
           <div className="menu col-sm-9 right-dashed-border">
-            <div class="title">منوی غذا</div>
+            <div className="title">منوی غذا</div>
             <Menu menu={menu} />
           </div>
         </div>

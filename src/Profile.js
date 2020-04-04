@@ -198,7 +198,6 @@ class Profile extends CartBasedComponent {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result.allOrders.length);
         this.setState({
           cart: {
             orders: result.cart.orders

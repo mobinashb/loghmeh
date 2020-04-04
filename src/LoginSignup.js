@@ -1,5 +1,5 @@
 import React from 'react';
-import {Header, Footer, Form} from './Utils'
+import {Header, Form} from './Utils'
 
 function Panels(props) {
   return (

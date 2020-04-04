@@ -8,8 +8,8 @@ class FoodDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rating: props.rating,
-      img: props.img,
+      popularity: props.popularity,
+      image: props.image,
       name: props.name,
       restaurantId: props.restaurantId,
       restaurantName: props.restaurantName,
@@ -17,40 +17,46 @@ class FoodDetails extends React.Component {
       oldPrice: props.oldPrice,
       count: props.count,
       orderQuantity: 0,
-      show: false
+      toShow: props.toShow,
+      description: props.description
     };
-    this.handleShow = this.handleShow.bind(this);
-    this.handleHide = this.handleHide.bind(this);
   }
 
-  handleShow() {
-    this.setState({show: true});
+  showDetails() {
+    this.setState({toShow: this.state.restaurantId.concat(this.state.name)})
+    this.props.showFunc(this.state.restaurantId.concat(this.state.name));
   }
 
-  handleHide() {
-    this.setState({show: false});
+  hideDetails() {
+    this.setState({toShow: null})
+    this.props.hideFunc();
   }
 
   render() {
-    if (this.props.expand === "false") return (
-      <div class="card shadow-box col-sm-2">
-        <div class="row">
-          <div class="col-sm-2">
-            <img src={this.state.img} alt={this.state.name}/>
+    const toShow = this.state.toShow;
+    const id = this.state.restaurantId.concat(this.state.name);
+    const littleCard = this.props.littleCard === "true";
+    return (
+      <div>
+      {littleCard &&
+      <div className="card-body">
+        <div className="row">
+          <div className="col-sm-2">
+            <img src={this.state.image} alt={this.state.name}/>
           </div>
-          <div class="col-sm-2">
-            <div class="food-title">
+          <div className="col-sm-2">
+            <div className="food-title">
               {this.state.name}
             </div>
-            <span class="rating inline">
-              ۴
+            <span className="rating inline">
+              {toPersianNum(this.state.popularity * 5)}
               <img src={star} alt=""/>
             </span>
           </div>
         </div>
-        <ul class="price-old-new">
+        <ul className="price-old-new">
           {this.state.oldPrice !== undefined &&
-          <li h6 class="striked-through">
+          <li className="striked-through">
             {toPersianNum(this.state.oldPrice)}
           </li>
           }
@@ -58,70 +64,74 @@ class FoodDetails extends React.Component {
             {toPersianNum(this.state.price)}
           </li>
         </ul>
-        <button disabled class="in-stock">
+        <button disabled className="in-stock">
           موجودی: {toPersianNum(this.state.count)}
         </button>
-        {this.state.count > 0 &&
-        <button class="cyan-btn" onClick={() => this.handleShow()}>خرید</button>
-        }
-        {this.state.count === 0 &&
-        <button disabled class="cyan-btn" onClick={() => this.handleShow()}>خرید</button>
-        }
-        <hr class="dashed-top"></hr>
+        &nbsp;&nbsp;&nbsp;
+        <button className="cyan-btn" onClick={this.showDetails.bind(this)} disabled={this.state.count <= 0}>خرید</button>
+        <hr className="dashed-top"></hr>
         {this.state.restaurantName}
-      </div>
-    )
-    else return (
-      <Modal className="modal fade" role="dialog"
-      show={this.state.show}
-      onHide={this.handleHide}>
-        <Modal.Body>
-          <h3>
-            {this.restaurantName}
-          </h3>
-          <div class="row">
-            <div class="col-sm-6">
-              <img src={this.state.img} alt={this.state.name} class="shadow-box"/>
-            </div>
-            <div class="col-sm-6">
-              <div class="food-title">
-                {this.state.name}
-                <span class="rating inline">
-                  {toPersianNum(this.state.rating)}
-                  <img src={star} alt=""/>
-                </span>
+        </div>
+        }
+        <Modal className="modal fade" role="dialog"
+          show={toShow === id}
+          onHide={this.hideDetails.bind(this)}>
+          <Modal.Body>
+          <div className="container-fluid card" id="foodDetails">
+            <h3>
+              {this.state.restaurantName}
+            </h3>
+            <div className="row-sm-12">
+              <div className="float-right col-sm-3">
+                <img src={this.state.image} alt={this.state.name} className="shadow-box"/>
               </div>
-              <p>
-                {this.state.description}
-              </p>
-              <ul class="price-old-new">
-                {this.state.oldPrice !== undefined &&
-                <li h6 class="striked-through">
-                  {toPersianNum(this.state.oldPrice)}
-                </li>
-                }
-                <li>
-                  {toPersianNum(this.state.price)} تومان
-                </li>
-              </ul>
+              <div className="float-left col-sm-9">
+                <div className="food-title">
+                  {this.state.name}
+                  <span className="rating inline">
+                    {toPersianNum(this.state.popularity * 5)}
+                    <img src={star} alt=""/>
+                  </span>
+                </div>
+                <p>
+                  {this.state.description}
+                </p>
+                <ul className="price-old-new">
+                  &nbsp;&nbsp;
+                  {this.state.oldPrice !== undefined &&
+                  <li className="striked-through">
+                    {toPersianNum(this.state.oldPrice)}
+                  </li>
+                  }
+                  <li>
+                    {toPersianNum(this.state.price)} تومان
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-          <hr class="dashed-top"></hr>
-          <div class="container">
-          {this.state.oldPrice !== undefined &&
-            <button disabled class="in-stock float-right">
+          <hr className="dashed-top"></hr>
+          <div className="container">
+          {this.state.oldPrice !== undefined && this.state.count > 0 &&
+            <button disabled className="in-stock float-right">
               موجودی: {toPersianNum(this.state.count)}
             </button>
+          }{this.state.oldPrice !== undefined && this.state.count <= 0 &&
+            <button disabled className="in-stock float-right">
+              ناموجود
+            </button>
           }
-            <button class="cyan-btn float-left">افزودن به سبد خرید</button>
-            <span class="plus-minus float-left">
-              <i class="flaticon-minus" onClick={this.changeOrderQuantity.bind(this, -1)}></i>
+            <button className="cyan-btn float-left" disabled={this.state.count <= 0}>افزودن به سبد خرید</button>
+            <span className="plus-minus float-left">
+              <i className="flaticon-minus" onClick={this.changeOrderQuantity.bind(this, -1)}></i>
+              &nbsp;&nbsp;
               {toPersianNum(this.state.orderQuantity)}
-              <i class="flaticon-plus" onClick={this.changeOrderQuantity.bind(this, +1)}></i>
+              <i className="flaticon-plus" onClick={this.changeOrderQuantity.bind(this, +1)}></i>
             </span>
           </div>
         </Modal.Body>
       </Modal>
+    </div>
     );
   }
 

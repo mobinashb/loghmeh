@@ -82,7 +82,7 @@ async function post(body, path) {
 }
 
 function getQueryParams(url, name) {
-  name = name.replace(/[\[\]]/g, '\\$&');
+  name = name.replace(/[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
         results = regex.exec(url);
     if (!results) return null;

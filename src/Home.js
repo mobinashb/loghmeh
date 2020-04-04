@@ -31,6 +31,7 @@ function RestaurantList(props) {
     rowContent.push(
       <RestaurantCard item={item} key={item.id}/>
     )
+    return item;
   })
   restaurantList.push(<div className="row">{rowContent}</div>);
   return restaurantList;
@@ -73,8 +74,11 @@ class Home extends CartBasedComponent {
     var foodPartyList = [];
     partyRestaurants.map((restaurant) => {
       restaurant.menu.map((food) => {
+        food.restaurantName = restaurant.name;
         foodPartyList.push(food)
+        return food;
       })
+      return restaurant;
     });
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -97,16 +101,17 @@ class Home extends CartBasedComponent {
           </div>
           <div className="scrolling-wrapper shadow-box">
             {foodPartyList.map(item => (
-              <div key={item.restaurantId+'-'+item.name}>
-                <FoodDetails expand="false" />
-                <FoodDetails expand="true" name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
+              <div className="card shadow-box container-fluid" key={item.restaurantId+'-'+item.name}>
+                <FoodDetails littleCard="true"
+                name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
                 description={item.description}
                 price={item.price}
-                rating={item.rating}
+                popularity={item.popularity}
                 count={item.count}
                 oldPrice={item.oldPrice}
-                img={item.img}
-                />
+                showFunc={this.handleShow}
+                hideFunc={this.handleHide}
+                image={item.image} />
               </div>
           ))}
           </div>
@@ -181,7 +186,6 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
             isLoaded: true,
             cart: result

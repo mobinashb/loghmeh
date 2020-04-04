@@ -9,8 +9,8 @@ class Navbar extends React.Component {
   render() {
     let profileNavlink = null;
     if (this.props.whereAmI !== "profile") {
-      profileNavlink = (<li class="nav-item">
-              <a class="nav-link" href="/profile">حساب کاربری</a>
+      profileNavlink = (<li className="nav-item">
+              <a className="nav-link" href="/profile">حساب کاربری</a>
               </li> );
     }
     return (
