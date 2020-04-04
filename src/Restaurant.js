@@ -1,51 +1,10 @@
 import React from 'react';
-import {toPersianNum, post, getQueryParams} from './Utils'
+import {getQueryParams} from './Utils'
 import PropTypes from 'prop-types';
 import Navbar from './Navbar'
 import Modal from "react-bootstrap/Modal";
 import CartBasedComponent from './CartBasedComponent';
-import star from './Assets/star.png';
-
-function Menu(props) {
-  let Menu = [];
-  let rowContent = [];
-  props.menu.map((item, i) => {
-    if ((i % 3 === 0) && i !== 0) {
-      Menu.push(<div className="row" key={"row".concat(i)}>{rowContent}</div>);
-      rowContent = [];
-    }
-    rowContent.push(
-      <FoodCard item={item} key={item.id}/>
-    )
-    return item;
-  })
-  Menu.push(<div className="row">{rowContent}</div>);
-  return Menu;
-}
-
-function FoodCard(params) {
-  return (
-    <div className="col-sm-4">
-      <div className="card shadow-box">
-        <div className="card-body">
-          <img src={params.item.image} alt={params.item.name}/>
-          <div className="row">
-            <div className="food-title">
-              {params.item.name}
-            </div>
-            <span className="rating inline">
-            {toPersianNum(params.item.popularity * 5)}
-              <img src={star} alt=""/>
-            </span>
-          </div>
-          <h6>{toPersianNum(params.item.price)} تومان</h6>
-        </div>
-        <button className="small-btn yellow-btn">افزودن به سبد خرید</button>
-      </div>
-    </div>
-  );
-}
-
+import FoodDetails from './FoodDetails'
 
 class Restaurant extends CartBasedComponent {
   constructor(props) {
@@ -53,13 +12,43 @@ class Restaurant extends CartBasedComponent {
     this.state = {
       error: null,
       isLoaded: false,
-      id: '',
+      id: null,
       menu: [],
       logo: '',
       name: '',
       cart: {},
       toShow: null
     };
+    this.handleShow = this.handleShow.bind(this);
+    this.handleHide = this.handleHide.bind(this);
+  }
+
+  Menu(menu) {
+    let Menu = [];
+    let rowContent = [];
+    menu.map((item, i) => {
+      if ((i % 3 === 0) && i !== 0) {
+        Menu.push(<div className="row" key={"row".concat(i)}>{rowContent}</div>);
+        rowContent = [];
+      }
+      rowContent.push(
+        <FoodDetails key={item.name}
+          whereAmI="menu"
+          name={item.name} restaurantName={this.state.name} restaurantId={this.state.id}
+          description={item.description}
+          price={item.price}
+          popularity={item.popularity}
+          count={item.count}
+          oldPrice={item.oldPrice}
+          showFunc={this.handleShow}
+          hideFunc={this.handleHide}
+          addToCart={this.addToCart}
+          image={item.image} />
+      )
+      return item;
+    })
+    Menu.push(<div className="row" key={"lastRow"}>{rowContent}</div>);
+    return Menu;
   }
 
   render() {
@@ -98,7 +87,7 @@ class Restaurant extends CartBasedComponent {
           </div>
           <div className="menu col-sm-9 right-dashed-border">
             <div className="title">منوی غذا</div>
-            <Menu menu={menu} />
+            {this.Menu(menu)}
           </div>
         </div>
         <Modal className="modal fade" role="dialog"
@@ -130,7 +119,8 @@ class Restaurant extends CartBasedComponent {
             isLoaded: true,
             menu: result.menu,
             name: result.name,
-            logo: result.logo
+            logo: result.logo,
+            id: result.id
           });
         },
         // Note: it's important to handle errors here

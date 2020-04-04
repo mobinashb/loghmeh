@@ -125,8 +125,6 @@ class Profile extends CartBasedComponent {
   }
 
   render() {
-    //
-
     const {firstname,
     lastname,
     email,
@@ -151,7 +149,6 @@ class Profile extends CartBasedComponent {
       <div>
         <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow}/>
         <Banner firstname={firstname} lastname={lastname} email={email} phonenumber={toPersianNum(phonenumber)} credit={credit}/>
-        {/* <Panels name1="سفارش ها" name2="افزایش اعتبار" one={this.OrderList} two={CreditForm} /> */}
         <div className="warpper">
           <input className="radio" id="one" name="group" type="radio" defaultChecked={true}/>
           <input className="radio" id="two" name="group" type="radio"/>

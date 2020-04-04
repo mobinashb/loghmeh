@@ -1,5 +1,6 @@
 import React from 'react';
 import {post, toPersianNum} from './Utils';
+import swal from 'sweetalert';
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class CartBasedComponent extends React.Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleHide = this.handleHide.bind(this);
     this.changeCart = this.changeCart.bind(this);
+    this.addToCart = this.addToCart.bind(this);
   }
 
   handleShow(id) {
@@ -28,11 +30,11 @@ class CartBasedComponent extends React.Component {
     return sum
   }
 
-  changeCart(i, num) {
+  changeCart(name, num) {
     let changedItem = null;
     this.setState(state => {
-      const list = state.cart.orders.map((item, j) => {
-        if (j === i) {
+      const list = state.cart.orders.map((item) => {
+        if (item.name === name) {
           if (item.count === 0 && num === -1) return item.count;
           changedItem = item;
           changedItem.count = item.count + num;
@@ -46,7 +48,13 @@ class CartBasedComponent extends React.Component {
       };
     });
     console.log(changedItem);
-    post(changedItem, 'http://localhost:8080/v1/cart');
+    var food = {
+      foodName: changedItem.name,
+      number: num,
+      restaurantId: this.state.cart.restaurantId,
+      // isParty: (changedItem.oldPrice !== undefined) ? 1 : 0
+    }
+    post(food, 'http://localhost:8080/v1/cart');
   }
 
   getFoodCount(name) {
@@ -54,6 +62,26 @@ class CartBasedComponent extends React.Component {
       return element.name === name;
     });
     return food.count;
+  }
+
+  addToCart(food) {
+    var curRestaurant = this.state.cart.restaurantId;
+    if (curRestaurant !== null && curRestaurant !== food.restaurantId) {
+      swal({
+        title: "خطا",
+        text: "شما قبلا از رستوران دیگری سفارش داده اید!",
+        icon: "warning",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      })
+      return;
+    }
+    post(food, "http://localhost:8080/v1/cart");
   }
 
   Cart(props) {

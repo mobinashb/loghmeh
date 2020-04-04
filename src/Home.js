@@ -33,7 +33,7 @@ function RestaurantList(props) {
     )
     return item;
   })
-  restaurantList.push(<div className="row">{rowContent}</div>);
+  restaurantList.push(<div className="row" key="lastRow">{rowContent}</div>);
   return restaurantList;
 }
 
@@ -41,16 +41,16 @@ function RestaurantCard(params) {
   var url = "restaurant?id=".concat(params.item.id);
   return (
     <div className="col-sm-3">
-        <div className="card shadow-box">
-          <div className="card-body">
-            <img src={params.item.logo} alt={params.item.name}/>
-            <div className="restaurant-title">
-              {params.item.name}
-            </div>
+      <div className="card shadow-box">
+        <div className="card-body">
+          <img src={params.item.logo} alt={params.item.name}/>
+          <div className="restaurant-title">
+            {params.item.name}
           </div>
-          <Link to={url} className="btn yellow-btn">نمایش منو</Link>
         </div>
+        <Link to={url} className="btn yellow-btn">نمایش منو</Link>
       </div>
+    </div>
   )
 }
 
@@ -102,7 +102,7 @@ class Home extends CartBasedComponent {
           <div className="scrolling-wrapper shadow-box">
             {foodPartyList.map(item => (
               <div className="card shadow-box container-fluid" key={item.restaurantId+'-'+item.name}>
-                <FoodDetails littleCard="true"
+                <FoodDetails whereAmI="foodparty"
                 name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
                 description={item.description}
                 price={item.price}
@@ -111,6 +111,7 @@ class Home extends CartBasedComponent {
                 oldPrice={item.oldPrice}
                 showFunc={this.handleShow}
                 hideFunc={this.handleHide}
+                addToCart={this.addToCart}
                 image={item.image} />
               </div>
           ))}
@@ -135,6 +136,15 @@ class Home extends CartBasedComponent {
                 <h1>سبد خرید شما خالی است</h1>
               }
               </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+        <Modal className="modal fade" role="dialog"
+        show={toShow === "error"}
+        onHide={this.handleHide}>
+          <Modal.Body>
+            <div className="container">
+              اروررر
             </div>
           </Modal.Body>
         </Modal>

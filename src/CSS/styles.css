@@ -4,7 +4,7 @@
 
 body {
     background-color: #F7FFF7 !important;
-    font-size: 1vw !important;
+    font-size: calc(12px + 0.1vw) !important;
 }
 
 div {
@@ -15,6 +15,10 @@ div {
     box-sizing: border-box;
     direction: rtl;
     font-family: Vazir;
+}
+
+p {
+    font-weight: lighter;
 }
 
 .logo {
@@ -184,10 +188,6 @@ h1, h2 {
     padding-bottom: 1em;
 }
 
-button {
-    font-size: 1em !important;
-}
-
 .cyan-btn {
     background-color: #4ECDC4 !important;
     border-radius: 0.3em !important;
@@ -272,11 +272,10 @@ footer {
     height: 5em;
     width: 5em;
     border-radius: 0.5em;
-    margin-right: 0.5em;
 }
 
 .shadow-box {
-    box-shadow: 0.01em 0.01em 0.4em 0.01em #00000034;
+    box-shadow: 0.01em 0.01em 0.4em 0.01em #00000063;
 }
 
 .card {
@@ -297,8 +296,9 @@ footer {
 }
 
 .rating img {
-    width: 1em !important;
-    height: 1em !important;
+    width: 0.9em !important;
+    height: 0.9em !important;
+    margin: 0em 0.1em !important;
 }
 
 .food-title {
@@ -396,7 +396,7 @@ footer {
 
 .plus-minus {
     float: left;
-    font-size: 1em;
+    font-size: 1.5em;
 }
 
 .plus-minus i.flaticon-plus {
@@ -639,7 +639,7 @@ form#login .btn, form#signup .btn {
     padding-right: 0%;
 }
 
-.price-old-new li:nth-child(2) {
+.price-old-new .new-price {
     display: inline;
     margin-right: 4vh;
     color: black;
@@ -672,18 +672,24 @@ thead tr th {
     width: 80%;
 }
 
+.modal .card {
+    padding: 0em !important;
+}
+
 #foodDetails img {
     width: 7rem;
     height: 7rem;
-    border-radius: 0.7em;
+    border-radius: 0.3em;
+    margin-top: 0.7em;
 }
 
 #foodDetails h3 {
     text-align: center !important;
+    padding-bottom: 0.3em;
 }
 
-#foodDetails .col-sm-9 {
-    padding-right: 3rem !important;
+#foodDetails .col-sm-10 {
+    padding-right: 4.7em !important;
     text-align: right !important;
 }
 
@@ -693,17 +699,6 @@ thead tr th {
 
 #foodDetails button {
     font-size: 0.8rem !important;
-}
-
-.col-sm-2 .col-sm-2:nth-child(2) {
-    margin-right: 3em !important;
-}
-
-#foodDetails .col-sm-6:nth-child(2){
-    text-align: right !important;
-    margin-right: -10% !important;
-    float: right !important;
-    font-size: 2vmin !important;
 }
 
 #restaurant-div .card {
@@ -719,4 +714,12 @@ thead tr th {
 #restaurant-div .rating {
     font-size: 1em;
     padding: 0.8em;
+}
+
+.swal-overlay {
+    background-color: #ff6b6b53;
+}
+
+.swal-footer {
+    text-align: center;
 }
