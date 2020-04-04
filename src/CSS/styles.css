@@ -22,8 +22,8 @@ p {
 }
 
 .logo {
-    width: 1.7em;
-    height: 1.7em;
+    width: 1.6em;
+    height: 1.6em;
 }
 
 .navbar-expand-sm {
@@ -33,7 +33,7 @@ p {
 .navbar-nav {
     padding-top: 0.1em;
     padding-left: 2em;
-    font-size: 2vh;
+    font-size: 1.1em;
 }
 
 .navbar-nav li a {
@@ -515,6 +515,10 @@ form#login .btn, form#signup .btn {
     position: relative;
     padding: 2vh 1vh;
     margin-bottom: 5vh;
+}
+
+.scrolling-wrapper .card {
+    width: 20em;
 }
 
 .centered-flex {

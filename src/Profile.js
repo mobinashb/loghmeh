@@ -5,6 +5,8 @@ import Navbar from './Navbar'
 import Modal from "react-bootstrap/Modal";
 import CreditForm from './CreditForm'
 import CartBasedComponent from './CartBasedComponent'
+import ClipLoader from 'react-spinners/ClipLoader';
+import LoadingOverlay from 'react-loading-overlay'
 
 function Banner(props) {
   let name = props.firstname + ' ' + props.lastname;
@@ -146,7 +148,13 @@ class Profile extends CartBasedComponent {
     } else {
       // return <div>{cartOrdersLen}</div>;
     return (
-      <div>
+      <LoadingOverlay
+        active={!isLoaded}
+        spinner={<ClipLoader
+          size={40}
+          color={"#ff6b6b"}
+          loading={!this.state.isLoaded}
+        />}>
         <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow}/>
         <Banner firstname={firstname} lastname={lastname} email={email} phonenumber={toPersianNum(phonenumber)} credit={credit}/>
         <div className="warpper">
@@ -185,7 +193,7 @@ class Profile extends CartBasedComponent {
             </div>
           </Modal.Body>
         </Modal>
-      </div>
+      </LoadingOverlay>
     );
     }
   }
@@ -205,6 +213,7 @@ class Profile extends CartBasedComponent {
           phonenumber: result.phoneNumber,
           credit: result.credit,
           orders: result.allOrders,
+          isLoaded: true
         });
       },
       // Note: it's important to handle errors here

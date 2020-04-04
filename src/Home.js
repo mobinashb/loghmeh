@@ -5,6 +5,8 @@ import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
 import Modal from "react-bootstrap/Modal";
+import ClipLoader from "react-spinners/ClipLoader";
+import LoadingOverlay from 'react-loading-overlay'
 
 function Search() {
   return (
@@ -82,11 +84,16 @@ class Home extends CartBasedComponent {
     });
     if (error) {
       return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
+
     } else {
       return (
-      <div>
+        <LoadingOverlay
+        active={!isLoaded}
+        spinner={<ClipLoader
+          size={40}
+          color={"#ff6b6b"}
+          loading={!this.state.isLoaded}
+        />}>
         <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow}/>
         <Header/>
         <Search/>
@@ -101,7 +108,7 @@ class Home extends CartBasedComponent {
           </div>
           <div className="scrolling-wrapper shadow-box">
             {foodPartyList.map(item => (
-              <div className="card shadow-box container-fluid" key={item.restaurantId+'-'+item.name}>
+              <div className="card shadow-box" key={item.restaurantId+'-'+item.name}>
                 <FoodDetails whereAmI="foodparty"
                 name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
                 description={item.description}
@@ -148,7 +155,7 @@ class Home extends CartBasedComponent {
             </div>
           </Modal.Body>
         </Modal>
-      </div>
+      </LoadingOverlay>
     );
     }
   }
@@ -158,8 +165,8 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result);
           this.setState({
-            isLoaded: true,
             restaurants: result
           });
         },
@@ -168,7 +175,6 @@ class Home extends CartBasedComponent {
         // exceptions from actual bugs in components.
         (error) => {
           this.setState({
-            isLoaded: true,
             error: error
           });
         }
@@ -177,8 +183,8 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result);
           this.setState({
-            isLoaded: true,
             partyRestaurants: result
           });
         },
@@ -196,6 +202,7 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result);
           this.setState({
             isLoaded: true,
             cart: result

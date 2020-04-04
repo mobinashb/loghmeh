@@ -5,6 +5,8 @@ import Navbar from './Navbar'
 import Modal from "react-bootstrap/Modal";
 import CartBasedComponent from './CartBasedComponent';
 import FoodDetails from './FoodDetails'
+import ClipLoader from 'react-spinners/ClipLoader';
+import LoadingOverlay from 'react-loading-overlay'
 
 class Restaurant extends CartBasedComponent {
   constructor(props) {
@@ -64,7 +66,13 @@ class Restaurant extends CartBasedComponent {
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length
     return (
-      <div>
+      <LoadingOverlay
+        active={!isLoaded}
+        spinner={<ClipLoader
+          size={40}
+          color={"#ff6b6b"}
+          loading={!this.state.isLoaded}
+        />}>
         <Navbar whereAmI="restaurant" cartCount={0} func={this.handleShow}/>
         <header className="container-fluid banner row-sm-12">
         </header>
@@ -106,7 +114,7 @@ class Restaurant extends CartBasedComponent {
             </div>
           </Modal.Body>
         </Modal>
-      </div>
+      </LoadingOverlay>
     );
   }
 
