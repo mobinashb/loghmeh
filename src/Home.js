@@ -5,8 +5,9 @@ import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
 import Modal from "react-bootstrap/Modal";
-import ClipLoader from "react-spinners/ClipLoader";
-import LoadingOverlay from 'react-loading-overlay'
+import ClipLoader from 'react-spinners/ClipLoader';
+import LoadingOverlay from 'react-loading-overlay';
+import Error from './Error';
 
 function Search() {
   return (
@@ -83,8 +84,7 @@ class Home extends CartBasedComponent {
       return restaurant;
     });
     if (error) {
-      return <div>Error: {error.message}</div>;
-
+      return <Error code={500} />
     } else {
       return (
         <LoadingOverlay
@@ -146,51 +146,20 @@ class Home extends CartBasedComponent {
             </div>
           </Modal.Body>
         </Modal>
-        <Modal className="modal fade" role="dialog"
-        show={toShow === "error"}
-        onHide={this.handleHide}>
-          <Modal.Body>
-            <div className="container">
-              اروررر
-            </div>
-          </Modal.Body>
-        </Modal>
       </LoadingOverlay>
     );
     }
   }
 
-  componentDidMount() {
-    fetch("http://localhost:8080/v1/restaurants")
+  fetchFoodParty() {
+    fetch("http://localhost:8080/v1/partyRestaurants")
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
-          this.setState({
-            restaurants: result
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            error: error
-          });
-        }
-      )
-      fetch("http://localhost:8080/v1/partyRestaurants")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result);
           this.setState({
             partyRestaurants: result
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             isLoaded: true,
@@ -198,26 +167,29 @@ class Home extends CartBasedComponent {
           });
         }
       )
-      fetch("http://localhost:8080/v1/cart")
+  }
+
+  fetchRestaurants() {
+    fetch("http://localhost:8080/v1/restaurants")
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
-            isLoaded: true,
-            cart: result
+            restaurants: result
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
-            isLoaded: true,
             error: error
           });
         }
       )
+  }
+
+  componentDidMount() {
+    this.fetchRestaurants();
+    this.fetchFoodParty();
+    this.fetchCart();
   }
 }
 

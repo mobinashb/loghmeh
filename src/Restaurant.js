@@ -6,7 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import CartBasedComponent from './CartBasedComponent';
 import FoodDetails from './FoodDetails'
 import ClipLoader from 'react-spinners/ClipLoader';
-import LoadingOverlay from 'react-loading-overlay'
+import LoadingOverlay from 'react-loading-overlay';
+import Error from './Error';
 
 class Restaurant extends CartBasedComponent {
   constructor(props) {
@@ -56,7 +57,6 @@ class Restaurant extends CartBasedComponent {
   render() {
     const {error,
     isLoaded,
-    id,
     menu,
     logo,
     name,
@@ -65,7 +65,10 @@ class Restaurant extends CartBasedComponent {
     var cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length
-    return (
+    if (error) {
+      return <Error code={500} />
+    } else {
+      return (
       <LoadingOverlay
         active={!isLoaded}
         spinner={<ClipLoader
@@ -83,17 +86,15 @@ class Restaurant extends CartBasedComponent {
             </figure>
         </div>
         <div className="row container-fluid" id="restaurant-div">
-          <div className="col-sm-3" id="cart">
+          <div className="col-sm-4" id="cart">
             <div className="card shadow-box">
-            {cartOrdersLen > 0 &&
-            this.Cart
-            }
-            {
-              <h1>سبد خرید شما خالی است</h1>
+            {cartOrdersLen > 0
+            ? this.Cart(cart)
+            : <h1>سبد خرید شما خالی است</h1>
             }
             </div>
           </div>
-          <div className="menu col-sm-9 right-dashed-border">
+          <div className="menu col-sm-8 right-dashed-border">
             <div className="title">منوی غذا</div>
             {this.Menu(menu)}
           </div>
@@ -104,11 +105,9 @@ class Restaurant extends CartBasedComponent {
           <Modal.Body>
             <div id="cart">
               <div className="card">
-              {cartOrdersLen > 0 &&
-              this.Cart
-              }
-              {
-                <h1>سبد خرید شما خالی است</h1>
+              {cartOrdersLen > 0
+              ? this.Cart(cart)
+              : <h1>سبد خرید شما خالی است</h1>
               }
               </div>
             </div>
@@ -116,9 +115,10 @@ class Restaurant extends CartBasedComponent {
         </Modal>
       </LoadingOverlay>
     );
+    }
   }
 
-  componentDidMount() {
+  fetchRestaurant() {
     fetch("http://localhost:8080/v1/restaurants/".concat(getQueryParams(this.props.location.search, 'id')))
       .then(res => res.json())
       .then(
@@ -131,9 +131,6 @@ class Restaurant extends CartBasedComponent {
             id: result.id
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             isLoaded: true,
@@ -141,27 +138,11 @@ class Restaurant extends CartBasedComponent {
           });
         }
       )
-      fetch("http://localhost:8080/v1/cart")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result);
-          this.setState({
-            isLoaded: true,
-            cart: result
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error: error
-          });
-        }
-      )
+  }
 
+  componentDidMount() {
+    this.fetchRestaurant();
+    this.fetchCart();
   }
 }
 

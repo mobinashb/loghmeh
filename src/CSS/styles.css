@@ -323,7 +323,7 @@ footer {
 }
 
 .menu .card {
-    height: 90%;
+    height: 24em;
 }
 
 .menu .card h6 {
@@ -346,7 +346,8 @@ footer {
 }
 
 #restaurant-div {
-    padding: 2em 4em 10em 2em;
+    padding: 1em 4em 10em 2em;
+    margin-bottom: 2em;
 }
 
 .menu .title {
@@ -359,25 +360,37 @@ footer {
     padding-left: 0.8em;
 }
 
-#restaurant-div #cart {
+#cart {
     padding-top: 5.5em;
     padding-left: 0%;
+    text-align: center;
+}
+
+#cart .plus-minus {
+    font-size: 1em;
+    padding-right: 1em;
+}
+
+.modal #cart {
+    padding-top: 0%;
+}
+
+.modal #cart .title {
+    font-size: 2em;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    padding-top: 0%;
 }
 
 #restaurant-div #cart .title {
-    font-size: 1.4em;
+    font-size: 1.8em;
     color: rgb(0, 0, 0);
     font-weight: bold;
     border-bottom: 0.08em solid rgba(66, 66, 66, 0.36);
     display: inline-block;
     padding-right: 0.8em;
     padding-left: 0.8em;
-}
-
-#cart .card-body {
-    width: 100%;
-    padding-top: 1em;
-    text-align: center;
+    margin-bottom: 1em;
 }
 
 .dashed-div {
@@ -389,9 +402,13 @@ footer {
     font-size: 1.5em;
 }
 
-.dashed-div div {
-    border-bottom: 0.08em solid rgba(54, 54, 54, 0.442);
+#cart div {
     padding-top: 0.4em;
+}
+
+.bottom-bordered {
+    padding-bottom: 1em;
+    border-bottom: 0.08em solid rgba(54, 54, 54, 0.442);
 }
 
 .plus-minus {
@@ -417,12 +434,12 @@ footer {
     font-size: 0.7em;
     font-weight: 100;
     text-align: left;
-    padding-left: 1.2em;
 }
 
-#cart .card-body .sum {
+#cart .sum {
     font-size: 1.5em;
     padding-top: 0.6em;
+    padding-bottom: 0.6em;
 }
 
 .sum p {
@@ -467,7 +484,7 @@ footer {
     padding-top: 0.5em;
 }
 
-header .cover {
+.cover {
     opacity: 0.5;
     object-fit: cover;
     width: 100%;
@@ -487,7 +504,7 @@ header .cover {
     align-items: center;
 }
 
-.title-description figcaption {
+.shadowed-text {
     text-shadow: 0px 2px 2px rgba(0,0,0,0.4),
     0px 8px 10px rgba(0,0,0,0.1),
     0px 5px 23px rgba(0,0,0,0.1);
@@ -721,9 +738,36 @@ thead tr th {
 }
 
 .swal-overlay {
-    background-color: #ff6b6b53;
+    background-color: #ff6b6b3d;
 }
 
 .swal-footer {
     text-align: center;
+}
+
+.error-text {
+    z-index: 2;
+    font-size: 2em;
+    color: #000000;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.599);
+    border-radius: 0.2em;
+    padding: 2em;
+    width: 20em;
+}
+
+.error-text div, .error-text img {
+    padding: 0.5em;
+}
+
+.error-page {
+    height: fit-content;
+    margin-top: -2em;
+}
+
+.error-page .cover {
+    max-height: 100%;
+    opacity: 100%;
+    filter: blur(0.6rem);
+    -webkit-filter: blur(0.6rem);
 }

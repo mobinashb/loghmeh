@@ -88,8 +88,8 @@ class FoodDetails extends React.Component {
                   <img src={star} alt=""/>
                 </span>
               </div>
-              <h6>{toPersianNum(this.state.price)} تومان</h6>
             </div>
+            <h6>{toPersianNum(this.state.price)} تومان</h6>
             <button className="small-btn yellow-btn" onClick={this.showDetails.bind(this)}>افزودن به سبد خرید</button>
           </div>
         </React.Fragment>
@@ -170,9 +170,11 @@ class FoodDetails extends React.Component {
       foodName: this.state.name,
       number: this.state.orderQuantity,
       restaurantId: this.state.restaurantId,
-      isParty: (this.state.oldPrice !== undefined) ? 1 : 0
+      isParty: (this.state.oldPrice !== undefined) ? 1 : 0,
+      price: this.state.price
     }
     this.props.addToCart(food);
+    this.hideDetails();
   }
 }
 

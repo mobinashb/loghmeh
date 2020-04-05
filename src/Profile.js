@@ -6,7 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import CreditForm from './CreditForm'
 import CartBasedComponent from './CartBasedComponent'
 import ClipLoader from 'react-spinners/ClipLoader';
-import LoadingOverlay from 'react-loading-overlay'
+import LoadingOverlay from 'react-loading-overlay';
+import Error from './Error';
 
 function Banner(props) {
   let name = props.firstname + ' ' + props.lastname;
@@ -144,9 +145,8 @@ class Profile extends CartBasedComponent {
     if (orders !== undefined && orders !== null && orders.length > 0)
       ordersLen = orders.length
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <Error code={500} />
     } else {
-      // return <div>{cartOrdersLen}</div>;
     return (
       <LoadingOverlay
         active={!isLoaded}
@@ -166,10 +166,9 @@ class Profile extends CartBasedComponent {
           </div>
           <div className="panels">
               <div className="panel row-sm-5" id="one-panel">
-              {ordersLen > 0 &&
-              this.OrderList}
-              {
-                <h1>سفارشی ثبت نشده است</h1>
+              {ordersLen > 0
+              ? this.OrderList
+              : <h1>سفارشی ثبت نشده است</h1>
               }
               </div>
               <div className="panel row-sm-5" id="two-panel">
@@ -183,11 +182,9 @@ class Profile extends CartBasedComponent {
           <Modal.Body>
             <div id="cart">
               <div className="card">
-              {cartOrdersLen > 0 &&
-              this.Cart
-              }
-              {
-                <h1>سبد خرید شما خالی است</h1>
+              {cartOrdersLen > 0
+              ? <this.Cart cart={cart}/>
+              : <h1>سبد خرید شما خالی است</h1>
               }
               </div>
             </div>
@@ -198,7 +195,7 @@ class Profile extends CartBasedComponent {
     }
   }
 
-  componentDidMount() {
+  fetchProfile() {
     fetch("http://localhost:8080/v1/profile")
     .then(res => res.json())
     .then(
@@ -216,9 +213,6 @@ class Profile extends CartBasedComponent {
           isLoaded: true
         });
       },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
       (error) => {
         this.setState({
           isLoaded: true,
@@ -226,6 +220,10 @@ class Profile extends CartBasedComponent {
         });
       }
     )
+  }
+
+  componentDidMount() {
+    this.fetchProfile();
   }
 }
 

@@ -12,7 +12,7 @@ function Header() {
       <div className="title-description">
         <figure className="figure">
           <img src={logo} className="figure-img" alt="لقمه"/>
-          <figcaption className="figure-caption">اولین و بزرگترین وب‌سایت سفارش آنلاین غذا در دانشگاه تهران</figcaption>
+          <figcaption className="figure-caption shadowed-text">اولین و بزرگترین وب‌سایت سفارش آنلاین غذا در دانشگاه تهران</figcaption>
         </figure>
       </div>
     </header>
@@ -72,8 +72,18 @@ function toPersianTime(seconds) {
 }
 
 async function post(body, path) {
-  const response = await fetch(path, {
+  await fetch(path, {
     method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+}
+
+async function put(body, path) {
+  await fetch(path, {
+    method: 'PUT',
     body: JSON.stringify(body),
     headers: {
       "Content-type": "application/json; charset=UTF-8"
@@ -97,5 +107,6 @@ export {
     toPersianNum,
     toPersianTime,
     post,
+    put,
     getQueryParams
 }
