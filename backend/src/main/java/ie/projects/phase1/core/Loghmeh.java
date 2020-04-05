@@ -7,6 +7,7 @@ import ie.projects.phase1.Utils;
 import ie.projects.phase1.exceptions.CartValidationException;
 import ie.projects.phase1.exceptions.RestaurantNotFound;
 import ie.projects.phase1.requestSender.HttpRequester;
+import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
 
 
 import java.io.IOException;
@@ -128,20 +129,20 @@ public class Loghmeh {
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty) throws CartValidationException, RestaurantNotFound {
+    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException, RestaurantNotFound {
         Restaurant restaurant;
         if(isParty == true)
             restaurant = findRestaurantInPartyById(restaurantId);
         else
             restaurant = findRestaurantById(restaurantId);
         if(restaurant == null)
-            throw new RestaurantNotFound("msg\": " + "\"Restaurant with id " + restaurantId + " doesn't exist\"}");
+            throw new RestaurantNotFound(new JSONStringCreator().errorMsgCreator("Restaurant with id " + restaurantId + " doesn't exist"));
 
         if(restaurant.containFood(foodName)) {
-            user.addToCart(foodName, number, restaurantId, isParty);
+            user.addToCart(foodName, number, restaurantId, isParty, isNew);
             return;
         }
-        throw new CartValidationException("{\"msg\": " + "\"Restaurant doesn't contain food " + foodName + "\"}");
+        throw new CartValidationException(new JSONStringCreator().errorMsgCreator("Restaurant doesn't contain food " + foodName));
     }
 
     public boolean addAllToLoghmeh(String url, String inputType){

@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.repeatedTasks;
+package ie.projects.phase1.server.repeatedTasks;
 
 import ie.projects.phase1.core.Loghmeh;
 

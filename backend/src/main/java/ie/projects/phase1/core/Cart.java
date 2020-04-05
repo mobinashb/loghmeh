@@ -3,6 +3,7 @@ package ie.projects.phase1.core;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ie.projects.phase1.exceptions.CartValidationException;
+import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -64,9 +65,9 @@ public class Cart {
 
     public void setRemainingTimeToDeliver(double remainingTimeToDeliver) { this.remainingTimeToDeliver = remainingTimeToDeliver; }
 
-    public void addNewOrder(String foodName, int number, String restaurantId, boolean isParty) throws CartValidationException{
+    public void addToCart(String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException{
         if(number == 0)
-            throw new CartValidationException("{\"msg\": " + "\"You should enter another value" + "\"}");
+            throw new CartValidationException(new JSONStringCreator().errorMsgCreator("You should enter another value"));
         if(isParty) {
             if (this.partyOrders.containsKey(foodName)) {
                 int foodNum = this.partyOrders.get(foodName);
@@ -75,8 +76,12 @@ public class Cart {
                 else
                     this.partyOrders.put(foodName, foodNum + number);
             }
-            else
-                this.partyOrders.put(foodName, number);
+            else {
+                if(isNew == false)
+                    throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in your cart. You can't edit it"));
+                else
+                    this.partyOrders.put(foodName, number);
+            }
         }
         else {
             if (this.orders.containsKey(foodName)){
@@ -86,8 +91,12 @@ public class Cart {
                 else
                     this.orders.put(foodName, foodNum + number);
             }
-            else
-                this.orders.put(foodName, number);
+            else{
+                if(isNew)
+                    throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in your cart. You can't edit it"));
+                else
+                    this.orders.put(foodName, number);
+            }
 
         }
         this.restaurantId = restaurantId;

@@ -2,6 +2,7 @@ package ie.projects.phase1.core;
 
 import ie.projects.phase1.exceptions.CartValidationException;
 import ie.projects.phase1.exceptions.NegativeCreditAmount;
+import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +18,7 @@ public class User {
     private ArrayList<Cart> orders;
     private ArrayList<Cart> undeliveredOrders;
     private Cart cart;
-    private int orderId;
+    private int cartId;
 
     private static final String ORDERDONE = "just has been finalized";
     private static final String DELIVERYMANFINDING = "finding delivery";
@@ -35,7 +36,7 @@ public class User {
         this.undeliveredOrders = new ArrayList<Cart>();
         this.cart = new Cart();
         this.location = new GeoLocation(0, 0);
-        orderId = 0;
+        cartId = 0;
     }
 
     public String getId() { return id; }
@@ -60,13 +61,13 @@ public class User {
 
     public void addCredit(double amount) throws NegativeCreditAmount{
         if(amount <= 0)
-            throw new NegativeCreditAmount("Amount of add credit should be positive");
+            throw new NegativeCreditAmount(new JSONStringCreator().errorMsgCreator("Amount of add credit should be positive"));
         credit += amount;
     }
 
     public Cart getCart() { return cart; }
 
-    public Cart findOrderById(String cartId){
+    public Cart findCartById(String cartId){
         for(Cart cart : this.orders){
             if(cart != null){
                 if(Integer.toString(cart.getId()).equals((cartId)))
@@ -82,27 +83,28 @@ public class User {
         return null;
     }
 
-    public void addToCart(String foodName, int number, String restaurantId, Boolean isParty) throws CartValidationException {
+    public void addToCart(String foodName, int number, String restaurantId, Boolean isParty, boolean isNew) throws CartValidationException {
         String cartResId = cart.getRestaurantId();
         if((cartResId == null) || (cartResId.equals(restaurantId))) {
-            cart.addNewOrder(foodName, number, restaurantId, isParty);
+            cart.addToCart(foodName, number, restaurantId, isParty, isNew);
             return;
         }
+        throw new CartValidationException(new JSONStringCreator().errorMsgCreator("You have ordered from another restaurant first"));
+    }
 
-        throw new CartValidationException("{\"msg\": " + "\"You have ordered from another restaurant first" + "\"}");
+    public void deleteCart(){
+        cart.clearOrders();
     }
 
     private boolean validateCart() throws CartValidationException {
         Restaurant restaurant;
-        if(cart.getRestaurantId() == null) {
-            throw new CartValidationException("{\"msg\": " + "\"Your cart's restaurant name isn't registered\"}");
-        }
+        if(cart.getRestaurantId() == null)
+            throw new CartValidationException(new JSONStringCreator().errorMsgCreator("Your cart's restaurant name isn't registered"));
 
         restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
         if(restaurant != null){
-            if (!restaurant.checkPartyFoodNum(cart.getPartyOrders())){
-                throw new CartValidationException("{\"msg\": " + "\"This food isn't in party anymore\"}");
-            }
+            if (!restaurant.checkPartyFoodNum(cart.getPartyOrders()))
+                throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in party anymore"));
         }
         return true;
     }
@@ -125,8 +127,8 @@ public class User {
     private void doOrder(double totalPrice){
         credit = credit - totalPrice;
         if(cart.getRestaurantId() != null)
-            cart.setId(this.orderId);
-        this.orderId++;
+            cart.setId(this.cartId);
+        this.cartId++;
         cart.setOrderStatus(ORDERDONE);
     }
 
@@ -149,7 +151,7 @@ public class User {
             cart.clearOrders();
         }
         else
-            throw new CartValidationException("{\"msg\": " + "\"You don't have enough credit\"}");
+            throw new CartValidationException(new JSONStringCreator().errorMsgCreator("You don't have enough credit"));
 
     }
 

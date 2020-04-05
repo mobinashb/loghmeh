@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.filters;
+package ie.projects.phase1.server.filters;
 
 import java.io.IOException;
 import javax.servlet.Filter;

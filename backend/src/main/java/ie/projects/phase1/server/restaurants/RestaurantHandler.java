@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.restaurants;
+package ie.projects.phase1.server.restaurants;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -9,7 +9,8 @@ import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.Restaurant;
 import ie.projects.phase1.exceptions.NoRestaurantsAround;
 import ie.projects.phase1.exceptions.RestaurantNotFound;
-import ie.projects.phase1.services.repeatedTasks.UpdatePartyRestaurants;
+import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
+import ie.projects.phase1.server.repeatedTasks.UpdatePartyRestaurants;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +39,7 @@ public class RestaurantHandler {
         ObjectWriter writer = mapper.writer(filter);
         ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInArea();
         if(restaurants.size() == 0)
-            throw new NoRestaurantsAround("{\"msg\": " + "\"There isn't any restaurant around you\"}");
+            throw new NoRestaurantsAround(new JSONStringCreator().errorMsgCreator("There isn't any restaurant around you"));
         return writer.writeValueAsString(restaurants);
     }
 
@@ -50,7 +51,7 @@ public class RestaurantHandler {
         ObjectWriter writer = mapper.writer(filter);
         Restaurant restaurant = loghmeh.findRestaurantById(restaurantId);
         if(restaurant == null){
-            throw new RestaurantNotFound("{\"msg\": " + "\"There isn't any restaurant with id " + restaurantId + "\"}");
+            throw new RestaurantNotFound(new JSONStringCreator().errorMsgCreator("There isn't any restaurant with id " + restaurantId));
         }
         return writer.writeValueAsString(loghmeh.findRestaurantById(restaurantId));
     }
@@ -63,7 +64,7 @@ public class RestaurantHandler {
         ObjectWriter writer = mapper.writer(filter);
         ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInParty();
         if(restaurants.size() == 0)
-            throw new NoRestaurantsAround("{\"msg\": " + "\"There isn't any party food around you\"}");
+            throw new NoRestaurantsAround(new JSONStringCreator().errorMsgCreator("There isn't any party food around you"));
         return writer.writeValueAsString(restaurants);
     }
 }

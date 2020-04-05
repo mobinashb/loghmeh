@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.carts;
+package ie.projects.phase1.server.carts;
 
 public class CartRequest {
     private String foodName;

@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.users;
+package ie.projects.phase1.server.users;
 
 import ie.projects.phase1.exceptions.NegativeCreditAmount;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package ie.projects.phase1.services.restaurants;
+package ie.projects.phase1.server.restaurants;
 
 import ie.projects.phase1.exceptions.NoRestaurantsAround;
 import ie.projects.phase1.exceptions.RestaurantNotFound;
