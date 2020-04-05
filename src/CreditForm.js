@@ -1,5 +1,5 @@
 import React from 'react';
-import {post, Form} from './Utils'
+import {POST, Form} from './Utils'
 
 class CreditForm extends Form {
   constructor(props) {
@@ -12,11 +12,13 @@ class CreditForm extends Form {
     this.mySubmitHandler = this.mySubmitHandler.bind(this);
   }
 
-  mySubmitHandler(event) {
+  async mySubmitHandler(event) {
     event.preventDefault();
-    console.log(JSON.stringify(this.state));
-    post(this.state, 'http://localhost:8080/v1/credit');
-    this.state.update(this.state.amount);
+    let response = POST(this.state, 'http://localhost:8080/v1/credit');
+    const res = await response;
+    if (res.ok) {
+      this.state.update(this.state.amount);
+    }
   }
 
   render() {

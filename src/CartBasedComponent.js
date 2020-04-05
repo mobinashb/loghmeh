@@ -1,5 +1,5 @@
 import React from 'react';
-import {post, put, toPersianNum} from './Utils';
+import {POST, PUT, DELETE, toPersianNum} from './Utils';
 import swal from 'sweetalert';
 
 class CartBasedComponent extends React.Component {
@@ -13,7 +13,6 @@ class CartBasedComponent extends React.Component {
     }
     this.handleShow = this.handleShow.bind(this);
     this.handleHide = this.handleHide.bind(this);
-    // this.changeCart = this.changeCart.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.finalizeOrder = this.finalizeOrder.bind(this);
   }
@@ -34,48 +33,53 @@ class CartBasedComponent extends React.Component {
   }
 
   async changeCart(name, num) {
-    if (this.getFoodCount(name) === 0 && num === -1) return;
-    // this.setState(this.state.cart.orders.reduce( (current, item) => {
-    //   if (item.foodName === name) {
-    //     item.number = item.number + num;
-    //   }
-    //   current.push( item );
-    //   return current;
-    // }, [] ) );
-    // if (this.getFoodCount(name) === 0) {
-    //   const orders = this.state.cart.orders.filter(item => item.foodName !== name);
-    //   this.setState({
-    //     cart: {
-    //       orders: orders
-    //     }});
-    // }
-    // if (this.state.cart.orders.length === 0) {
-    //   this.setState({
-    //     cart: {
-    //       restaurantId : null,
-    //       name: null
-    //     }});
-    // }
-    var food = {
+    const id = this.state.cart.restaurantId;
+    const food = {
       foodName: name,
       number: num,
-      restaurantId: this.state.cart.restaurantId,
+      restaurantId: id,
     };
-    put(food, 'http://localhost:8080/v1/cart');
-    while (!this.state.isLoaded);
-    this.fetchCart();
+    let response = PUT(food, 'http://localhost:8080/v1/cart');
+    const res = await response;
+    if (res.ok) {
+      var cartNew = JSON.parse(JSON.stringify(this.state.cart));
+      if (this.getFoodCount(name) === 0 && num === -1) return;
+      this.setState(this.state.cart.orders.reduce( (current, item) => {
+        if (item.foodName === name) {
+          item.number = item.number + num;
+        }
+        current.push( item );
+        return current;
+      }, [] ) );
+      if (this.getFoodCount(name) === 0) {
+        const orders = this.state.cart.orders.filter(item => item.foodName !== name);
+        cartNew.orders = orders;
+        if (this.state.cart.orders.length === 0) {
+          cartNew.restaurantId = null;
+          cartNew.name = null;
+          // DELETE("", "http://localhost:8080/v1/cart");
+        }
+        this.setState({
+          cart: cartNew
+        });
+      }
+    }
+
   }
 
   getFoodCount(name) {
     let food = this.state.cart.orders.find((element) => {
       return element.foodName === name;
     });
+    if (food === null || food === undefined) return 0;
     return food.number;
   }
 
-  addToCart(food) {
-    var curRestaurant = this.state.cart.restaurantId;
-    if (curRestaurant !== null && curRestaurant !== food.restaurantId) {
+  async addToCart(food) {
+    const curRestaurant = this.state.cart.restaurantId;
+    var cartNew = JSON.parse(JSON.stringify(this.state.cart));
+    cartNew.orders = cartNew.orders.concat(food);
+    if ((curRestaurant !== null) && (curRestaurant !== food.restaurantId)) {
       swal({
         title: "خطا",
         text: "شما قبلا از رستوران دیگری سفارش داده اید!",
@@ -90,33 +94,74 @@ class CartBasedComponent extends React.Component {
       })
       return;
     }
-    post(food, "http://localhost:8080/v1/cart");
-    this.fetchCart();
+    let response = POST(food, "http://localhost:8080/v1/cart");
+    const res = await response;
+    if (res.ok) {
+      let count = this.getFoodCount(food.foodName);
+      if (count !== 0) {
+        this.changeCart(food.foodName, food.number);
+        return;
+      }
+      this.setState({
+        cart: cartNew
+      })
+    }
   }
 
-  finalizeOrder() {
-    post("", "http://localhost:8080/v1/finalize");
-    this.fetchCart();
+  async finalizeOrder() {
+    let response = POST("", "http://localhost:8080/v1/cart/finalize");
+    const res = await response;
+    if (res.ok) {
+      this.setState({
+        cart: {
+          restaurantId: null,
+          name: null
+        }
+      })
+      if (this.constructor.name === "Profile") {
+        this.fetchOrders();
+      }
+    }
+    else {
+      swal({
+        title: "خطا",
+        text: "اعتبار شما کافی نیست!",
+        icon: "warning",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      })
+    }
+    this.handleHide();
   }
 
-  Cart(cart) {
+  Cart() {
+    const cart = this.state.cart;
     return (
-    <div>
+    <div className="container">
       <div className="title">
           سبد خرید
       </div>
       <div >
         <div className="dashed-div">
           {cart.orders.map((food) => (
-          <div key={food.foodName} className="bottom-bordered">
-            {food.foodName}
-            <span className="plus-minus float-left">
-              <i className="flaticon-minus" onClick={this.changeCart.bind(this, food.foodName, -1)}></i>
-              &nbsp;&nbsp;
-              {toPersianNum(this.getFoodCount(food.foodName))}
-              <i className="flaticon-plus" onClick={this.changeCart.bind(this, food.foodName, +1)}></i>
-            </span>
-            <div className="price">{toPersianNum(food.price * this.getFoodCount(food.foodName))} تومان</div>
+          <div key={food.foodName} className="bottom-bordered flexcontainer">
+            <div className="row">
+              <span className="float-right">
+              {food.foodName}
+              </span>
+              <span className="plus-minus float-left">
+                <i className="flaticon-minus" onClick={this.changeCart.bind(this, food.foodName, -1)}></i>
+                &nbsp;&nbsp;
+                {toPersianNum(this.getFoodCount(food.foodName))}
+                <i className="flaticon-plus" onClick={this.changeCart.bind(this, food.foodName, +1)}></i>
+              </span>
+            </div>
+            <p className="price float-left">{toPersianNum(food.price * this.getFoodCount(food.foodName))} تومان</p>
           </div>
         ))}
         </div>
@@ -147,6 +192,24 @@ class CartBasedComponent extends React.Component {
           });
         }
       )
+  }
+
+  fetchOrders() {
+    fetch("http://localhost:8080/v1/orders/")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({
+          orders: result
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error: error
+        });
+      }
+    )
   }
 }
 

@@ -71,24 +71,37 @@ function toPersianTime(seconds) {
   return res;
 }
 
-async function post(body, path) {
-  await fetch(path, {
+async function POST(body, path) {
+  let response = await fetch(path, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
       "Content-type": "application/json; charset=UTF-8"
     }
   });
+  return response;
 }
 
-async function put(body, path) {
-  await fetch(path, {
+async function PUT(body, path) {
+  let response = await fetch(path, {
     method: 'PUT',
     body: JSON.stringify(body),
     headers: {
       "Content-type": "application/json; charset=UTF-8"
     }
   });
+  return response;
+}
+
+async function DELETE(body, path) {
+  let response = await fetch(path, {
+    method: 'DELETE',
+    body: JSON.stringify(body),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+  return response;
 }
 
 function getQueryParams(url, name) {
@@ -106,7 +119,8 @@ export {
     Form,
     toPersianNum,
     toPersianTime,
-    post,
-    put,
+    POST,
+    PUT,
+    DELETE,
     getQueryParams
 }

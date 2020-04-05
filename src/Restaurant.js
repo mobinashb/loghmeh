@@ -89,12 +89,12 @@ class Restaurant extends CartBasedComponent {
           <div className="col-sm-4" id="cart">
             <div className="card shadow-box">
             {cartOrdersLen > 0
-            ? this.Cart(cart)
+            ? this.Cart()
             : <h1>سبد خرید شما خالی است</h1>
             }
             </div>
           </div>
-          <div className="menu col-sm-8 right-dashed-border">
+          <div className="menu col-sm-8 right-dashed-border container">
             <div className="title">منوی غذا</div>
             {this.Menu(menu)}
           </div>
@@ -106,7 +106,7 @@ class Restaurant extends CartBasedComponent {
             <div id="cart">
               <div className="card">
               {cartOrdersLen > 0
-              ? this.Cart(cart)
+              ? this.Cart()
               : <h1>سبد خرید شما خالی است</h1>
               }
               </div>

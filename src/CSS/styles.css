@@ -322,8 +322,15 @@ footer {
     font-weight: 100;
 }
 
-.menu .card {
-    height: 24em;
+#restaurants .card {
+    min-height: 90%;
+    max-height: 90%;
+}
+
+#restaurant-div .menu .card {
+    height: 22em;
+    min-height: calc(20em + 8vmin);
+    padding: 1em !important;
 }
 
 .menu .card h6 {
@@ -346,8 +353,8 @@ footer {
 }
 
 #restaurant-div {
-    padding: 1em 4em 10em 2em;
-    margin-bottom: 2em;
+    padding: 1em 1em 0em 1em;
+    margin-bottom: 1em;
 }
 
 .menu .title {
@@ -419,7 +426,7 @@ footer {
 .plus-minus i.flaticon-plus {
     color: #1A535C;
     font-weight: 100;
-    padding-left: 0;
+    padding: 0% !important;
     text-align: left;
     display: inline;
 }
@@ -434,7 +441,13 @@ footer {
     font-size: 0.7em;
     font-weight: 100;
     text-align: left;
+    align-items: left;
 }
+
+.flexcontainer {
+    display: flex;
+    flex-direction: column;
+ }
 
 #cart .sum {
     font-size: 1.5em;
@@ -728,8 +741,8 @@ thead tr th {
 }
 
 #restaurant-div .card img {
-    height: 12vmin;
-    width: 12vmin;
+    height: 6em;
+    width: 6em;
 }
 
 #restaurant-div .rating {

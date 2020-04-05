@@ -124,7 +124,7 @@ class Home extends CartBasedComponent {
           ))}
           </div>
         </div>
-        <div className="menu container">
+        <div className="menu container" id="restaurants">
           <div className="title">
             رستوران ها
           </div>
@@ -136,10 +136,9 @@ class Home extends CartBasedComponent {
           <Modal.Body>
             <div id="cart">
               <div className="card">
-              {cartOrdersLen > 0 &&
-              this.Cart
-              }
-              {
+              {cartOrdersLen > 0
+              ? this.Cart(cart)
+              :
                 <h1>سبد خرید شما خالی است</h1>
               }
               </div>

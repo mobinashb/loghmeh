@@ -54,16 +54,19 @@ class Profile extends CartBasedComponent {
       toShow: null,
       cart: {},
       error: null,
-      isLoaded: false
+      isLoaded: false,
+      orderToShow: null
     }
     this.handleShow = this.handleShow.bind(this);
     this.handleHide = this.handleHide.bind(this);
     this.updateCredit = this.updateCredit.bind(this);
+    this.showOrder = this.showOrder.bind(this);
   }
 
   OrderList() {
     return (
-      this.state.orders.map((order, i) => (
+      <div>
+      {this.state.orders.map((order, i) => (
         <div className="row" key={order.id}>
           <div className="col-1 col-bordered bg-light">
             {toPersianNum(i+1)}
@@ -72,54 +75,71 @@ class Profile extends CartBasedComponent {
             {order.restaurantName}
           </div>
           <div className="col-4 col-bordered bg-light">
-            {order.status === "delivering" &&
+            {order.orderStatus === "delivering" &&
               <button disabled className="green-btn small-btn">پیک در مسیر</button>
             }
-            {order.status === "finding delivery" &&
+            {order.orderStatus === "finding delivery" &&
               <button disabled className="blue-btn small-btn">در جست‌و‌جوی پیک</button>
             }
-            {order.status === "delivered" &&
-              <button className="yellow-btn small-btn" onClick={() => this.handleShow(order.id)}>مشاهده فاکتور</button>
+            {order.orderStatus === "delivered" &&
+              <button className="yellow-btn small-btn" onClick={() => this.showOrder(order.id)}>مشاهده فاکتور</button>
             }
           </div>
-          <Modal className="modal fade" role="dialog"
-           show={this.state.toShow === order.id}
-           onHide={this.handleHide}>
-            <Modal.Body>
-              <h2>
-                {order.restaurantName}
-              </h2>
-              <hr className="thin"></hr>
-              <div className="table-responsive bg-white">
-                <table className="table table-bordered table-small">
-                  <thead className="thead-light">
-                    <tr>
-                      <th scope="col" className="text-center">ردیف</th>
-                      <th scope="col" className="text-center">نام غذا</th>
-                      <th scope="col" className="text-center">تعداد</th>
-                      <th scope="col" className="text-center">قیمت</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {order.orders.map((food, i) => (
-                    <tr key={food.name}>
-                      <th scope="row" className="text-center">{toPersianNum(i+1)}</th>
-                      <td className="text-center">{food.name}</td>
-                      <td className="text-center">{toPersianNum(food.count)}</td>
-                      <td className="text-center">{toPersianNum(food.price)}</td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </table>
-                <p className="bold">
-                  جمع کل: {toPersianNum(this.getSum(order.orders))} تومان
-                </p>
-              </div>
-            </Modal.Body>
-          </Modal>
+            {this.OrderDetails(order.id)}
         </div>
-      ))
+      ))}
+    </div>
     );
+  }
+
+  showOrder(id) {
+    this.fetchOrder(id);
+    this.handleShow(id);
+  }
+
+  OrderDetails(id) {
+    const toShow = this.state.toShow;
+    const order = this.state.orderToShow;
+    if (order === null || order.id !== id) return<div></div>;
+    if (toShow === id)
+    return (
+      <Modal className="modal fade" role="dialog"
+        show={toShow === id}
+        onHide={this.handleHide}>
+        <Modal.Body>
+          <h2>
+            {order.restaurantName}
+          </h2>
+          <hr className="thin"></hr>
+          <div className="table-responsive bg-white">
+            <table className="table table-bordered table-small">
+              <thead className="thead-light">
+                <tr>
+                  <th scope="col" className="text-center">ردیف</th>
+                  <th scope="col" className="text-center">نام غذا</th>
+                  <th scope="col" className="text-center">تعداد</th>
+                  <th scope="col" className="text-center">قیمت</th>
+                </tr>
+              </thead>
+              <tbody>
+              {order.orders.map((food, i) => (
+                <tr key={food.foodName}>
+                  <th scope="row" className="text-center">{toPersianNum(i+1)}</th>
+                  <td className="text-center">{food.foodName}</td>
+                  <td className="text-center">{toPersianNum(food.number)}</td>
+                  <td className="text-center">{toPersianNum(food.price)}</td>
+                </tr>
+              ))}
+              </tbody>
+            </table>
+            <p className="bold">
+              جمع کل: {toPersianNum(this.getSum(order.orders))} تومان
+            </p>
+          </div>
+        </Modal.Body>
+      </Modal>
+    );
+    else return;
   }
 
   updateCredit(amount) {
@@ -167,7 +187,7 @@ class Profile extends CartBasedComponent {
           <div className="panels">
               <div className="panel row-sm-5" id="one-panel">
               {ordersLen > 0
-              ? this.OrderList
+              ? this.OrderList()
               : <h1>سفارشی ثبت نشده است</h1>
               }
               </div>
@@ -183,7 +203,7 @@ class Profile extends CartBasedComponent {
             <div id="cart">
               <div className="card">
               {cartOrdersLen > 0
-              ? <this.Cart cart={cart}/>
+              ? this.Cart()
               : <h1>سبد خرید شما خالی است</h1>
               }
               </div>
@@ -201,16 +221,30 @@ class Profile extends CartBasedComponent {
     .then(
       (result) => {
         this.setState({
-          cart: {
-            orders: result.cart.orders
-          },
           firstname: result.firstName,
           lastname: result.lastName,
           email: result.email,
           phonenumber: result.phoneNumber,
           credit: result.credit,
-          orders: result.allOrders,
           isLoaded: true
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error: error
+        });
+      }
+    )
+  }
+
+  fetchOrder(id) {
+    fetch("http://localhost:8080/v1/orders/".concat(id))
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({
+          orderToShow: result
         });
       },
       (error) => {
@@ -224,6 +258,8 @@ class Profile extends CartBasedComponent {
 
   componentDidMount() {
     this.fetchProfile();
+    this.fetchCart();
+    this.fetchOrders();
   }
 }
 
