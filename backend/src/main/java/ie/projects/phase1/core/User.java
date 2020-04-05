@@ -1,6 +1,6 @@
 package ie.projects.phase1.core;
 
-import ie.projects.phase1.exceptions.DifferentRestaurantsForCart;
+import ie.projects.phase1.exceptions.CartValidationException;
 import ie.projects.phase1.exceptions.NegativeCreditAmount;
 
 import java.util.ArrayList;
@@ -82,27 +82,29 @@ public class User {
         return null;
     }
 
-    public void addToCart(String foodName, int number, String restaurantId, Boolean isParty) throws DifferentRestaurantsForCart {
+    public void addToCart(String foodName, int number, String restaurantId, Boolean isParty) throws CartValidationException {
         String cartResId = cart.getRestaurantId();
         if((cartResId == null) || (cartResId.equals(restaurantId))) {
             cart.addNewOrder(foodName, number, restaurantId, isParty);
             return;
         }
 
-        throw new DifferentRestaurantsForCart("{\"msg\": " + "\"You have ordered from another restaurant first" + "\"}");
+        throw new CartValidationException("{\"msg\": " + "\"You have ordered from another restaurant first" + "\"}");
     }
 
-    private String validateCart(){
+    private boolean validateCart() throws CartValidationException {
         Restaurant restaurant;
-        if(cart.getRestaurantId() == null)
-            return "Your cart's restaurant name isn't registered";
+        if(cart.getRestaurantId() == null) {
+            throw new CartValidationException("{\"msg\": " + "\"Your cart's restaurant name isn't registered\"}");
+        }
 
         restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
         if(restaurant != null){
-            if (!restaurant.checkPartyFoodNum(cart.getPartyOrders()))
-                return "This food isn't in party anymore";
+            if (!restaurant.checkPartyFoodNum(cart.getPartyOrders())){
+                throw new CartValidationException("{\"msg\": " + "\"This food isn't in party anymore\"}");
+            }
         }
-        return "";
+        return true;
     }
 
     private double checkUserCredit(){
@@ -128,31 +130,27 @@ public class User {
         cart.setOrderStatus(ORDERDONE);
     }
 
-    public String finalizeOrder() {
-        if (cart.getOrderStatus() == null) {
-            String cartValidation = validateCart();
-            if (cartValidation == "") {
-                double price = checkUserCredit();
-                if (price > 0) {
-                    doOrder(price);
-                    if (cart.getPartyOrders().isEmpty() == false){
-                        Restaurant restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
-                        restaurant.setPartyFoodNum(cart.getPartyOrders());
-                    }
-                    cart.setOrderStatus(DELIVERYMANFINDING);
-
-                    Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
-                    this.undeliveredOrders.add(newCart);
-                    cart.clearOrders();
-                    return "";
-                }
-                else
-                    return "You don't have enough credit";
+    public void finalizeOrder() throws CartValidationException{
+        if (cart.getOrderStatus() != null)
+            return;
+        if (validateCart() == false)
+            return;
+        double price = checkUserCredit();
+        if (price > 0) {
+            doOrder(price);
+            if (cart.getPartyOrders().isEmpty() == false){
+                Restaurant restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
+                restaurant.setPartyFoodNum(cart.getPartyOrders());
             }
-            else
-                return cartValidation;
+            cart.setOrderStatus(DELIVERYMANFINDING);
+
+            Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
+            this.undeliveredOrders.add(newCart);
+            cart.clearOrders();
         }
-        return "There isn't order to finalize";
+        else
+            throw new CartValidationException("{\"msg\": " + "\"You don't have enough credit\"}");
+
     }
 
     public void checkStates(){
@@ -163,18 +161,18 @@ public class User {
         }
     }
 
-    private boolean orderState(Cart cart, Iterator cartItr){
+    private void orderState(Cart cart, Iterator cartItr){
         if(cart.getOrderStatus() == DELIVERYMANFINDING){
             Loghmeh loghmeh = Loghmeh.getInstance();
             if(!loghmeh.addAllToLoghmeh("http://138.197.181.131:8080/deliveries", "deliveryMan"))
-                return false;
+                return;
             else {
                 Restaurant restaurant = loghmeh.findRestaurantById(cart.getRestaurantId());
                 DeliveryMan deliveryMan = loghmeh.selectBestDeliveryMan(restaurant, location);
 
                 if(deliveryMan == null) {
                     System.out.println("There isn't any delivery service available now");
-                    return false;
+                    return;
                 }
 
                 cart.setOrderStatus(DELIVERYMANCOMING);
@@ -182,7 +180,7 @@ public class User {
                 cart.setDeliveryManId(deliveryMan.getId());
                 cart.setDeliveryManTimeToReach(deliveryMan.calcReceiveToUserTime(restaurant.getLocation(), restaurant.getDistance(location.getx(), location.gety())));
                 cart.setDeliveryManFoundedTime(System.currentTimeMillis());
-                return true;
+                return;
             }
         }
         else if(cart.getOrderStatus() == DELIVERYMANCOMING) {
@@ -195,6 +193,6 @@ public class User {
             orders.add(newCart);
             cartItr.remove();
         }
-        return false;
+        return;
     }
 }

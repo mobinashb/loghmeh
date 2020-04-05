@@ -18,10 +18,6 @@ public class Restaurant
     private GeoLocation location;
     private String logo;
     private ArrayList<Food> menu;
-    private int estimatedDeliverTime;
-    private static final double FINDDELIVERYMANTIME = 60.0;
-    private static final double AVGDDELIVERYMANVELOCITY = 5.0;
-    private static final double DISTANCERATIO = 2;
 
     @JsonCreator
     public Restaurant(@JsonProperty("id") String id, @JsonProperty("name") String name, @JsonProperty("location") GeoLocation location, @JsonProperty("logo") String logo, @JsonProperty("menu")ArrayList<Food> menu){
@@ -43,8 +39,6 @@ public class Restaurant
     public String getLogo() { return logo; }
 
     public ArrayList<Food> getMenu() { return menu; }
-
-    public int getEstimatedDeliverTime() { return estimatedDeliverTime; }
 
     public void addFood(Food food){
         this.menu.add(food);
@@ -117,13 +111,6 @@ public class Restaurant
             int availableNum = findFood(foodName).getCount();
             findFood(foodName).setCount(availableNum - number);
         }
-    }
-
-    public void calculateEstimatedDeliveryTime(GeoLocation userLocation){
-        double time = location.distanceCalculator(userLocation.getx(), userLocation.gety()) / AVGDDELIVERYMANVELOCITY;
-        time += time / DISTANCERATIO;
-        time += FINDDELIVERYMANTIME;
-        this.estimatedDeliverTime = (int) time;
     }
 
     public void convertPartyMenuToMenu(Restaurant restaurant){

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.Utils;
-import ie.projects.phase1.exceptions.DifferentRestaurantsForCart;
-import ie.projects.phase1.exceptions.FoodNotInRestaurant;
+import ie.projects.phase1.exceptions.CartValidationException;
+import ie.projects.phase1.exceptions.RestaurantNotFound;
 import ie.projects.phase1.requestSender.HttpRequester;
 
 
@@ -82,7 +82,6 @@ public class Loghmeh {
         ObjectMapper mapper = new ObjectMapper();
         try{
             Restaurant restaurant = mapper.readValue(jsonData, Restaurant.class);
-            restaurant.calculateEstimatedDeliveryTime(new GeoLocation(X0, Y0));
             if(findRestaurantById(restaurant.getId()) == null) {
                 restaurants.add(restaurant);
                 restaurant.deleteSame();
@@ -129,18 +128,20 @@ public class Loghmeh {
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty) throws FoodNotInRestaurant, DifferentRestaurantsForCart {
+    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty) throws CartValidationException, RestaurantNotFound {
         Restaurant restaurant;
         if(isParty == true)
             restaurant = findRestaurantInPartyById(restaurantId);
         else
             restaurant = findRestaurantById(restaurantId);
+        if(restaurant == null)
+            throw new RestaurantNotFound("msg\": " + "\"Restaurant with id " + restaurantId + " doesn't exist\"}");
 
         if(restaurant.containFood(foodName)) {
             user.addToCart(foodName, number, restaurantId, isParty);
             return;
         }
-        throw new FoodNotInRestaurant("{\"msg\": " + "\"Restaurant doesn't contain food " + foodName + "\"}");
+        throw new CartValidationException("{\"msg\": " + "\"Restaurant doesn't contain food " + foodName + "\"}");
     }
 
     public boolean addAllToLoghmeh(String url, String inputType){

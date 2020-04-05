@@ -2,6 +2,7 @@ package ie.projects.phase1.core;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import ie.projects.phase1.exceptions.CartValidationException;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -63,7 +64,9 @@ public class Cart {
 
     public void setRemainingTimeToDeliver(double remainingTimeToDeliver) { this.remainingTimeToDeliver = remainingTimeToDeliver; }
 
-    public void addNewOrder(String foodName, int number, String restaurantId, boolean isParty){
+    public void addNewOrder(String foodName, int number, String restaurantId, boolean isParty) throws CartValidationException{
+        if(number == 0)
+            throw new CartValidationException("{\"msg\": " + "\"You should enter another value" + "\"}");
         if(isParty) {
             if (this.partyOrders.containsKey(foodName)) {
                 int foodNum = this.partyOrders.get(foodName);
