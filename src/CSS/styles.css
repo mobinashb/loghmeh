@@ -441,7 +441,6 @@ footer {
     font-size: 0.7em;
     font-weight: 100;
     text-align: left;
-    align-items: left;
 }
 
 .flexcontainer {
@@ -666,7 +665,6 @@ form#login .btn, form#signup .btn {
 
 .price-old-new {
     display: flex;
-    align-items: right;
     list-style-type: none;
     color: darkgray;
     font-size: 1.5em;

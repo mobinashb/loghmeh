@@ -23,12 +23,12 @@ class FoodDetails extends React.Component {
   }
 
   showDetails() {
-    this.setState({toShow: this.state.restaurantId.concat(this.state.name)})
+    this.setState({toShow: this.state.restaurantId.concat(this.state.name)});
     this.props.showFunc(this.state.restaurantId.concat(this.state.name));
   }
 
   hideDetails() {
-    this.setState({toShow: null})
+    this.setState({toShow: null});
     this.props.hideFunc();
   }
 
@@ -70,7 +70,7 @@ class FoodDetails extends React.Component {
           </button>
           &nbsp;&nbsp;&nbsp;
           <button className="cyan-btn" onClick={this.showDetails.bind(this)} disabled={this.state.count <= 0}>خرید</button>
-          <hr className="dashed-top"></hr>
+          <hr className="dashed-top"/>
           {this.state.restaurantName}
         </div>
         }
@@ -131,7 +131,7 @@ class FoodDetails extends React.Component {
               </div>
             </div>
           </div>
-          <hr className="dashed-top"></hr>
+          <hr className="dashed-top"/>
           <div className="container">
           {this.state.oldPrice !== undefined && this.state.count > 0 &&
             <button disabled className="in-stock float-right">
@@ -142,12 +142,15 @@ class FoodDetails extends React.Component {
               ناموجود
             </button>
           }
-            <button className="cyan-btn float-left" disabled={this.state.count <= 0 || this.state.orderQuantity < 1} onClick={this.addToCart.bind(this)}>افزودن به سبد خرید</button>
+            <button className="cyan-btn float-left" disabled={this.state.count <= 0 || this.state.orderQuantity < 1 || this.state.orderQuantity > this.state.count} onClick={this.addToCart.bind(this)}>افزودن به سبد خرید</button>
             <span className="plus-minus float-left">
-              <i className="flaticon-minus" onClick={this.changeOrderQuantity.bind(this, -1)}></i>
+              {this.state.orderQuantity === 0
+                ? <i className="flaticon-minus grayed-out"/>
+                : <i className="flaticon-minus" onClick={this.changeOrderQuantity.bind(this, -1)}/>
+              }
               &nbsp;&nbsp;
               {toPersianNum(this.state.orderQuantity)}
-              <i className="flaticon-plus" onClick={this.changeOrderQuantity.bind(this, +1)}></i>
+              <i className="flaticon-plus" onClick={this.changeOrderQuantity.bind(this, +1)}/>
             </span>
           </div>
         </Modal.Body>
@@ -172,9 +175,10 @@ class FoodDetails extends React.Component {
       restaurantId: this.state.restaurantId,
       isParty: (this.state.oldPrice !== undefined) ? 1 : 0,
       price: this.state.price
-    }
+    };
     this.props.addToCart(food);
     this.hideDetails();
+    this.setState({orderQuantity: 0});
   }
 }
 

@@ -163,7 +163,7 @@ class Profile extends CartBasedComponent {
       cartOrdersLen = cart.orders.length;
     if (orders !== undefined && orders !== null && orders.length > 0)
       ordersLen = orders.length;
-      if (error) {
+    if (error) {
       return <Error msg={error}/>
     } else {
     return (
