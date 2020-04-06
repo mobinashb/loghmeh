@@ -29,6 +29,8 @@ public class Loghmeh {
     private ArrayList<User> users;
 
     private long lastPartFoodUpdateTime;
+    private boolean foodPartyTaskSet;
+    private boolean statusTaskSet;
 
     public ArrayList<User> getUsers() { return users; }
 
@@ -40,6 +42,8 @@ public class Loghmeh {
         User testUser = new User("1", "احسان", "خامس‌ پناه", "09124820194", "ekhamespanah@yahoo.com", 100000.0);
         users.add(testUser);
         lastPartFoodUpdateTime = 0;
+        foodPartyTaskSet = false;
+        statusTaskSet = false;
         addAllToLoghmeh("http://138.197.181.131:8080/restaurants", "restaurant");
     }
 
@@ -49,6 +53,22 @@ public class Loghmeh {
 
     public void setLastPartFoodUpdateTime(long lastPartFoodUpdateTime) {
         this.lastPartFoodUpdateTime = lastPartFoodUpdateTime;
+    }
+
+    public boolean getFoodPartyTaskSet() {
+        return foodPartyTaskSet;
+    }
+
+    public void setFoodPartyTaskSet(boolean foodPartyTaskSet) {
+        this.foodPartyTaskSet = foodPartyTaskSet;
+    }
+
+    public boolean getStatusTaskSet() {
+        return statusTaskSet;
+    }
+
+    public void setStatusTaskSet(boolean statusTaskSet) {
+        this.statusTaskSet = statusTaskSet;
     }
 
     public static int getPARTYFOODUPDATEPERIOD() {

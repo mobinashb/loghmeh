@@ -24,7 +24,7 @@ public class DelayFilter implements Filter {
             throws IOException, ServletException {
 
         try{
-            Thread.sleep(1000);
+            Thread.sleep(10);
         }
         catch (InterruptedException e1){
             e1.printStackTrace();

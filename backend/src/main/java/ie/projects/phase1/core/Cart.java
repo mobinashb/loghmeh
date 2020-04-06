@@ -65,51 +65,39 @@ public class Cart {
 
     public void setRemainingTimeToDeliver(double remainingTimeToDeliver) { this.remainingTimeToDeliver = remainingTimeToDeliver; }
 
+    private void addToCartUtil(HashMap<String, Integer> newOrder, String foodName, int number, boolean isNew) throws CartValidationException{
+        if (newOrder.containsKey(foodName)) {
+            int foodNum = newOrder.get(foodName);
+            if (foodNum + number == 0)
+                newOrder.remove(foodName);
+            else if(foodNum + number < 0)
+                throw new CartValidationException(new JSONStringCreator().msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد."));
+            else
+                newOrder.put(foodName, foodNum + number);
+        }
+        else {
+            if(isNew == false)
+                throw new CartValidationException(new JSONStringCreator().msgCreator("غذای درخواست‌شده برای تغییر، موجود نمی‌باشد."));
+            else {
+                if(number <= 0)
+                    throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد مثبتی را وارد نمایید."));
+                newOrder.put(foodName, number);
+            }
+        }
+    }
+
     public void addToCart(String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException{
         if(number == 0)
             throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد دیگری غیر از ۰ وارد کنید."));
         if(isParty) {
-            if (this.partyOrders.containsKey(foodName)) {
-                int foodNum = this.partyOrders.get(foodName);
-                if (foodNum + number == 0)
-                    this.partyOrders.remove(foodName);
-                else if(foodNum + number < 0)
-                    throw new CartValidationException(new JSONStringCreator().msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد."));
-                else
-                    this.partyOrders.put(foodName, foodNum + number);
-            }
-            else {
-                if(isNew == false)
-                    throw new CartValidationException(new JSONStringCreator().msgCreator("غذای درخواست‌شده برای تغییر، موجود نمی‌باشد."));
-                else {
-                    if(number <= 0)
-                        throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد مثبتی را وارد نمایید."));
-                    this.partyOrders.put(foodName, number);
-                }
-            }
+            this.addToCartUtil(this.partyOrders, foodName, number, isNew);
         }
         else {
-            if (this.orders.containsKey(foodName)){
-                int foodNum = this.orders.get(foodName);
-                if(foodNum + number == 0)
-                    this.orders.remove(foodName);
-                else if(foodNum + number < 0)
-                    throw new CartValidationException(new JSONStringCreator().msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد."));
-                else
-                    this.orders.put(foodName, foodNum + number);
-            }
-            else{
-                if(isNew == false)
-                    throw new CartValidationException(new JSONStringCreator().msgCreator("غذای درخواست‌شده برای تغییر، موجود نمی‌باشد."));
-                else {
-                    if(number <= 0)
-                        throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد مثبتی را وارد نمایید."));
-                    this.orders.put(foodName, number);
-                }
-            }
-
+            this.addToCartUtil(this.orders, foodName, number, isNew);
         }
         this.restaurantId = restaurantId;
+        if((this.orders.size() == 0) && (this.partyOrders.size() == 0))
+            this.clearOrders();
     }
 
     public void clearOrders(){

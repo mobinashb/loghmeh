@@ -27,8 +27,6 @@ public class RestaurantHandler {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void test(){
-        Timer timer = new Timer();
-        timer.schedule(new UpdatePartyRestaurants(), 0, loghmeh.getPARTYFOODUPDATEPERIOD());
     }
 
     @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
@@ -58,6 +56,11 @@ public class RestaurantHandler {
 
     @RequestMapping(value = "/v1/foodparty", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getAllRestaurantsInParty() throws IOException, NoRestaurantsAround {
+        if(loghmeh.getFoodPartyTaskSet() == false){
+            Timer timer = new Timer();
+            timer.schedule(new UpdatePartyRestaurants(), 0, loghmeh.getPARTYFOODUPDATEPERIOD());
+            loghmeh.setFoodPartyTaskSet(true);
+        }
         String[] restaurantFilterParams = {"location", "logo", "estimatedDeliverTime"};
         FilterProvider filter = new SimpleFilterProvider()
                 .addFilter("restaurant", SimpleBeanPropertyFilter.serializeAllExcept(restaurantFilterParams));

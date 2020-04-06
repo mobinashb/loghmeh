@@ -52,8 +52,11 @@ public class CartHandler {
     public String finalizeOrder() throws CartValidationException {
         User user = loghmeh.getUsers().get(0);
         user.finalizeOrder();
-        Timer timer = new Timer();
-        timer.schedule(new CheckOrderStatus(), 0, 3000);
+        if(loghmeh.getStatusTaskSet() == false) {
+            Timer timer = new Timer();
+            timer.schedule(new CheckOrderStatus(), 0, 3000);
+            loghmeh.setStatusTaskSet(true);
+        }
         return new JSONStringCreator().msgCreator("سفارش شما ثبت نهایی گردید.");
     }
 }

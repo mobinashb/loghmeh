@@ -7,6 +7,7 @@ import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.Restaurant;
 import org.apache.commons.lang.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class JSONStringCreator {
@@ -43,5 +44,17 @@ public class JSONStringCreator {
         }
         tempObj.add("orders", orders);
         return tempObj;
+    }
+
+    public String ordersCreator(ArrayList<Cart> carts){
+        JsonArray orders = new JsonArray();
+        for (Cart cart: carts){
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", cart.getId());
+            jsonObject.addProperty("restaurantName", Loghmeh.getInstance().findRestaurantById(cart.getRestaurantId()).getName());
+            jsonObject.addProperty("orderStatus", cart.getOrderStatus());
+            orders.add(jsonObject);
+        }
+        return orders.toString();
     }
 }
