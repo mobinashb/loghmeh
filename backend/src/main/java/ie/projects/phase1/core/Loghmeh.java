@@ -18,6 +18,7 @@ public class Loghmeh {
     private static final double X0 = 0.0;
     private static final double Y0 = 0.0;
     private static final double DISTANCEOFRESTAURANTSTOSHOW = 170;
+    private static final int PARTYFOODUPDATEPERIOD = 1800000;
 
     private static Loghmeh instance;
 
@@ -27,16 +28,31 @@ public class Loghmeh {
     private ArrayList<Restaurant> restaurantsInParty;
     private ArrayList<User> users;
 
+    private long lastPartFoodUpdateTime;
+
     public ArrayList<User> getUsers() { return users; }
 
     private Loghmeh(){
-        restaurants = new ArrayList<Restaurant>();
-        deliveryMen = new ArrayList<DeliveryMan>();
-        restaurantsInParty = new ArrayList<Restaurant>();
-        users= new ArrayList<User>();
+        restaurants = new ArrayList<>();
+        deliveryMen = new ArrayList<>();
+        restaurantsInParty = new ArrayList<>();
+        users= new ArrayList<>();
         User testUser = new User("1", "احسان", "خامس‌ پناه", "09124820194", "ekhamespanah@yahoo.com", 100000.0);
         users.add(testUser);
+        lastPartFoodUpdateTime = 0;
         addAllToLoghmeh("http://138.197.181.131:8080/restaurants", "restaurant");
+    }
+
+    public double calculatePartyRemainingTime(){
+        return (PARTYFOODUPDATEPERIOD - (System.currentTimeMillis() - lastPartFoodUpdateTime))/1000;
+    }
+
+    public void setLastPartFoodUpdateTime(long lastPartFoodUpdateTime) {
+        this.lastPartFoodUpdateTime = lastPartFoodUpdateTime;
+    }
+
+    public static int getPARTYFOODUPDATEPERIOD() {
+        return PARTYFOODUPDATEPERIOD;
     }
 
     public static Loghmeh getInstance(){

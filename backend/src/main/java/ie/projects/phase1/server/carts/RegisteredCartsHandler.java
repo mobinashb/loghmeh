@@ -22,7 +22,7 @@ public class RegisteredCartsHandler {
     Loghmeh loghmeh = Loghmeh.getInstance();
     ObjectMapper mapper = new ObjectMapper();
 
-    @RequestMapping(value = "/v1/carts", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/orders", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getAllCarts() throws IOException {
         User user = loghmeh.getUsers().get(0);
         String[] userFilterParams = {"orders", "partyOrders", "restaurantId", "deliveryManFoundedTime", "deliveryManTimeToReach", "remainingTimeToDeliver"};
@@ -31,7 +31,7 @@ public class RegisteredCartsHandler {
         return writer.writeValueAsString(user.getAllOrders());
     }
 
-    @RequestMapping(value = "/v1/carts/{cartId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/orders/{cartId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getCart(@PathVariable(value = "cartId") String cartId) throws CartNotFound{
         User user = loghmeh.getUsers().get(0);
         Cart cart = user.findCartById(cartId);

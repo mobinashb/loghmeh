@@ -16,7 +16,7 @@ import java.io.IOException;
 public class UserHandler {
     Loghmeh loghmeh = Loghmeh.getInstance();
     ObjectMapper mapper = new ObjectMapper();
-    String[] userFilterParams = {"location", "credit", "orders", "undeliveredOrders", "cart", "orderId"};
+    String[] userFilterParams = {"location", "orders", "undeliveredOrders", "cart", "orderId", "allOrders"};
     FilterProvider filter = new SimpleFilterProvider().addFilter("user", SimpleBeanPropertyFilter.serializeAllExcept(userFilterParams));
     ObjectWriter writer = mapper.writer(filter);
 

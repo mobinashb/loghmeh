@@ -92,7 +92,7 @@ public class Cart {
                     this.orders.put(foodName, foodNum + number);
             }
             else{
-                if(isNew)
+                if(isNew == false)
                     throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in your cart. You can't edit it"));
                 else
                     this.orders.put(foodName, number);

@@ -1,5 +1,6 @@
 package ie.projects.phase1.core;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import ie.projects.phase1.exceptions.CartValidationException;
 import ie.projects.phase1.exceptions.NegativeCreditAmount;
 import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
@@ -7,6 +8,7 @@ import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+@JsonFilter("user")
 public class User {
     private String id;
     private String firstName;

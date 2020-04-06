@@ -1,10 +1,14 @@
 package ie.projects.phase1.server.restaurants;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.Restaurant;
 import ie.projects.phase1.exceptions.NoRestaurantsAround;
@@ -28,7 +32,7 @@ public class RestaurantHandler {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void test(){
         Timer timer = new Timer();
-        timer.schedule(new UpdatePartyRestaurants(), 0, 600000);
+        timer.schedule(new UpdatePartyRestaurants(), 0, loghmeh.getPARTYFOODUPDATEPERIOD());
     }
 
     @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
@@ -56,7 +60,7 @@ public class RestaurantHandler {
         return writer.writeValueAsString(loghmeh.findRestaurantById(restaurantId));
     }
 
-    @RequestMapping(value = "/v1/partyRestaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/foodparty", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getAllRestaurantsInParty() throws IOException, NoRestaurantsAround {
         String[] restaurantFilterParams = {"location", "logo", "estimatedDeliverTime"};
         FilterProvider filter = new SimpleFilterProvider()
@@ -66,5 +70,10 @@ public class RestaurantHandler {
         if(restaurants.size() == 0)
             throw new NoRestaurantsAround(new JSONStringCreator().errorMsgCreator("There isn't any party food around you"));
         return writer.writeValueAsString(restaurants);
+    }
+    @RequestMapping(value = "/v1/foodparty/remainingTime", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    public String getFoodpartyRemainingTime(){
+        double remainingTime = loghmeh.calculatePartyRemainingTime();
+        return "{\"remainingTime\": " + "\"" + remainingTime + "\"}";
     }
 }

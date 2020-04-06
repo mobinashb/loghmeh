@@ -17,10 +17,11 @@ public class JSONStringCreator {
         JsonArray orders = new JsonArray();
         JsonObject tempObj = new JsonObject();
         tempObj.addProperty("restaurantId", cart.getRestaurantId());
+        tempObj.addProperty("restaurantName", loghmeh.findRestaurantById(cart.getRestaurantId()).getName());
         tempObj.addProperty("id", cart.getId());
         for(Map.Entry element: cart.getOrders().entrySet()){
             JsonObject orderObj = new JsonObject();
-            orderObj.addProperty("name", (String) element.getKey());
+            orderObj.addProperty("foodName", (String) element.getKey());
             orderObj.addProperty("number", (int) element.getValue());
             orderObj.addProperty("price", loghmeh.findRestaurantById(cart.getRestaurantId()).findFood((String) element.getKey()).getPrice());
             orderObj.addProperty("isParty", 0);
@@ -28,7 +29,7 @@ public class JSONStringCreator {
         }
         for(Map.Entry element: cart.getPartyOrders().entrySet()){
             JsonObject orderObj = new JsonObject();
-            orderObj.addProperty("name", (String) element.getKey());
+            orderObj.addProperty("foodName", (String) element.getKey());
             orderObj.addProperty("number", (int) element.getValue());
             orderObj.addProperty("price", loghmeh.findRestaurantInPartyById(cart.getRestaurantId()).findFood((String) element.getKey()).getPrice());
             orderObj.addProperty("isParty", 1);
