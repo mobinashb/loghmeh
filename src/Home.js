@@ -1,5 +1,5 @@
 import React from 'react';
-import {Header, toPersianTime} from './Utils';
+import {Header, toPersianNum} from './Utils';
 import FoodDetails from './FoodDetails';
 import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
@@ -8,7 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from './Error';
-import Timer from './Timer';
+import Timer from 'react-compound-timer';
 
 function Search() {
   return (
@@ -58,6 +58,7 @@ function RestaurantCard(params) {
   )
 }
 
+
 class Home extends CartBasedComponent {
   constructor(props) {
     super(props);
@@ -67,7 +68,7 @@ class Home extends CartBasedComponent {
       restaurants: [],
       restaurantsInParty: [],
       partyRemainingTime: 0,
-      cart: []
+      cart: {}
     };
   }
   render() {
@@ -85,7 +86,7 @@ class Home extends CartBasedComponent {
       return restaurant;
     });
     if (error) {
-      return <Error code={500} />
+      return <Error msg={error}/>
     } else {
       return (
         <LoadingOverlay
@@ -104,10 +105,14 @@ class Home extends CartBasedComponent {
           </div>
           <div className="centered-flex">
             <div className="timer">
-
-              {/* <Timer seconds={partyRemainingTime}/> */}
-              {toPersianTime(partyRemainingTime)}
-            </div>
+              {isLoaded &&<Timer
+              initialTime={parseInt(partyRemainingTime)*1000}
+              direction="backward"
+              >
+                زمان باقی مانده: &nbsp;<b><Timer.Minutes formatValue={value => toPersianNum(`${value}`)}/>:<Timer.Seconds formatValue={value => toPersianNum(`${value}`)}/></b>
+              </Timer>
+              }
+              </div>
           </div>
           <div className="scrolling-wrapper shadow-box">
             {foodPartyList.map(item => (
@@ -176,8 +181,9 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result)
           this.setState({
-            restaurants: result
+            restaurants: result,
           });
         },
         (error) => {
@@ -197,6 +203,7 @@ class Home extends CartBasedComponent {
           this.setState({
             partyRemainingTime: result.remainingTime,
             isLoaded: true,
+            error: result.msg
           });
         },
         (error) => {

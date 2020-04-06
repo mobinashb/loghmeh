@@ -182,7 +182,8 @@ class CartBasedComponent extends React.Component {
         (result) => {
           this.setState({
             isLoaded: true,
-            cart: result
+            cart: result,
+            error: result.msg
           });
         },
         (error) => {
@@ -200,7 +201,8 @@ class CartBasedComponent extends React.Component {
     .then(
       (result) => {
         this.setState({
-          orders: result
+          orders: result,
+          error: result.msg
         });
       },
       (error) => {

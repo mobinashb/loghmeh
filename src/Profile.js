@@ -66,7 +66,7 @@ class Profile extends CartBasedComponent {
   OrderList() {
     return (
       <div>
-      {this.state.orders.map((order, i) => (
+      {this.state.orders.slice(0).reverse().map((order, i) => (
         <div className="row" key={order.id}>
           <div className="col-1 col-bordered bg-light">
             {toPersianNum(i+1)}
@@ -164,8 +164,8 @@ class Profile extends CartBasedComponent {
       cartOrdersLen = cart.orders.length
     if (orders !== undefined && orders !== null && orders.length > 0)
       ordersLen = orders.length
-    if (error) {
-      return <Error code={500} />
+      if (error) {
+      return <Error msg={error}/>
     } else {
     return (
       <LoadingOverlay
@@ -226,7 +226,8 @@ class Profile extends CartBasedComponent {
           email: result.email,
           phonenumber: result.phoneNumber,
           credit: result.credit,
-          isLoaded: true
+          isLoaded: true,
+          error: result.msg
         });
       },
       (error) => {
@@ -244,7 +245,8 @@ class Profile extends CartBasedComponent {
     .then(
       (result) => {
         this.setState({
-          orderToShow: result
+          orderToShow: result,
+          error: result.msg
         });
       },
       (error) => {

@@ -20,7 +20,7 @@ class Restaurant extends CartBasedComponent {
       logo: '',
       name: '',
       cart: {},
-      toShow: null
+      toShow: null,
     };
     this.handleShow = this.handleShow.bind(this);
     this.handleHide = this.handleHide.bind(this);
@@ -66,7 +66,7 @@ class Restaurant extends CartBasedComponent {
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length
     if (error) {
-      return <Error code={500} />
+      return <Error msg={error}/>
     } else {
       return (
       <LoadingOverlay
@@ -128,7 +128,8 @@ class Restaurant extends CartBasedComponent {
             menu: result.menu,
             name: result.name,
             logo: result.logo,
-            id: result.id
+            id: result.id,
+            error: result.msg
           });
         },
         (error) => {
@@ -137,7 +138,7 @@ class Restaurant extends CartBasedComponent {
             error: error
           });
         }
-      )
+      );
   }
 
   componentDidMount() {

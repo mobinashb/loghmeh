@@ -16,6 +16,7 @@ class Error extends React.Component {
       errorMessage = "صفحه یافت نشد!";
       button = <div><Link to="" className="btn btn-danger">بازگشت به صفحه اصلی</Link></div>;
     }
+    else errorMessage = this.props.msg;
     return (
       <div className="error-page">
         <img src={cover} className="cover" alt="لقمه"/>
