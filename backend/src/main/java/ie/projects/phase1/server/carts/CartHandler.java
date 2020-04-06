@@ -1,5 +1,6 @@
 package ie.projects.phase1.server.carts;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.core.Cart;
@@ -32,19 +33,19 @@ public class CartHandler {
     public String addOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
         System.out.println(request.getIsParty());
         loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), true);
-        return "{\"msg\": " + "\"" + "Your order saved successfully" + "\"}";
+        return new JSONStringCreator().msgCreator( "سفارش شما با موفقیت ثبت شد.");
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.PUT, produces = "text/plain;charset=UTF-8")
     public String editOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
         loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), false);
-        return "{\"msg\": " + "\"" + "Your order edited successfully" + "\"}";
+        return new JSONStringCreator().msgCreator("سفارش شما با موفقیت تغییر یافت.");
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.DELETE, produces = "text/plain;charset=UTF-8")
     public String deleteOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
         loghmeh.getUsers().get(0).deleteCart();
-        return "{\"msg\": " + "\"" + "Your order deleted successfully" + "\"}";
+        return new JSONStringCreator().msgCreator("سبد خرید شما با موفقیت حذف شد.");
     }
 
     @RequestMapping(value = "/v1/cart/finalize", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
@@ -53,6 +54,6 @@ public class CartHandler {
         user.finalizeOrder();
         Timer timer = new Timer();
         timer.schedule(new CheckOrderStatus(), 0, 3000);
-        return "{\"msg\": " + "\"" + "Your cart registered successfully" + "\"}";
+        return new JSONStringCreator().msgCreator("سفارش شما ثبت نهایی گردید.");
     }
 }

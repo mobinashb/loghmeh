@@ -152,17 +152,17 @@ public class Loghmeh {
         else
             restaurant = findRestaurantById(restaurantId);
         if(restaurant == null)
-            throw new RestaurantNotFound(new JSONStringCreator().errorMsgCreator("Restaurant with id " + restaurantId + " doesn't exist"));
+            throw new RestaurantNotFound(new JSONStringCreator().msgCreator("رستورانی با شناسه درخواست‌شده موجود نمی‌باشد."));
 
         if(restaurant.containFood(foodName)) {
             if(isParty){
                 if(restaurant.findFood(foodName).getCount() < number)
-                    throw new CartValidationException(new JSONStringCreator().errorMsgCreator("this food isn't in party anymore"));
+                    throw new CartValidationException(new JSONStringCreator().msgCreator("غذا از جشن غذا برداشته شده‌است."));
             }
             user.addToCart(foodName, number, restaurantId, isParty, isNew);
             return;
         }
-        throw new CartValidationException(new JSONStringCreator().errorMsgCreator("Restaurant doesn't contain food " + foodName));
+        throw new CartValidationException(new JSONStringCreator().msgCreator("رستوران مدنظر، شامل غذای درخواست‌شده نمی‌باشد"));
     }
 
     public boolean addAllToLoghmeh(String url, String inputType){

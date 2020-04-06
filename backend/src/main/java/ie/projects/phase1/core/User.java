@@ -63,7 +63,7 @@ public class User {
 
     public void addCredit(double amount) throws NegativeCreditAmount{
         if(amount <= 0)
-            throw new NegativeCreditAmount(new JSONStringCreator().errorMsgCreator("Amount of add credit should be positive"));
+            throw new NegativeCreditAmount(new JSONStringCreator().msgCreator("برای افزایش اعتبار مقدار مثبتی را وارد نمایید."));
         credit += amount;
     }
 
@@ -91,7 +91,7 @@ public class User {
             cart.addToCart(foodName, number, restaurantId, isParty, isNew);
             return;
         }
-        throw new CartValidationException(new JSONStringCreator().errorMsgCreator("You have ordered from another restaurant first"));
+        throw new CartValidationException(new JSONStringCreator().msgCreator("امکان ثبت سفارش از دو رستوران مجزا در یک سبد خرید وجود ندارد."));
     }
 
     public void deleteCart(){
@@ -101,12 +101,12 @@ public class User {
     private boolean validateCart() throws CartValidationException {
         Restaurant restaurant;
         if(cart.getRestaurantId() == null)
-            throw new CartValidationException(new JSONStringCreator().errorMsgCreator("Your cart's restaurant name isn't registered"));
+            throw new CartValidationException(new JSONStringCreator().msgCreator("برای سبدخرید شما، رستورانی ثبت نشده‌است."));
 
         restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
         if(restaurant != null){
             if (!restaurant.checkPartyFoodNum(cart.getPartyOrders()))
-                throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in party anymore"));
+                throw new CartValidationException(new JSONStringCreator().msgCreator("غذا از جشن غذا برداشته شده‌است."));
         }
         return true;
     }
@@ -153,7 +153,7 @@ public class User {
             cart.clearOrders();
         }
         else
-            throw new CartValidationException(new JSONStringCreator().errorMsgCreator("You don't have enough credit"));
+            throw new CartValidationException(new JSONStringCreator().msgCreator("موجودی برای نهایی کردن سفارش کافی نمی‌باشد."));
 
     }
 

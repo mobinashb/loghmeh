@@ -10,7 +10,7 @@ import org.apache.commons.lang.ObjectUtils;
 import java.util.Map;
 
 public class JSONStringCreator {
-    public String errorMsgCreator(String msg){
+    public String msgCreator(String msg){
         return "{\"msg\": " + "\"" + msg + "\"}";
     }
 

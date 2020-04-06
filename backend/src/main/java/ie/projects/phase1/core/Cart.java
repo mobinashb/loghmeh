@@ -67,20 +67,25 @@ public class Cart {
 
     public void addToCart(String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException{
         if(number == 0)
-            throw new CartValidationException(new JSONStringCreator().errorMsgCreator("You should enter another value"));
+            throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد دیگری غیر از ۰ وارد کنید."));
         if(isParty) {
             if (this.partyOrders.containsKey(foodName)) {
                 int foodNum = this.partyOrders.get(foodName);
                 if (foodNum + number == 0)
                     this.partyOrders.remove(foodName);
+                else if(foodNum + number < 0)
+                    throw new CartValidationException(new JSONStringCreator().msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد."));
                 else
                     this.partyOrders.put(foodName, foodNum + number);
             }
             else {
                 if(isNew == false)
-                    throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in your cart. You can't edit it"));
-                else
+                    throw new CartValidationException(new JSONStringCreator().msgCreator("غذای درخواست‌شده برای تغییر، موجود نمی‌باشد."));
+                else {
+                    if(number <= 0)
+                        throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد مثبتی را وارد نمایید."));
                     this.partyOrders.put(foodName, number);
+                }
             }
         }
         else {
@@ -88,14 +93,19 @@ public class Cart {
                 int foodNum = this.orders.get(foodName);
                 if(foodNum + number == 0)
                     this.orders.remove(foodName);
+                else if(foodNum + number < 0)
+                    throw new CartValidationException(new JSONStringCreator().msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد."));
                 else
                     this.orders.put(foodName, foodNum + number);
             }
             else{
                 if(isNew == false)
-                    throw new CartValidationException(new JSONStringCreator().errorMsgCreator("This food isn't in your cart. You can't edit it"));
-                else
+                    throw new CartValidationException(new JSONStringCreator().msgCreator("غذای درخواست‌شده برای تغییر، موجود نمی‌باشد."));
+                else {
+                    if(number <= 0)
+                        throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد مثبتی را وارد نمایید."));
                     this.orders.put(foodName, number);
+                }
             }
 
         }

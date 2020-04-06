@@ -1,14 +1,10 @@
 package ie.projects.phase1.server.restaurants;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.Restaurant;
 import ie.projects.phase1.exceptions.NoRestaurantsAround;
@@ -43,7 +39,7 @@ public class RestaurantHandler {
         ObjectWriter writer = mapper.writer(filter);
         ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInArea();
         if(restaurants.size() == 0)
-            throw new NoRestaurantsAround(new JSONStringCreator().errorMsgCreator("There isn't any restaurant around you"));
+            throw new NoRestaurantsAround(new JSONStringCreator().msgCreator("رستورانی اطراف شما یافت نشد."));
         return writer.writeValueAsString(restaurants);
     }
 
@@ -55,7 +51,7 @@ public class RestaurantHandler {
         ObjectWriter writer = mapper.writer(filter);
         Restaurant restaurant = loghmeh.findRestaurantById(restaurantId);
         if(restaurant == null){
-            throw new RestaurantNotFound(new JSONStringCreator().errorMsgCreator("There isn't any restaurant with id " + restaurantId));
+            throw new RestaurantNotFound(new JSONStringCreator().msgCreator("رستورانی با شناسه درخواست شده یافت نشد."));
         }
         return writer.writeValueAsString(loghmeh.findRestaurantById(restaurantId));
     }
@@ -68,7 +64,7 @@ public class RestaurantHandler {
         ObjectWriter writer = mapper.writer(filter);
         ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInParty();
         if(restaurants.size() == 0)
-            throw new NoRestaurantsAround(new JSONStringCreator().errorMsgCreator("There isn't any party food around you"));
+            throw new NoRestaurantsAround(new JSONStringCreator().msgCreator("جشن غذایی موجود نمی‌باشد."));
         return writer.writeValueAsString(restaurants);
     }
     @RequestMapping(value = "/v1/foodparty/remainingTime", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")

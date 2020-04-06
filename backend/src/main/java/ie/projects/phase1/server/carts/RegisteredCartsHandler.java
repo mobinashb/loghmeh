@@ -36,7 +36,7 @@ public class RegisteredCartsHandler {
         User user = loghmeh.getUsers().get(0);
         Cart cart = user.findCartById(cartId);
         if(cart == null)
-            throw new CartNotFound("{\"msg\": " + "\"" + "Cart with id " + cartId + " not found" + "\"}");
+            throw new CartNotFound("سبد خریدی با شناسه مورد نظر یافت نشد.");
         return new JSONStringCreator().cartCreator(cart).toString();
     }
 }
