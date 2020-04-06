@@ -25,19 +25,19 @@ public class CartHandler {
     public String getCart() throws JsonProcessingException {
         User user = loghmeh.getUsers().get(0);
         Cart cart = user.getCart();
-
         return new JSONStringCreator().cartCreator(cart).toString();
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String addOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
-        loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty(), true);
+        System.out.println(request.getIsParty());
+        loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), true);
         return "{\"msg\": " + "\"" + "Your order saved successfully" + "\"}";
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.PUT, produces = "text/plain;charset=UTF-8")
     public String editOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
-        loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.isParty(), false);
+        loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), false);
         return "{\"msg\": " + "\"" + "Your order edited successfully" + "\"}";
     }
 

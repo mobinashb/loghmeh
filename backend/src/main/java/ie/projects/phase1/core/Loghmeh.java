@@ -155,6 +155,10 @@ public class Loghmeh {
             throw new RestaurantNotFound(new JSONStringCreator().errorMsgCreator("Restaurant with id " + restaurantId + " doesn't exist"));
 
         if(restaurant.containFood(foodName)) {
+            if(isParty){
+                if(restaurant.findFood(foodName).getCount() < number)
+                    throw new CartValidationException(new JSONStringCreator().errorMsgCreator("this food isn't in party anymore"));
+            }
             user.addToCart(foodName, number, restaurantId, isParty, isNew);
             return;
         }

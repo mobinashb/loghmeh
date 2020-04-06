@@ -18,7 +18,7 @@ public class CartRequest {
         return restaurantId;
     }
 
-    public boolean isParty() {
+    public boolean getIsParty() {
         return isParty;
     }
 }
