@@ -1,6 +1,6 @@
 import React from 'react';
-import {Header, toPersianTime} from './Utils'
-import FoodDetails from './FoodDetails'
+import {Header, toPersianTime} from './Utils';
+import FoodDetails from './FoodDetails';
 import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from './Error';
+import Timer from './Timer';
 
 function Search() {
   return (
@@ -64,18 +65,18 @@ class Home extends CartBasedComponent {
       error: null,
       isLoaded: false,
       restaurants: [],
-      partyRestaurants: [],
-      timeLeft: 0,
+      restaurantsInParty: [],
+      partyRemainingTime: 0,
       cart: []
     };
   }
   render() {
-    const { error, isLoaded, restaurants, partyRestaurants, timeLeft, toShow, cart} = this.state;
+    const { error, isLoaded, restaurants, restaurantsInParty, partyRemainingTime, toShow, cart} = this.state;
     let cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length
     var foodPartyList = [];
-    partyRestaurants.map((restaurant) => {
+    restaurantsInParty.map((restaurant) => {
       restaurant.menu.map((food) => {
         food.restaurantName = restaurant.name;
         foodPartyList.push(food)
@@ -103,7 +104,9 @@ class Home extends CartBasedComponent {
           </div>
           <div className="centered-flex">
             <div className="timer">
-              زمان باقی مانده: {toPersianTime(timeLeft)}
+
+              {/* <Timer seconds={partyRemainingTime}/> */}
+              {toPersianTime(partyRemainingTime)}
             </div>
           </div>
           <div className="scrolling-wrapper shadow-box">
@@ -151,18 +154,18 @@ class Home extends CartBasedComponent {
   }
 
   fetchFoodParty() {
-    fetch("http://localhost:8080/v1/partyRestaurants")
+    fetch("http://localhost:8080/v1/foodparty")
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
-            partyRestaurants: result
+            restaurantsInParty: result
           });
         },
         (error) => {
           this.setState({
+            error: error,
             isLoaded: true,
-            error: error
           });
         }
       )
@@ -179,16 +182,37 @@ class Home extends CartBasedComponent {
         },
         (error) => {
           this.setState({
-            error: error
+            error: error,
+            isLoaded: true,
+          });
+        }
+      )
+  }
+
+  fetchRemainingTime() {
+    fetch("http://localhost:8080/v1/foodparty/remainingTime")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            partyRemainingTime: result.remainingTime,
+            isLoaded: true,
+          });
+        },
+        (error) => {
+          this.setState({
+            error: error,
+            isLoaded: true,
           });
         }
       )
   }
 
   componentDidMount() {
+    this.fetchCart();
     this.fetchRestaurants();
     this.fetchFoodParty();
-    this.fetchCart();
+    this.fetchRemainingTime();
   }
 }
 
