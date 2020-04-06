@@ -1,5 +1,5 @@
 import React from 'react';
-import {POST, PUT, DELETE, toPersianNum} from './Utils';
+import {POST, PUT, toPersianNum} from './Utils';
 import swal from 'sweetalert';
 
 class CartBasedComponent extends React.Component {
@@ -10,7 +10,7 @@ class CartBasedComponent extends React.Component {
       toShow: null,
       error: null,
       isLoaded: false
-    }
+    };
     this.handleShow = this.handleShow.bind(this);
     this.handleHide = this.handleHide.bind(this);
     this.addToCart = this.addToCart.bind(this);
@@ -26,63 +26,47 @@ class CartBasedComponent extends React.Component {
   }
 
   getSum(orders) {
-    let sum = orders.reduce(function(prev, current) {
+    return orders.reduce(function(prev, current) {
       return prev + +(current.price * current.number)
     }, 0);
-    return sum
   }
 
-  async changeCart(name, num) {
+  async changeCart(food, num) {
     const id = this.state.cart.restaurantId;
-    const food = {
-      foodName: name,
+    const foodNew = {
+      foodName: food.foodName,
       number: num,
       restaurantId: id,
+      isParty: food.isParty
     };
-    let response = PUT(food, 'http://localhost:8080/v1/cart');
+    let response = PUT(foodNew, 'http://localhost:8080/v1/cart');
     const res = await response;
+    const text = await (res).text();
     if (res.ok) {
       var cartNew = JSON.parse(JSON.stringify(this.state.cart));
-      if (this.getFoodCount(name) === 0 && num === -1) return;
+      if (this.getFoodCount(food.foodName) === 0 && num === -1) return;
       this.setState(this.state.cart.orders.reduce( (current, item) => {
-        if (item.foodName === name) {
+        if (item.foodName === food.foodName) {
           item.number = item.number + num;
         }
         current.push( item );
         return current;
       }, [] ) );
-      if (this.getFoodCount(name) === 0) {
-        const orders = this.state.cart.orders.filter(item => item.foodName !== name);
-        cartNew.orders = orders;
+      if (this.getFoodCount(food.foodName) === 0) {
+        cartNew.orders = this.state.cart.orders.slice(0).filter(item => item.foodName !== food.foodName);
         if (this.state.cart.orders.length === 0) {
           cartNew.restaurantId = null;
           cartNew.name = null;
-          // DELETE("", "http://localhost:8080/v1/cart");
         }
         this.setState({
           cart: cartNew
         });
       }
     }
-
-  }
-
-  getFoodCount(name) {
-    let food = this.state.cart.orders.find((element) => {
-      return element.foodName === name;
-    });
-    if (food === null || food === undefined) return 0;
-    return food.number;
-  }
-
-  async addToCart(food) {
-    const curRestaurant = this.state.cart.restaurantId;
-    var cartNew = JSON.parse(JSON.stringify(this.state.cart));
-    cartNew.orders = cartNew.orders.concat(food);
-    if ((curRestaurant !== null) && (curRestaurant !== food.restaurantId)) {
+    else {
       swal({
         title: "خطا",
-        text: "شما قبلا از رستوران دیگری سفارش داده اید!",
+        text: JSON.parse(text).msg,
         icon: "warning",
         dangerMode: true,
         button: {
@@ -92,18 +76,52 @@ class CartBasedComponent extends React.Component {
           closeModal: true,
         },
       })
-      return;
     }
+
+  }
+
+  getFoodCount(name) {
+    if (this.state.cart.orders === undefined || this.state.cart.orders === null)
+      return 0;
+    let food = this.state.cart.orders.find((element) => {
+      return element.foodName === name;
+    });
+    if (food === null || food === undefined) return 0;
+    return food.number;
+  }
+
+  async addToCart(food) {
+    var cartNew = JSON.parse(JSON.stringify(this.state.cart));
+    cartNew.restaurantId = food.restaurantId;
+    if (cartNew.orders === undefined) {
+      cartNew.orders = []
+    }
+    cartNew.orders = cartNew.orders.concat(food);
     let response = POST(food, "http://localhost:8080/v1/cart");
     const res = await response;
+    const text = await (res).text();
     if (res.ok) {
       let count = this.getFoodCount(food.foodName);
       if (count !== 0) {
-        this.changeCart(food.foodName, food.number);
+        this.changeCart(food, food.number);
         return;
       }
       this.setState({
         cart: cartNew
+      })
+    }
+    else {
+      swal({
+        title: "خطا",
+        text: JSON.parse(text).msg,
+        icon: "warning",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
       })
     }
   }
@@ -111,13 +129,14 @@ class CartBasedComponent extends React.Component {
   async finalizeOrder() {
     let response = POST("", "http://localhost:8080/v1/cart/finalize");
     const res = await response;
+    const text = await (res).text();
     if (res.ok) {
       this.setState({
         cart: {
           restaurantId: null,
           name: null
         }
-      })
+      });
       if (this.constructor.name === "Profile") {
         this.fetchOrders();
       }
@@ -125,7 +144,7 @@ class CartBasedComponent extends React.Component {
     else {
       swal({
         title: "خطا",
-        text: "اعتبار شما کافی نیست!",
+        text: JSON.parse(text).msg,
         icon: "warning",
         dangerMode: true,
         button: {
@@ -155,10 +174,10 @@ class CartBasedComponent extends React.Component {
               {food.foodName}
               </span>
               <span className="plus-minus float-left">
-                <i className="flaticon-minus" onClick={this.changeCart.bind(this, food.foodName, -1)}></i>
+                <i className="flaticon-minus" onClick={this.changeCart.bind(this, food, -1)}/>
                 &nbsp;&nbsp;
                 {toPersianNum(this.getFoodCount(food.foodName))}
-                <i className="flaticon-plus" onClick={this.changeCart.bind(this, food.foodName, +1)}></i>
+                <i className="flaticon-plus" onClick={this.changeCart.bind(this, food, +1)}/>
               </span>
             </div>
             <p className="price float-left">{toPersianNum(food.price * this.getFoodCount(food.foodName))} تومان</p>
@@ -181,9 +200,7 @@ class CartBasedComponent extends React.Component {
       .then(
         (result) => {
           this.setState({
-            isLoaded: true,
             cart: result,
-            error: result.msg
           });
         },
         (error) => {
@@ -202,7 +219,6 @@ class CartBasedComponent extends React.Component {
       (result) => {
         this.setState({
           orders: result,
-          error: result.msg
         });
       },
       (error) => {

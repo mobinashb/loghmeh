@@ -17,21 +17,21 @@ function Banner(props) {
   return (
     <header className="container-fluid banner row-sm-12">
       <div className="col-sm-6">
-          <i className="flaticon-account"></i>
+          <i className="flaticon-account"/>
           {name}
       </div>
       <div className="col-sm-6">
           <ul>
           <li>
-              <i dir="ltr" className="flaticon-phone"></i>
+              <i dir="ltr" className="flaticon-phone"/>
               {phonenumber}
           </li>
           <li>
-              <i dir="ltr" className="flaticon-mail"></i>
+              <i dir="ltr" className="flaticon-mail"/>
               {email}
           </li>
           <li>
-              <i dir="ltr" className="flaticon-card"></i>
+              <i dir="ltr" className="flaticon-card"/>
               {toPersianNum(credit)} &nbsp;
               تومان
           </li>
@@ -56,7 +56,7 @@ class Profile extends CartBasedComponent {
       error: null,
       isLoaded: false,
       orderToShow: null
-    }
+    };
     this.handleShow = this.handleShow.bind(this);
     this.handleHide = this.handleHide.bind(this);
     this.updateCredit = this.updateCredit.bind(this);
@@ -100,7 +100,7 @@ class Profile extends CartBasedComponent {
   OrderDetails(id) {
     const toShow = this.state.toShow;
     const order = this.state.orderToShow;
-    if (order === null || order.id !== id) return<div></div>;
+    if (order === null || order.id !== id) return;
     if (toShow === id)
     return (
       <Modal className="modal fade" role="dialog"
@@ -110,7 +110,7 @@ class Profile extends CartBasedComponent {
           <h2>
             {order.restaurantName}
           </h2>
-          <hr className="thin"></hr>
+          <hr className="thin"/>
           <div className="table-responsive bg-white">
             <table className="table table-bordered table-small">
               <thead className="thead-light">
@@ -139,7 +139,6 @@ class Profile extends CartBasedComponent {
         </Modal.Body>
       </Modal>
     );
-    else return;
   }
 
   updateCredit(amount) {
@@ -161,9 +160,9 @@ class Profile extends CartBasedComponent {
     let cartOrdersLen = 0;
     let ordersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
-      cartOrdersLen = cart.orders.length
+      cartOrdersLen = cart.orders.length;
     if (orders !== undefined && orders !== null && orders.length > 0)
-      ordersLen = orders.length
+      ordersLen = orders.length;
       if (error) {
       return <Error msg={error}/>
     } else {
@@ -227,7 +226,6 @@ class Profile extends CartBasedComponent {
           phonenumber: result.phoneNumber,
           credit: result.credit,
           isLoaded: true,
-          error: result.msg
         });
       },
       (error) => {
@@ -273,6 +271,6 @@ Profile.propTypes = {
   credit: PropTypes.number,
   orders: PropTypes.array,
   cart: PropTypes.object
-}
+};
 
 export default Profile;

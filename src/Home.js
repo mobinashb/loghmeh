@@ -13,7 +13,7 @@ import Timer from 'react-compound-timer';
 function Search() {
   return (
     <div className="search centered-flex">
-      <form className="form-inline justify-content-center shadow-box" action="search">
+      <form className="form-inline justify-content-center shadow-box" action="">
         <div className="form-group">
           <input type="text" className="form-control bg-light" id="foodname" placeholder="نـــام غـــذا" />
           <input type="text" className="form-control bg-light" id="restaurantname" placeholder="نـــام رســـتـــوران" />
@@ -34,9 +34,9 @@ function RestaurantList(props) {
     }
     rowContent.push(
       <RestaurantCard item={item} key={item.id}/>
-    )
+    );
     return item;
-  })
+  });
   restaurantList.push(<div className="row" key="lastRow">{rowContent}</div>);
   return restaurantList;
 }
@@ -75,18 +75,18 @@ class Home extends CartBasedComponent {
     const { error, isLoaded, restaurants, restaurantsInParty, partyRemainingTime, toShow, cart} = this.state;
     let cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
-      cartOrdersLen = cart.orders.length
+      cartOrdersLen = cart.orders.length;
     var foodPartyList = [];
     restaurantsInParty.map((restaurant) => {
       restaurant.menu.map((food) => {
         food.restaurantName = restaurant.name;
-        foodPartyList.push(food)
+        foodPartyList.push(food);
         return food;
-      })
+      });
       return restaurant;
     });
     if (error) {
-      return <Error msg={error}/>
+      return <Error code={500}/>
     } else {
       return (
         <LoadingOverlay
@@ -164,7 +164,8 @@ class Home extends CartBasedComponent {
       .then(
         (result) => {
           this.setState({
-            restaurantsInParty: result
+            restaurantsInParty: result,
+            error: result.msg
           });
         },
         (error) => {
@@ -181,9 +182,9 @@ class Home extends CartBasedComponent {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result)
           this.setState({
             restaurants: result,
+            error: result.msg
           });
         },
         (error) => {
