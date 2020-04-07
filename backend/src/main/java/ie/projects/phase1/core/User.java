@@ -2,6 +2,7 @@ package ie.projects.phase1.core;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import ie.projects.phase1.exceptions.CartValidationException;
+import ie.projects.phase1.exceptions.FoodPartyExpiration;
 import ie.projects.phase1.exceptions.NegativeCreditAmount;
 import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
 
@@ -85,6 +86,15 @@ public class User {
         return null;
     }
 
+    public void checkPartyExpiration(String restaurantId) throws FoodPartyExpiration{
+        if(cart.getRestaurantId() == null)
+            return;
+        if(cart.getRestaurantId().equals(restaurantId)){
+            cart.getPartyOrders().clear();
+            throw new FoodPartyExpiration(new JSONStringCreator().msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند."));
+        }
+    }
+
     public void addToCart(String foodName, int number, double price, String restaurantId, String restaurantName, Boolean isParty, boolean isNew) throws CartValidationException {
         String cartResId = cart.getRestaurantId();
         if((cartResId == null) || (cartResId.equals(restaurantId))) {
@@ -132,7 +142,14 @@ public class User {
         cart.setOrderStatus(ORDERDONE);
     }
 
-    public void finalizeOrder() throws CartValidationException{
+    public void finalizeOrder() throws CartValidationException, FoodPartyExpiration{
+        Restaurant partyRestaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
+        if(cart.getPartyOrders().size() != 0){
+            if(partyRestaurant == null){
+                cart.getPartyOrders().clear();
+                throw new FoodPartyExpiration(new JSONStringCreator().msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند."));
+            }
+        }
         if (cart.getOrderStatus() != null)
             return;
         if (validateCart() == false)
@@ -140,10 +157,8 @@ public class User {
         double price = checkUserCredit();
         if (price > 0) {
             doOrder(price);
-            if (cart.getPartyOrders().isEmpty() == false){
-                Restaurant restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
-                restaurant.setPartyFoodNum(cart.getPartyOrders());
-            }
+            if (cart.getPartyOrders().size() != 0)
+                partyRestaurant.setPartyFoodNum(cart.getPartyOrders());
             Cart newCart = new Cart(cart.getId(), new ArrayList<Order>(cart.getOrders()), new ArrayList<Order>(cart.getPartyOrders()), cart.getRestaurantId(), cart.getRestaurantName(),
                     cart.getDeliveryManId(), DELIVERYMANFINDING, cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
 

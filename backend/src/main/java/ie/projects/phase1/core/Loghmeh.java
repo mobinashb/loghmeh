@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase1.Utils;
 import ie.projects.phase1.exceptions.CartValidationException;
+import ie.projects.phase1.exceptions.FoodPartyExpiration;
 import ie.projects.phase1.exceptions.RestaurantNotFound;
 import ie.projects.phase1.requestSender.HttpRequester;
 import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
@@ -165,14 +166,18 @@ public class Loghmeh {
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException, RestaurantNotFound {
+    public void addToUserCart(User user, String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException, RestaurantNotFound, FoodPartyExpiration {
         Restaurant restaurant;
-        if(isParty == true)
+        if(isParty == true) {
             restaurant = findRestaurantInPartyById(restaurantId);
+            if (restaurant == null)
+                user.checkPartyExpiration(restaurantId);
+        }
         else
             restaurant = findRestaurantById(restaurantId);
         if(restaurant == null)
             throw new RestaurantNotFound(new JSONStringCreator().msgCreator("رستورانی با شناسه درخواست‌شده موجود نمی‌باشد."));
+
 
         if(restaurant.containFood(foodName)) {
             if(isParty){

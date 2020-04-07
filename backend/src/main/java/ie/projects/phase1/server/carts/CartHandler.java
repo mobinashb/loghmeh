@@ -7,6 +7,7 @@ import ie.projects.phase1.core.Cart;
 import ie.projects.phase1.core.Loghmeh;
 import ie.projects.phase1.core.User;
 import ie.projects.phase1.exceptions.CartValidationException;
+import ie.projects.phase1.exceptions.FoodPartyExpiration;
 import ie.projects.phase1.exceptions.RestaurantNotFound;
 import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
 import ie.projects.phase1.server.repeatedTasks.CheckOrderStatus;
@@ -30,14 +31,14 @@ public class CartHandler {
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String addOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
+    public String addOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound, FoodPartyExpiration {
         System.out.println(request.getIsParty());
         loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), true);
         return new JSONStringCreator().msgCreator( "سفارش شما با موفقیت ثبت شد.");
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.PUT, produces = "text/plain;charset=UTF-8")
-    public String editOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
+    public String editOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound, FoodPartyExpiration {
         loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), false);
         return new JSONStringCreator().msgCreator("سفارش شما با موفقیت تغییر یافت.");
     }
@@ -49,7 +50,7 @@ public class CartHandler {
     }
 
     @RequestMapping(value = "/v1/cart/finalize", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String finalizeOrder() throws CartValidationException {
+    public String finalizeOrder() throws CartValidationException, FoodPartyExpiration {
         User user = loghmeh.getUsers().get(0);
         user.finalizeOrder();
         if(loghmeh.getStatusTaskSet() == false) {
