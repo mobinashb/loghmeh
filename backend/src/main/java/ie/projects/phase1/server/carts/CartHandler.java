@@ -32,7 +32,6 @@ public class CartHandler {
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String addOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound, FoodPartyExpiration {
-        System.out.println(request.getIsParty());
         loghmeh.addToUserCart(loghmeh.getUsers().get(0), request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), true);
         return new JSONStringCreator().msgCreator( "سفارش شما با موفقیت ثبت شد.");
     }

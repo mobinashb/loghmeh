@@ -19,7 +19,7 @@ public class Loghmeh {
     private static final double X0 = 0.0;
     private static final double Y0 = 0.0;
     private static final double DISTANCEOFRESTAURANTSTOSHOW = 170;
-    private static final int PARTYFOODUPDATEPERIOD = 1800000;
+    private static final int PARTYFOODUPDATEPERIOD = 90000;
 
     private static Loghmeh instance;
 

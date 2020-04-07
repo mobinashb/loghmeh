@@ -146,7 +146,10 @@ public class User {
         Restaurant partyRestaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
         if(cart.getPartyOrders().size() != 0){
             if(partyRestaurant == null){
-                cart.getPartyOrders().clear();
+                if(cart.getOrders().size() == 0)
+                    cart.clearOrders();
+                else
+                    cart.getPartyOrders().clear();
                 throw new FoodPartyExpiration(new JSONStringCreator().msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند."));
             }
         }
@@ -162,10 +165,8 @@ public class User {
             Cart newCart = new Cart(cart.getId(), new ArrayList<Order>(cart.getOrders()), new ArrayList<Order>(cart.getPartyOrders()), cart.getRestaurantId(), cart.getRestaurantName(),
                     cart.getDeliveryManId(), DELIVERYMANFINDING, cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
 
-            System.out.println(newCart.getOrders().size());
             this.undeliveredOrders.add(newCart);
             cart.clearOrders();
-            System.out.println(newCart.getOrders().size());
         }
         else
             throw new CartValidationException(new JSONStringCreator().msgCreator("موجودی برای نهایی کردن سفارش کافی نمی‌باشد."));
