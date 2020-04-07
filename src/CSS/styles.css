@@ -144,6 +144,7 @@ h1, h2 {
     border-radius: 1.5em;
     overflow: hidden;
     padding: 4em;
+    margin-bottom: 20em;
 }
 
 .panel{
@@ -435,6 +436,10 @@ footer {
     color: #ff6b6b;
     font-weight: 100;
     display: inline;
+}
+
+.grayed-out {
+    color: lightgray !important;
 }
 
 .dashed-div .price {
@@ -749,7 +754,7 @@ thead tr th {
 }
 
 .swal-overlay {
-    background-color: #ff6b6b3d;
+    background-color: rgba(255, 231, 109, 0.285);
 }
 
 .swal-footer {

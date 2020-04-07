@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Home from './Home';
-import LoginSignup from './LoginSignup';
-import Profile from './Profile';
-import {Footer} from './Utils'
-import Restaurant from './Restaurant'
-import Error from './Error'
+import Home from './Components/Home';
+import LoginSignup from './Components/LoginSignup';
+import Profile from './Components/Profile';
+import {Footer} from './Utils/Utils';
+import Restaurant from './Components/Restaurant';
+import Error from './Error/Error';
 
 class App extends React.Component {
   render() {
