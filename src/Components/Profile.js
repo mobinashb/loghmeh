@@ -41,6 +41,22 @@ function Banner(props) {
   );
 }
 
+Banner.propTypes = {
+  firstname: PropTypes.string,
+  lastname: PropTypes.string,
+  email: PropTypes.string,
+  phonenumber: PropTypes.string,
+  credit: PropTypes.number
+};
+
+Banner.defaultProps = {
+  firstname: '',
+  lastname: '',
+  email: '',
+  phonenumber: '',
+  credit: 0
+};
+
 class Profile extends CartBasedComponent {
   constructor(props) {
     super(props);
@@ -65,7 +81,7 @@ class Profile extends CartBasedComponent {
 
   OrderList() {
     return (
-      <div>
+      <div className="multiple-rows">
       {this.state.orders.slice(0).reverse().map((order, i) => (
         <div className="row" key={order.id}>
           <div className="col-1 col-bordered bg-light">
@@ -107,9 +123,9 @@ class Profile extends CartBasedComponent {
         show={toShow === id}
         onHide={this.handleHide}>
         <Modal.Body>
-          <h2>
+          <h4>
             {order.restaurantName}
-          </h2>
+          </h4>
           <hr className="thin"/>
           <div className="table-responsive bg-white">
             <table className="table table-bordered table-small">
@@ -127,14 +143,14 @@ class Profile extends CartBasedComponent {
                   <th scope="row" className="text-center">{toPersianNum(i+1)}</th>
                   <td className="text-center">{food.foodName}</td>
                   <td className="text-center">{toPersianNum(food.number)}</td>
-                  <td className="text-center">{toPersianNum(food.price)}</td>
+                  <td className="text-center">{toPersianNum(food.price * food.number)}</td>
                 </tr>
               ))}
               </tbody>
             </table>
-            <p className="bold">
+            <h6><b>
               جمع کل: {toPersianNum(this.getSum(order.orders))} تومان
-            </p>
+            </b></h6>
           </div>
         </Modal.Body>
       </Modal>
@@ -225,6 +241,7 @@ class Profile extends CartBasedComponent {
           email: result.email,
           phonenumber: result.phoneNumber,
           credit: result.credit,
+          error: (!this.state.error) ? result.msg : this.state.error,
           isLoaded: true,
         });
       },
@@ -244,7 +261,7 @@ class Profile extends CartBasedComponent {
       (result) => {
         this.setState({
           orderToShow: result,
-          error: result.msg
+          error: (!this.state.error) ? result.msg : this.state.error
         });
       },
       (error) => {
@@ -257,20 +274,10 @@ class Profile extends CartBasedComponent {
   }
 
   componentDidMount() {
-    this.fetchProfile();
     this.fetchCart();
+    this.fetchProfile();
     this.fetchOrders();
   }
 }
-
-Profile.propTypes = {
-  firstname: PropTypes.string,
-  lastname: PropTypes.string,
-  email: PropTypes.string,
-  phonenumber: PropTypes.string,
-  credit: PropTypes.number,
-  orders: PropTypes.array,
-  cart: PropTypes.object
-};
 
 export default Profile;

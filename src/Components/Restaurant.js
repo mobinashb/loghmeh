@@ -1,6 +1,5 @@
 import React from 'react';
 import {getQueryParams} from '../Utils/Utils';
-import PropTypes from 'prop-types';
 import Navbar from './Navbar';
 import Modal from "react-bootstrap/Modal";
 import CartBasedComponent from './CartBasedComponent';
@@ -66,6 +65,7 @@ class Restaurant extends CartBasedComponent {
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length;
     if (error) {
+      if (error.includes("یافت")) return <Error code={404}/>;
       return <Error code={500}/>;
     } else {
       return (
@@ -129,6 +129,7 @@ class Restaurant extends CartBasedComponent {
             name: result.name,
             logo: result.logo,
             id: result.id,
+            error: (!this.state.error) ? result.msg : this.state.error
           });
         },
         (error) => {

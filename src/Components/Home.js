@@ -105,7 +105,8 @@ class Home extends CartBasedComponent {
           </div>
           <div className="centered-flex">
             <div className="timer">
-              {isLoaded &&<Timer
+              {partyRemainingTime > 0 &&
+              <Timer
               initialTime={parseInt(partyRemainingTime)*1000}
               direction="backward"
               >
@@ -165,7 +166,7 @@ class Home extends CartBasedComponent {
         (result) => {
           this.setState({
             restaurantsInParty: result,
-            error: result.msg
+            error: (!this.state.error) ? result.msg : this.state.error
           });
         },
         (error) => {
@@ -184,7 +185,7 @@ class Home extends CartBasedComponent {
         (result) => {
           this.setState({
             restaurants: result,
-            error: result.msg
+            error: (!this.state.error) ? result.msg : this.state.error
           });
         },
         (error) => {
@@ -203,8 +204,8 @@ class Home extends CartBasedComponent {
         (result) => {
           this.setState({
             partyRemainingTime: result.remainingTime,
+            error: (!this.state.error) ? result.msg : this.state.error,
             isLoaded: true,
-            error: result.msg
           });
         },
         (error) => {

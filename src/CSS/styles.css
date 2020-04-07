@@ -5,6 +5,8 @@
 body {
     background-color: #F7FFF7 !important;
     font-size: calc(12px + 0.1vw) !important;
+    -moz-appearance: none;
+    -webkit-appearance: none;
 }
 
 div {
@@ -70,7 +72,6 @@ header{
     width: 100%;
     min-height: 14em;
     overflow: hidden;
-    margin-top: 1em;
 }
 
 .banner div {
@@ -103,12 +104,7 @@ header{
     display: inline !important;
 }
 
-
-.bold {
-    font-weight: bold !important;
-}
-
-h1, h2 {
+h1, h2, h3, h4 {
    text-align: center;
 }
 
@@ -228,8 +224,8 @@ form#credit .cyan-btn {
     text-align: center;
 }
 
-.row {
-    padding-bottom: 0em !important;
+.multiple-rows .row {
+    padding-bottom: 1em;
 }
 
 .small-btn {
@@ -505,9 +501,8 @@ footer {
     opacity: 0.5;
     object-fit: cover;
     width: 100%;
-    max-height: 17em;
+    max-height: 18em;
     position: relative;
-    margin-top: 1.5em;
 }
 
 .title-description {
@@ -687,7 +682,7 @@ form#login .btn, form#signup .btn {
     display: block;
 }
 
-.modal h2 {
+.modal h2, .modal h4 {
     font-weight: normal !important;
 }
 
@@ -744,8 +739,8 @@ thead tr th {
 }
 
 #restaurant-div .card img {
-    height: 6em;
-    width: 6em;
+    height: 13vh;
+    width: 13vh;
 }
 
 #restaurant-div .rating {

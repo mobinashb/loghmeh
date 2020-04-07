@@ -4,6 +4,7 @@ import '../CSS/styles.css';
 import cover from '../Assets/cover.jpg';
 import error from '../Assets/error.png';
 import {Link} from 'react-router-dom';
+import PropTypes from "prop-types";
 
 class Error extends React.Component {
   render() {
@@ -30,5 +31,13 @@ class Error extends React.Component {
     )
   }
 }
+
+Error.propTypes = {
+  code: PropTypes.number
+};
+
+Error.defaultProps = {
+  code: 500
+};
 
 export default Error;

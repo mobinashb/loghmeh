@@ -179,10 +179,10 @@ class CartBasedComponent extends React.Component {
           {cart.orders.map((food) => (
           <div key={food.foodName} className="bottom-bordered flexcontainer">
             <div className="row">
-              <span className="float-right">
+              <span className="col-sm-7">
               {food.foodName}
               </span>
-              <span className="plus-minus float-left">
+              <span className="plus-minus col-sm-5">
                 <i className="flaticon-minus" onClick={this.changeCart.bind(this, food, -1)}/>
                 &nbsp;&nbsp;
                 {toPersianNum(this.getFoodCount(food.foodName))}
@@ -210,6 +210,7 @@ class CartBasedComponent extends React.Component {
         (result) => {
           this.setState({
             cart: result,
+            error: (!this.state.error) ? result.msg : this.state.error
           });
         },
         (error) => {
@@ -228,6 +229,7 @@ class CartBasedComponent extends React.Component {
       (result) => {
         this.setState({
           orders: result,
+          error: (!this.state.error) ? result.msg : this.state.error
         });
       },
       (error) => {

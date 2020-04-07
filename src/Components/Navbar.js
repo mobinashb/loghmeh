@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../Assets/LOGO.png';
 import {toPersianNum} from '../Utils/Utils';
+import PropTypes from "prop-types";
 
 class Navbar extends React.Component {
   showCart() {
@@ -35,5 +36,17 @@ class Navbar extends React.Component {
     );
   }
 }
+
+Navbar.propTypes = {
+  whereAmI: PropTypes.string,
+  cartCount: PropTypes.number,
+  func: PropTypes.func
+};
+
+Navbar.defaultProps = {
+  whereAmI: "home",
+  cartCount: 0,
+  func: null
+};
 
 export default Navbar;

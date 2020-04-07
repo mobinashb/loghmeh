@@ -1,5 +1,8 @@
 import React from 'react';
-import {POST, Form} from '../Utils/Utils';
+import {POST} from '../Utils/Utils';
+import swal from 'sweetalert';
+import Form from './Form';
+import PropTypes from "prop-types";
 
 class CreditForm extends Form {
   constructor(props) {
@@ -18,6 +21,16 @@ class CreditForm extends Form {
     if (res.ok) {
       this.props.update(this.state.amount);
       this.setState({amount: ""});
+      swal({
+        text: "اعتبار شما با موفقیت افزایش یافت",
+        icon: "success",
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      });
     }
   }
 
@@ -28,7 +41,7 @@ class CreditForm extends Form {
   render() {
     const {amount} = this.state;
     return (
-      <form className="form-inline justify-content-center" id="credit" action="#!" onSubmit={this.mySubmitHandler} onReset={this.resetForm}>
+      <form className="form-inline justify-content-center" id="credit" onSubmit={this.mySubmitHandler} onReset={this.resetForm}>
       <div className="form-group">
         <input type="text" id="amount" value={amount} className="form-control bg-light" placeholder="میزان افزایش اعتبار" onChange={this.myChangeHandler} />
       </div>
@@ -37,5 +50,13 @@ class CreditForm extends Form {
     );
   }
 }
+
+CreditForm.propTypes = {
+  update: PropTypes.func
+};
+
+CreditForm.defaultProps = {
+  update: null
+};
 
 export default CreditForm;

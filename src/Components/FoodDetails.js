@@ -3,6 +3,7 @@ import React from 'react';
 import {toPersianNum} from '../Utils/Utils';
 import star from '../Assets/star.png';
 import Modal from "react-bootstrap/Modal";
+import PropTypes from "prop-types";
 
 class FoodDetails extends React.Component {
   constructor(props) {
@@ -48,11 +49,11 @@ class FoodDetails extends React.Component {
           <div className="col-sm-2">
             <div className="food-title">
               {this.state.name}
-              </div>
-              <span className="rating inline">
-                {toPersianNum(this.state.popularity * 5)}
-                <img src={star} alt=""/>
-              </span>
+            </div>
+            <span className="rating inline">
+              {toPersianNum(this.state.popularity * 5)}
+              <img src={star} alt=""/>
+            </span>
             </div>
           </div>
           <ul className="price-old-new">
@@ -181,5 +182,31 @@ class FoodDetails extends React.Component {
     this.setState({orderQuantity: 0});
   }
 }
+
+FoodDetails.propTypes = {
+  popularity: PropTypes.number,
+  image: PropTypes.string,
+  name: PropTypes.string,
+  restaurantId: PropTypes.string,
+  restaurantName: PropTypes.string,
+  price: PropTypes.number,
+  oldPrice: PropTypes.number,
+  count: PropTypes.number,
+  toShow: PropTypes.string,
+  description: PropTypes.string,
+};
+
+FoodDetails.defaultProps = {
+  popularity: 0,
+  image: '',
+  name: '',
+  restaurantId: '',
+  restaurantName: '',
+  price: 0,
+  oldPrice: undefined,
+  count: undefined,
+  toShow: '',
+  description: ''
+};
 
 export default FoodDetails;

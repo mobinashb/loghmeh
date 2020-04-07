@@ -25,14 +25,6 @@ function Footer() {
   );
 }
 
-class Form extends React.Component {
-  myChangeHandler = (event) => {
-    let nam = event.target.id;
-    let val = event.target.value;
-    this.setState({[nam]: val});
-  }
-}
-
 function toPersianNum(inp) {
   var i = 0,
   num = inp.toString(),
@@ -50,36 +42,33 @@ function toPersianNum(inp) {
 }
 
 async function POST(body, path) {
-  let response = await fetch(path, {
+  return await fetch(path, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
       "Content-type": "application/json; charset=UTF-8"
     }
   });
-  return response;
 }
 
 async function PUT(body, path) {
-  let response = await fetch(path, {
+  return await fetch(path, {
     method: 'PUT',
     body: JSON.stringify(body),
     headers: {
       "Content-type": "application/json; charset=UTF-8"
     }
   });
-  return response;
 }
 
 async function DELETE(body, path) {
-  let response = await fetch(path, {
+  return await fetch(path, {
     method: 'DELETE',
     body: JSON.stringify(body),
     headers: {
       "Content-type": "application/json; charset=UTF-8"
     }
   });
-  return response;
 }
 
 function getQueryParams(url, name) {
@@ -94,7 +83,6 @@ function getQueryParams(url, name) {
 export {
     Header,
     Footer,
-    Form,
     toPersianNum,
     POST,
     PUT,

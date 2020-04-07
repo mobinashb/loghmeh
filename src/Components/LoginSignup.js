@@ -1,20 +1,22 @@
 import React from 'react';
-import {Header, Form} from '../Utils/Utils';
+import {Header} from '../Utils/Utils';
+import swal from "sweetalert";
+import Form from './Form';
 
-function Panels(props) {
+function Panels() {
   return (
-    <div class="warpper">
-      <input class="radio" id="one" name="group" type="radio" defaultChecked={true}/>
-      <input class="radio" id="two" name="group" type="radio"/>
-      <div class="tabs">
-      <label class="tab" id="one-tab" htmlFor="one">ورود</label>
-      <label class="tab" id="two-tab" htmlFor="two">ثبت نام</label>
+    <div className="warpper">
+      <input className="radio" id="one" name="group" type="radio" defaultChecked={true}/>
+      <input className="radio" id="two" name="group" type="radio"/>
+      <div className="tabs">
+      <label className="tab" id="one-tab" htmlFor="one">ورود</label>
+      <label className="tab" id="two-tab" htmlFor="two">ثبت نام</label>
       </div>
-      <div class="panels">
-          <div class="panel row-sm-5" id="one-panel">
+      <div className="panels">
+          <div className="panel row-sm-5" id="one-panel">
           <LoginForm/>
           </div>
-          <div class="panel row-sm-5" id="two-panel">
+          <div className="panel row-sm-5" id="two-panel">
           <SignupForm/>
           </div>
       </div>
@@ -43,19 +45,19 @@ class LoginForm extends Form {
   }
   render() {
     return(
-      <form class="text-center p-5" action="#!" id="login">
-        <p class="h4 mb-4">ورود</p>
-        <input type="email" id="email" class="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
-        <input type="password" id="password" class="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
-        <div class="d-flex justify-content-around">
+      <form className="text-center p-5" action="/" id="login">
+        <p className="h4 mb-4">ورود</p>
+        <input type="email" required name="email" className="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
+        <input type="password" required name="password" className="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
+        <div className="d-flex justify-content-around">
             <div>
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="remember"/>
-                    <label class="custom-control-label" for="remember">مرا به خاطر بسپار</label>
+                <div className="custom-control custom-checkbox">
+                    <input type="checkbox" className="custom-control-input" id="remember"/>
+                    <label className="custom-control-label" htmlFor="remember">مرا به خاطر بسپار</label>
                 </div>
             </div>
         </div>
-        <button class="btn cyan-btn" type="submit">ورود</button>
+        <button className="btn cyan-btn" type="submit">ورود</button>
       </form>
     );
   }
@@ -76,22 +78,49 @@ class SignupForm extends Form {
   mySubmitHandler = (event) => {
     let password = event.target.password;
     let passwordRep = event.target.passwordrepeat;
+    let phoneNum = event.target.phonenumber;
     if (password.value !== passwordRep.value) {
       event.preventDefault();
-      alert("Passwords do not match!");
+      swal({
+        title: "خطا",
+        text: "تکرار رمز عبور اشتباه وارد شده است!",
+        icon: "error",
+        dangerMode: true,
+        button: {
+            text: "بستن",
+            value: null,
+            visible: true,
+            closeModal: true,
+        },
+      });
+    }
+    if (isNaN(phoneNum) || phoneNum < 0) {
+      event.preventDefault();
+      swal({
+        title: "خطا",
+        text: "شماره تلفن اشتباه وارد شده است!",
+        icon: "error",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      });
     }
   }
   render() {
     return (
-      <form class="text-center p-5" action="#" id="signup" onSubmit={this.mySubmitHandler}>
-        <p class="h4 mb-4">ثبت نام</p>
-        <input type="text" id="firstname" class="form-control mb-4" placeholder="نام" onChange={this.myChangeHandler}/>
-        <input type="text" id="lastname" class="form-control mb-4" placeholder="نام خانوادگی" onChange={this.myChangeHandler}/>
-        <input type="email" id="email" class="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
-        <input type="text" id="phonenumber" class="form-control mb-4" placeholder="شماره تماس" onChange={this.myChangeHandler}/>
-        <input type="password" id="password" class="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
-        <input type="password" id="passwordrepeat" class="form-control mb-4" placeholder="تکرار رمز عبور"/>
-        <button class="btn cyan-btn" type="submit">ثبت نام</button>
+      <form className="text-center p-5" action="#" id="signup" onSubmit={this.mySubmitHandler}>
+        <p className="h4 mb-4">ثبت نام</p>
+        <input type="text" required name="firstname" className="form-control mb-4" placeholder="نام" onChange={this.myChangeHandler}/>
+        <input type="text" required name="lastname" className="form-control mb-4" placeholder="نام خانوادگی" onChange={this.myChangeHandler}/>
+        <input type="email" required name="email" className="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
+        <input type="text" required name="phonenumber" className="form-control mb-4" placeholder="شماره تماس" onChange={this.myChangeHandler}/>
+        <input type="password" required name="password" className="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
+        <input type="password" required name="passwordrepeat" className="form-control mb-4" placeholder="تکرار رمز عبور"/>
+        <button className="btn cyan-btn" type="submit">ثبت نام</button>
       </form>
     );
   }
