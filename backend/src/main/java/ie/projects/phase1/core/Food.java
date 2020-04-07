@@ -28,6 +28,10 @@ public class Food{
 
     public String getImage() { return image; }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getRestaurantId() { return restaurantId;}
     public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId;}
 

@@ -90,7 +90,7 @@ public class User {
         if(cart.getRestaurantId() == null)
             return;
         if(cart.getRestaurantId().equals(restaurantId)){
-            cart.getPartyOrders().clear();
+            cart.clearOrders();
             throw new FoodPartyExpiration(new JSONStringCreator().msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند."));
         }
     }
@@ -146,10 +146,7 @@ public class User {
         Restaurant partyRestaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
         if(cart.getPartyOrders().size() != 0){
             if(partyRestaurant == null){
-                if(cart.getOrders().size() == 0)
-                    cart.clearOrders();
-                else
-                    cart.getPartyOrders().clear();
+                cart.clearOrders();
                 throw new FoodPartyExpiration(new JSONStringCreator().msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند."));
             }
         }

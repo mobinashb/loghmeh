@@ -63,6 +63,7 @@ public class Utils {
         Food newFood = new Food();
         newFood.setName(food.getName());
         newFood.setDescription(food.getDescription());
+        newFood.setImage(food.getImage());
         newFood.setPopularity(food.getPopularity());
         newFood.setRestaurantId(food.getRestaurantId());
         newFood.setPrice(food.getPrice());
