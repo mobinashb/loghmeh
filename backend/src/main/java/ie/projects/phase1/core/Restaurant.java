@@ -41,6 +41,10 @@ public class Restaurant
     public ArrayList<Food> getMenu() { return menu; }
 
     public void addFood(Food food){
+        for(Food menuFoods: this.menu){
+            if(menuFoods.getName().equals(food.getName()))
+                return;
+        }
         this.menu.add(food);
     }
 
@@ -88,41 +92,32 @@ public class Restaurant
         return false;
     }
 
-    public double getFoodPrices(HashMap<String, Integer> orders){
-        double totalPrice = 0;
-        for(Map.Entry element: orders.entrySet())
-            totalPrice += findFood((String) element.getKey()).getPrice() * ((int) element.getValue());
-        return totalPrice;
-    }
-
-    public boolean checkPartyFoodNum(HashMap<String, Integer> orders){
-        for (String foodName : orders.keySet()){
-            int number = orders.get(foodName);
-            int availableNum = findFood(foodName).getCount();
+    public boolean checkPartyFoodNum(ArrayList<Order> orders){
+        for (Order order : orders){
+            int number = order.getFoodNum();
+            int availableNum = findFood(order.getFoodName()).getCount();
             if(availableNum < number)
                 return false;
         }
         return true;
     }
 
-    public void setPartyFoodNum(HashMap<String, Integer> orders){
-        for (String foodName : orders.keySet()){
-            int number = orders.get(foodName);
-            int availableNum = findFood(foodName).getCount();
-            findFood(foodName).setCount(availableNum - number);
+    public void setPartyFoodNum(ArrayList<Order> orders){
+        for (Order order : orders){
+            int number = order.getFoodNum();
+            int availableNum = findFood(order.getFoodName()).getCount();
+            findFood(order.getFoodName()).setCount(availableNum - number);
         }
     }
 
     public void convertPartyMenuToMenu(Restaurant restaurant){
         for(Food food : restaurant.getMenu()){
             food.setRestaurantId(restaurant.getId());
-            if(findFood(food.getName()) == null){
-                Food newFood = Utils.deepCopyFood(food);
-                newFood.setPrice(food.getOldPrice());
-                newFood.setOldPrice(null);
-                newFood.setCount(null);
-                addFood(newFood);
-            }
+            Food newFood = Utils.deepCopyFood(food);
+            newFood.setPrice(food.getOldPrice());
+            newFood.setOldPrice(null);
+            newFood.setCount(null);
+            addFood(newFood);
         }
     }
 }

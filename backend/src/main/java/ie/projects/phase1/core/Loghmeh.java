@@ -149,7 +149,7 @@ public class Loghmeh {
             Restaurant restaurant = mapper.readValue(jsonData, Restaurant.class);
             Restaurant foundedRestaurant = findRestaurantById(restaurant.getId());
             if(foundedRestaurant == null) {
-                Restaurant restaurant1 = new Restaurant(restaurant.getId(), restaurant.getName(), restaurant.getLocation(), restaurant.getLogo(), restaurant.getMenu());
+                Restaurant restaurant1 = new Restaurant(restaurant.getId(), restaurant.getName(), restaurant.getLocation(), restaurant.getLogo(), new ArrayList<Food>());
                 restaurant1.convertPartyMenuToMenu(restaurant);
                 this.restaurants.add(restaurant1);
             }
@@ -179,7 +179,7 @@ public class Loghmeh {
                 if(restaurant.findFood(foodName).getCount() < number)
                     throw new CartValidationException(new JSONStringCreator().msgCreator("غذا از جشن غذا برداشته شده‌است."));
             }
-            user.addToCart(foodName, number, restaurantId, isParty, isNew);
+            user.addToCart(foodName, number, restaurant.findFood(foodName).getPrice(), restaurantId, restaurant.getName(), isParty, isNew);
             return;
         }
         throw new CartValidationException(new JSONStringCreator().msgCreator("رستوران مدنظر، شامل غذای درخواست‌شده نمی‌باشد"));

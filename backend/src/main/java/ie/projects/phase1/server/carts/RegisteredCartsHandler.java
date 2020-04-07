@@ -20,20 +20,15 @@ import java.io.IOException;
 @RestController
 public class RegisteredCartsHandler {
     Loghmeh loghmeh = Loghmeh.getInstance();
-    ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping(value = "/v1/orders", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    public String getAllCarts() throws IOException {
+    public String getAllCarts() {
         User user = loghmeh.getUsers().get(0);
-        String[] userFilterParams = {"orders", "partyOrders", "deliveryManId", "deliveryManFoundedTime", "deliveryManTimeToReach", "remainingTimeToDeliver"};
-        FilterProvider filter = new SimpleFilterProvider().addFilter("user", SimpleBeanPropertyFilter.serializeAllExcept(userFilterParams));
-        ObjectWriter writer = mapper.writer(filter);
         return new JSONStringCreator().ordersCreator(user.getAllOrders());
     }
 
     @RequestMapping(value = "/v1/orders/{cartId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getCart(@PathVariable(value = "cartId") String cartId) throws CartNotFound{
-        System.out.println(cartId);
         User user = loghmeh.getUsers().get(0);
         Cart cart = user.findCartById(cartId);
         if(cart == null)

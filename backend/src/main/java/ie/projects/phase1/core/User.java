@@ -85,10 +85,10 @@ public class User {
         return null;
     }
 
-    public void addToCart(String foodName, int number, String restaurantId, Boolean isParty, boolean isNew) throws CartValidationException {
+    public void addToCart(String foodName, int number, double price, String restaurantId, String restaurantName, Boolean isParty, boolean isNew) throws CartValidationException {
         String cartResId = cart.getRestaurantId();
         if((cartResId == null) || (cartResId.equals(restaurantId))) {
-            cart.addToCart(foodName, number, restaurantId, isParty, isNew);
+            cart.addToCart(foodName, number, price, restaurantId, restaurantName, isParty, isNew);
             return;
         }
         throw new CartValidationException(new JSONStringCreator().msgCreator("امکان ثبت سفارش از دو رستوران مجزا در یک سبد خرید وجود ندارد."));
@@ -113,13 +113,11 @@ public class User {
 
     private double checkUserCredit(){
         double totalPrice = 0;
-        Loghmeh loghmeh = Loghmeh.getInstance();
 
-        if(cart.getPartyOrders().isEmpty() == false)
-            totalPrice = loghmeh.findRestaurantInPartyById(cart.getRestaurantId()).getFoodPrices(cart.getPartyOrders());
-
-        if(cart.getOrders().isEmpty() == false)
-            totalPrice += loghmeh.findRestaurantById(cart.getRestaurantId()).getFoodPrices(cart.getOrders());
+        for (Order order: cart.getPartyOrders())
+            totalPrice += order.getPrice();
+        for (Order order: cart.getOrders())
+            totalPrice += order.getPrice();
 
         if(totalPrice > this.credit)
             totalPrice = 0.0;
@@ -146,11 +144,13 @@ public class User {
                 Restaurant restaurant = Loghmeh.getInstance().findRestaurantInPartyById(cart.getRestaurantId());
                 restaurant.setPartyFoodNum(cart.getPartyOrders());
             }
-            cart.setOrderStatus(DELIVERYMANFINDING);
+            Cart newCart = new Cart(cart.getId(), new ArrayList<Order>(cart.getOrders()), new ArrayList<Order>(cart.getPartyOrders()), cart.getRestaurantId(), cart.getRestaurantName(),
+                    cart.getDeliveryManId(), DELIVERYMANFINDING, cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
 
-            Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
+            System.out.println(newCart.getOrders().size());
             this.undeliveredOrders.add(newCart);
             cart.clearOrders();
+            System.out.println(newCart.getOrders().size());
         }
         else
             throw new CartValidationException(new JSONStringCreator().msgCreator("موجودی برای نهایی کردن سفارش کافی نمی‌باشد."));
@@ -193,7 +193,7 @@ public class User {
                 cart.setOrderStatus(ORDERDELIVERED);
         }
         else if(cart.getOrderStatus() == ORDERDELIVERED) {
-            Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
+            Cart newCart = new Cart(cart.getId(), cart.getOrders(), cart.getPartyOrders(), cart.getRestaurantId(), cart.getRestaurantName(), cart.getDeliveryManId(), cart.getOrderStatus(), cart.getDeliveryManFoundedTime(), cart.getDeliveryManTimeToReach());
             orders.add(newCart);
             cartItr.remove();
         }

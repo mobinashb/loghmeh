@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class RestaurantHandler {
@@ -61,6 +62,12 @@ public class RestaurantHandler {
             timer.schedule(new UpdatePartyRestaurants(), 0, loghmeh.getPARTYFOODUPDATEPERIOD());
             loghmeh.setFoodPartyTaskSet(true);
         }
+        try{
+            TimeUnit.SECONDS.sleep(1);
+        }catch (InterruptedException e1){
+            e1.printStackTrace();
+        }
+
         String[] restaurantFilterParams = {"location", "logo", "estimatedDeliverTime"};
         FilterProvider filter = new SimpleFilterProvider()
                 .addFilter("restaurant", SimpleBeanPropertyFilter.serializeAllExcept(restaurantFilterParams));

@@ -3,12 +3,9 @@ package ie.projects.phase1.server.jsonCreator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import ie.projects.phase1.core.Cart;
-import ie.projects.phase1.core.Loghmeh;
-import ie.projects.phase1.core.Restaurant;
-import org.apache.commons.lang.ObjectUtils;
+import ie.projects.phase1.core.Order;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class JSONStringCreator {
     public String msgCreator(String msg){
@@ -16,29 +13,24 @@ public class JSONStringCreator {
     }
 
     public JsonObject cartCreator(Cart cart){
-        Loghmeh loghmeh = Loghmeh.getInstance();
-        Restaurant restaurant = loghmeh.findRestaurantById(cart.getRestaurantId());
         JsonArray orders = new JsonArray();
         JsonObject tempObj = new JsonObject();
         tempObj.addProperty("restaurantId", cart.getRestaurantId());
-        if(restaurant == null)
-            tempObj.addProperty("restaurantName", cart.getRestaurantId());
-        else
-            tempObj.addProperty("restaurantName", restaurant.getName());
+        tempObj.addProperty("restaurantName", cart.getRestaurantName());
         tempObj.addProperty("id", cart.getId());
-        for(Map.Entry element: cart.getOrders().entrySet()){
+        for(Order order: cart.getOrders()){
             JsonObject orderObj = new JsonObject();
-            orderObj.addProperty("foodName", (String) element.getKey());
-            orderObj.addProperty("number", (int) element.getValue());
-            orderObj.addProperty("price", restaurant.findFood((String) element.getKey()).getPrice());
+            orderObj.addProperty("foodName", order.getFoodName());
+            orderObj.addProperty("number", order.getFoodNum());
+            orderObj.addProperty("price", order.getPrice());
             orderObj.addProperty("isParty", 0);
             orders.add(orderObj);
         }
-        for(Map.Entry element: cart.getPartyOrders().entrySet()){
+        for(Order order: cart.getPartyOrders()){
             JsonObject orderObj = new JsonObject();
-            orderObj.addProperty("foodName", (String) element.getKey());
-            orderObj.addProperty("number", (int) element.getValue());
-            orderObj.addProperty("price", loghmeh.findRestaurantInPartyById(cart.getRestaurantId()).findFood((String) element.getKey()).getPrice());
+            orderObj.addProperty("foodName", order.getFoodName());
+            orderObj.addProperty("number", order.getFoodNum());
+            orderObj.addProperty("price", order.getPrice());
             orderObj.addProperty("isParty", 1);
             orders.add(orderObj);
         }
@@ -51,7 +43,7 @@ public class JSONStringCreator {
         for (Cart cart: carts){
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("id", cart.getId());
-            jsonObject.addProperty("restaurantName", Loghmeh.getInstance().findRestaurantById(cart.getRestaurantId()).getName());
+            jsonObject.addProperty("restaurantName", cart.getRestaurantName());
             jsonObject.addProperty("orderStatus", cart.getOrderStatus());
             orders.add(jsonObject);
         }

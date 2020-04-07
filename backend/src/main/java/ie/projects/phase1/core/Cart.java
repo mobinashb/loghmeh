@@ -1,18 +1,16 @@
 package ie.projects.phase1.core;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import ie.projects.phase1.exceptions.CartValidationException;
 import ie.projects.phase1.server.jsonCreator.JSONStringCreator;
-
-import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Cart {
     private Integer id = 1;
-    private HashMap<String, Integer> orders = new HashMap<String, Integer>();
-    private HashMap<String, Integer> partyOrders = new HashMap<String, Integer>();
+    private ArrayList<Order> orders = new ArrayList<>();
+    private ArrayList<Order> partyOrders = new ArrayList<>();
     private String restaurantId;
+    private String restaurantName;
     private String deliveryManId;
     private String orderStatus;
     private long deliveryManFoundedTime;
@@ -21,15 +19,12 @@ public class Cart {
 
     public Cart(){}
 
-    public Cart(Integer id, HashMap<String, Integer> orders, HashMap<String, Integer> partyOrders, String restaurantId, String deliveryManId, String orderStatus, long deliveryManFoundedTime, double deliveryManTimeToReach){
+    public Cart(Integer id, ArrayList<Order> orders, ArrayList<Order> partyOrders, String restaurantId, String restaurantName, String deliveryManId, String orderStatus, long deliveryManFoundedTime, double deliveryManTimeToReach){
         this.id = id;
-        Gson gson = new Gson();
-        String ordersJsonString = gson.toJson(orders);
-        String partyOrdersJsonString = gson.toJson(partyOrders);
-        Type type = new TypeToken<HashMap<String, Integer> >(){}.getType();
-        this.orders = gson.fromJson(ordersJsonString, type);
-        this.partyOrders = gson.fromJson(partyOrdersJsonString, type);
+        this.orders = orders;
+        this.partyOrders = partyOrders;
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
         this.deliveryManId = deliveryManId;
         this.orderStatus = orderStatus;
         this.deliveryManFoundedTime = deliveryManFoundedTime;
@@ -37,17 +32,21 @@ public class Cart {
         this.remainingTimeToDeliver = 0;
     }
 
-    public HashMap<String, Integer> getOrders() {
+    public ArrayList<Order> getOrders() {
         return orders;
     }
 
-    public HashMap<String, Integer> getPartyOrders() { return partyOrders; }
+    public ArrayList<Order> getPartyOrders() {
+        return partyOrders;
+    }
 
     public int getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
     public String getRestaurantId() { return restaurantId; }
     public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+
+    public String getRestaurantName() { return restaurantName; }
 
     public String getDeliveryManId() { return deliveryManId; }
     public void setDeliveryManId(String deliveryManId) { this.deliveryManId = deliveryManId; }
@@ -65,15 +64,24 @@ public class Cart {
 
     public void setRemainingTimeToDeliver(double remainingTimeToDeliver) { this.remainingTimeToDeliver = remainingTimeToDeliver; }
 
-    private void addToCartUtil(HashMap<String, Integer> newOrder, String foodName, int number, boolean isNew) throws CartValidationException{
-        if (newOrder.containsKey(foodName)) {
-            int foodNum = newOrder.get(foodName);
+    private Order findOrderByFoodName(String foodName, ArrayList<Order> orders){
+        for(Order order: orders){
+            if(order.getFoodName().equals(foodName))
+                return order;
+        }
+        return null;
+    }
+
+    private void addToCartUtil(ArrayList<Order> newOrders, String foodName, int number, double price, boolean isNew) throws CartValidationException{
+        Order foundedOrder = findOrderByFoodName(foodName, newOrders);
+        if (foundedOrder != null) {
+            int foodNum = foundedOrder.getFoodNum();
             if (foodNum + number == 0)
-                newOrder.remove(foodName);
+                newOrders.remove(foundedOrder);
             else if(foodNum + number < 0)
                 throw new CartValidationException(new JSONStringCreator().msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد."));
             else
-                newOrder.put(foodName, foodNum + number);
+                foundedOrder.setFoodNum(foodNum + number);
         }
         else {
             if(isNew == false)
@@ -81,27 +89,30 @@ public class Cart {
             else {
                 if(number <= 0)
                     throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد مثبتی را وارد نمایید."));
-                newOrder.put(foodName, number);
+                Order newOrder = new Order(foodName, number, price);
+                newOrders.add(newOrder);
             }
         }
     }
 
-    public void addToCart(String foodName, int number, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException{
+    public void addToCart(String foodName, int number, double price, String restaurantId, String restaurantName, boolean isParty, boolean isNew) throws CartValidationException{
         if(number == 0)
             throw new CartValidationException(new JSONStringCreator().msgCreator("لطفا عدد دیگری غیر از ۰ وارد کنید."));
         if(isParty) {
-            this.addToCartUtil(this.partyOrders, foodName, number, isNew);
+            this.addToCartUtil(this.partyOrders, foodName, number, price, isNew);
         }
         else {
-            this.addToCartUtil(this.orders, foodName, number, isNew);
+            this.addToCartUtil(this.orders, foodName, number, price, isNew);
         }
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
         if((this.orders.size() == 0) && (this.partyOrders.size() == 0))
             this.clearOrders();
     }
 
     public void clearOrders(){
         restaurantId = null;
+        restaurantName = null;
         deliveryManId = null;
         orderStatus = null;
         orders.clear();
