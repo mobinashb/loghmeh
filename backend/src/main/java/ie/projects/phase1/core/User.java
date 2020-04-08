@@ -125,9 +125,9 @@ public class User {
         double totalPrice = 0;
 
         for (Order order: cart.getPartyOrders())
-            totalPrice += order.getPrice();
+            totalPrice += order.getPrice() * order.getFoodNum();
         for (Order order: cart.getOrders())
-            totalPrice += order.getPrice();
+            totalPrice += order.getPrice() * order.getFoodNum();
 
         if(totalPrice > this.credit)
             totalPrice = 0.0;
