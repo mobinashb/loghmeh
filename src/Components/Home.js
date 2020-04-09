@@ -87,14 +87,17 @@ class Home extends CartBasedComponent {
     });
     if (error) {
       return <Error code={500}/>;
-    } else {
+    }
+    if (partyRemainingTime <= 0) return null;
+    else {
+      console.log(partyRemainingTime)
       return (
         <LoadingOverlay
         active={!isLoaded}
         spinner={<ClipLoader
           size={40}
           color={"#ff6b6b"}
-          loading={!this.state.isLoaded}
+          loading={!isLoaded}
         />}>
         <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow}/>
         <Header/>
@@ -105,14 +108,12 @@ class Home extends CartBasedComponent {
           </div>
           <div className="centered-flex">
             <div className="timer">
-              {partyRemainingTime > 0 &&
               <Timer
               initialTime={parseInt(partyRemainingTime)*1000}
               direction="backward"
               >
                 زمان باقی مانده: &nbsp;<b><Timer.Minutes formatValue={value => toPersianNum(`${value}`)}/>:<Timer.Seconds formatValue={value => toPersianNum(`${value}`)}/></b>
               </Timer>
-              }
               </div>
           </div>
           <div className="scrolling-wrapper shadow-box">
