@@ -67,7 +67,7 @@ class Home extends CartBasedComponent {
       isLoaded: false,
       restaurants: [],
       restaurantsInParty: [],
-      partyRemainingTime: 0,
+      partyRemainingTime: null,
       cart: {}
     };
   }
@@ -88,9 +88,7 @@ class Home extends CartBasedComponent {
     if (error) {
       return <Error code={500}/>;
     }
-    if (partyRemainingTime <= 0) return null;
     else {
-      console.log(partyRemainingTime)
       return (
         <LoadingOverlay
         active={!isLoaded}
@@ -108,12 +106,14 @@ class Home extends CartBasedComponent {
           </div>
           <div className="centered-flex">
             <div className="timer">
+              {isLoaded &&
               <Timer
               initialTime={parseInt(partyRemainingTime)*1000}
               direction="backward"
               >
                 زمان باقی مانده: &nbsp;<b><Timer.Minutes formatValue={value => toPersianNum(`${value}`)}/>:<Timer.Seconds formatValue={value => toPersianNum(`${value}`)}/></b>
               </Timer>
+              }
               </div>
           </div>
           <div className="scrolling-wrapper shadow-box">
@@ -166,8 +166,10 @@ class Home extends CartBasedComponent {
       .then(
         (result) => {
           this.setState({
-            restaurantsInParty: result,
-            error: (!this.state.error) ? result.msg : this.state.error
+            restaurantsInParty: result.restaurants,
+            error: (!this.state.error) ? result.msg : this.state.error,
+            partyRemainingTime: result.remainingTime,
+            isLoaded: true
           });
         },
         (error) => {
@@ -186,7 +188,7 @@ class Home extends CartBasedComponent {
         (result) => {
           this.setState({
             restaurants: result,
-            error: (!this.state.error) ? result.msg : this.state.error
+            error: (!this.state.error) ? result.msg : this.state.error,
           });
         },
         (error) => {
@@ -198,31 +200,11 @@ class Home extends CartBasedComponent {
       )
   }
 
-  fetchRemainingTime() {
-    fetch("http://localhost:8080/v1/foodparty/remainingTime")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            partyRemainingTime: result.remainingTime,
-            error: (!this.state.error) ? result.msg : this.state.error,
-            isLoaded: true,
-          });
-        },
-        (error) => {
-          this.setState({
-            error: error,
-            isLoaded: true,
-          });
-        }
-      )
-  }
 
   componentDidMount() {
+    this.fetchFoodParty();
     this.fetchCart();
     this.fetchRestaurants();
-    this.fetchFoodParty();
-    this.fetchRemainingTime();
   }
 }
 

@@ -756,6 +756,10 @@ thead tr th {
     text-align: center;
 }
 
+.swal-modal .swal-text {
+    text-align: center;
+}
+
 .error-text {
     z-index: 2;
     font-size: 2em;

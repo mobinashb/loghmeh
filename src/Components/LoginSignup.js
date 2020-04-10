@@ -79,6 +79,39 @@ class SignupForm extends Form {
     let password = event.target.password;
     let passwordRep = event.target.passwordrepeat;
     let phoneNum = event.target.phonenumber;
+    let name = (event.target.firstname.value).concat(event.target.lastname.value);
+    if (!(name.match(/^[a-zA-Z]+$/)) && !(name.match(/^[\u0600-\u06FF\s]+$/))) {
+      event.preventDefault();
+      swal({
+        title: "خطا",
+        text: "نام و نام خانوادگی شما اشتباه وارد شده است!",
+        icon: "error",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      });
+      return
+    }
+    if (!phoneNum.value.match(/^[0-9]+$/)) {
+      event.preventDefault();
+      swal({
+        title: "خطا",
+        text: "شماره تلفن اشتباه وارد شده است!",
+        icon: "error",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      });
+      return
+    }
     if (password.value !== passwordRep.value) {
       event.preventDefault();
       swal({
@@ -93,21 +126,7 @@ class SignupForm extends Form {
             closeModal: true,
         },
       });
-    }
-    if (isNaN(phoneNum) || phoneNum < 0) {
-      event.preventDefault();
-      swal({
-        title: "خطا",
-        text: "شماره تلفن اشتباه وارد شده است!",
-        icon: "error",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      });
+      return
     }
   }
   render() {
