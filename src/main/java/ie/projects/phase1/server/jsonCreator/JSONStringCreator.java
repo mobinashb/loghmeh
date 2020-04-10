@@ -1,5 +1,9 @@
 package ie.projects.phase1.server.jsonCreator;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import ie.projects.phase1.core.Cart;
@@ -48,5 +52,13 @@ public class JSONStringCreator {
             orders.add(jsonObject);
         }
         return orders.toString();
+    }
+
+    public String partyfoodJson(JsonNode partyfoods, double remainingTime){
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.putPOJO("restaurants", partyfoods);
+        objectNode.put("remainingTime", remainingTime);
+        return objectNode.toString();
     }
 }

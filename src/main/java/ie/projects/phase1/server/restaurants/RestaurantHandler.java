@@ -75,7 +75,8 @@ public class RestaurantHandler {
         ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInParty();
         if(restaurants.size() == 0)
             throw new NoRestaurantsAround(new JSONStringCreator().msgCreator("جشن غذایی موجود نمی‌باشد."));
-        return writer.writeValueAsString(restaurants);
+        String resultStr = writer.writeValueAsString(restaurants);
+        return new JSONStringCreator().partyfoodJson(mapper.readTree(resultStr), loghmeh.calculatePartyRemainingTime());
     }
     @RequestMapping(value = "/v1/foodparty/remainingTime", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getFoodpartyRemainingTime(){
