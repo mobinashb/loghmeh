@@ -11,6 +11,12 @@
 # production
 /build
 
+.idea/
+target/
+out/
+*.iml
+
+
 # misc
 .DS_Store
 .env.local
