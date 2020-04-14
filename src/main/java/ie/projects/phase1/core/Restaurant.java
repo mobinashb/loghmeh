@@ -4,11 +4,9 @@ package ie.projects.phase1.core;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ie.projects.phase1.Utils;
+import ie.projects.phase1.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonFilter("restaurant")
 public class Restaurant

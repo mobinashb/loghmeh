@@ -1,4 +1,4 @@
-package ie.projects.phase1;
+package ie.projects.phase1.utils;
 
 import ie.projects.phase1.core.DeliveryMan;
 import ie.projects.phase1.core.Food;
@@ -25,38 +25,11 @@ public class Utils {
         return restaurantsString;
     }
 
-    public static ArrayList<Restaurant> top3InList(ArrayList<Restaurant> restaurants, double X0, double Y0){
-        Collections.sort(restaurants, Comparator.comparing((Restaurant restaurant) -> restaurant.calculateScore(X0, Y0)));
-        return new ArrayList<Restaurant>(restaurants.subList(0, 3));
-    }
-
     public static DeliveryMan selectBestDeliveryMan(Restaurant restaurant, ArrayList<DeliveryMan> deliveryMen, double X0, double Y0){
         GeoLocation restaurantLocation = restaurant.getLocation();
         double restaurantToUserDistance = restaurant.getDistance(X0, Y0);
         Collections.sort(deliveryMen, Comparator.comparing((DeliveryMan deliveryMan) -> deliveryMan.calcReceiveToUserTime(restaurantLocation, restaurantToUserDistance)));
         return deliveryMen.get(0);
-    }
-
-    public static String intToTime(int seconds)
-    {
-        String str = "";
-        int hours = 0;
-        int minutes = 0;
-        while (seconds >= 3600) {
-            hours += 1;
-            seconds -= 3600;
-        }
-        while (seconds >= 60) {
-            minutes += 1;
-            seconds -= 60;
-        }
-        if (hours > 0)
-            str += hours + " hour(s) ";
-        if (minutes > 0)
-            str += minutes + " minute(s) ";
-        if (seconds > 0)
-            str += seconds + " second(s) ";
-        return str;
     }
 
     public static Food deepCopyFood(Food food){

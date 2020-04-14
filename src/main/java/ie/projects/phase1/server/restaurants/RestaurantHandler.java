@@ -30,17 +30,17 @@ public class RestaurantHandler {
     public void test(){
     }
 
-    @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    public String getAllRestaurants() throws IOException, NoRestaurantsAround {
-        String[] restaurantFilterParams = {"location", "menu", "estimatedDeliverTime"};
-        FilterProvider filter = new SimpleFilterProvider()
-                .addFilter("restaurant", SimpleBeanPropertyFilter.serializeAllExcept(restaurantFilterParams));
-        ObjectWriter writer = mapper.writer(filter);
-        ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInArea();
-        if(restaurants.size() == 0)
-            throw new NoRestaurantsAround(new JSONStringCreator().msgCreator("رستورانی اطراف شما یافت نشد."));
-        return writer.writeValueAsString(restaurants);
-    }
+//    @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+//    public String getAllRestaurants() throws IOException, NoRestaurantsAround {
+//        String[] restaurantFilterParams = {"location", "menu", "estimatedDeliverTime"};
+//        FilterProvider filter = new SimpleFilterProvider()
+//                .addFilter("restaurant", SimpleBeanPropertyFilter.serializeAllExcept(restaurantFilterParams));
+//        ObjectWriter writer = mapper.writer(filter);
+//        ArrayList<Restaurant> restaurants = loghmeh.getRestaurantsInArea();
+//        if(restaurants.size() == 0)
+//            throw new NoRestaurantsAround(new JSONStringCreator().msgCreator("رستورانی اطراف شما یافت نشد."));
+//        return writer.writeValueAsString(restaurants);
+//    }
 
     @RequestMapping(value = "/v1/restaurants/{restaurantId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getRestaurant(@PathVariable(value = "restaurantId") String restaurantId) throws IOException, RestaurantNotFound{

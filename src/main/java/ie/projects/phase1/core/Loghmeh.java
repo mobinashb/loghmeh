@@ -3,7 +3,7 @@ package ie.projects.phase1.core;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ie.projects.phase1.Utils;
+import ie.projects.phase1.utils.Utils;
 import ie.projects.phase1.exceptions.CartValidationException;
 import ie.projects.phase1.exceptions.FoodPartyExpiration;
 import ie.projects.phase1.exceptions.RestaurantNotFound;
