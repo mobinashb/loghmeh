@@ -6,22 +6,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ConnectionPool {
+    private static ConnectionPool instance = new ConnectionPool();
 
-    private static BasicDataSource ds = new BasicDataSource();
+    public static ConnectionPool getInstance() {
+        return instance;
+    }
+
+    private static BasicDataSource dataSource = new BasicDataSource();
 
     static {
-        ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/Loghmeh");
-        ds.setUsername("root");
-        ds.setPassword("omidomid");
-        ds.setMinIdle(1);
-        ds.setMaxIdle(10);
-        ds.setMaxOpenPreparedStatements(100);
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost/Loghmeh");
+        dataSource.setUsername("root");
+        dataSource.setPassword("omidomid");
+        dataSource.setMinIdle(5);
+        dataSource.setMaxIdle(10);
+        dataSource.setMaxOpenPreparedStatements(100);
     }
 
-    public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+    public static Connection getConnection() throws SQLException{
+        return dataSource.getConnection();
     }
-
-    private ConnectionPool(){ }
 }
