@@ -54,7 +54,7 @@ public class Restaurant
         return null;
     }
 
-    public double getDistance(double x0, double y0){
+    public double getDistance(float x0, float y0){
         return location.distanceCalculator(x0, y0);
     }
 

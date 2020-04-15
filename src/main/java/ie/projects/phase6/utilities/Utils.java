@@ -26,7 +26,7 @@ public class Utils {
         return restaurantsString;
     }
 
-    public static DeliveryMan selectBestDeliveryMan(Restaurant restaurant, ArrayList<DeliveryMan> deliveryMen, double X0, double Y0){
+    public static DeliveryMan selectBestDeliveryMan(Restaurant restaurant, ArrayList<DeliveryMan> deliveryMen, float X0, float Y0){
         GeoLocation restaurantLocation = restaurant.getLocation();
         double restaurantToUserDistance = restaurant.getDistance(X0, Y0);
         Collections.sort(deliveryMen, Comparator.comparing((DeliveryMan deliveryMan) -> deliveryMan.calcReceiveToUserTime(restaurantLocation, restaurantToUserDistance)));

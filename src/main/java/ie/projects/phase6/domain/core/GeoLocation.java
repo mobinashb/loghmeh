@@ -6,24 +6,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.lang.Math;
 
 public class GeoLocation {
-    private double x;
-    private double y;
+    private float x;
+    private float y;
 
     @JsonCreator
-    public GeoLocation(@JsonProperty("x") double x, @JsonProperty("y") double y){
+    public GeoLocation(@JsonProperty("x") float x, @JsonProperty("y") float y){
         this.x = x;
         this.y = y;
     }
 
-    public double getx() {return x;}
-    public void setx(double x) {this.x = x;}
+    public float getx() {return x;}
+    public void setx(float x) {this.x = x;}
 
-    public double gety() {return y;}
-    public void sety(double y) {this.y = y;}
+    public float gety() {return y;}
+    public void sety(float y) {this.y = y;}
 
-    public double distanceCalculator(double x, double y) {
-        double temp = Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2);
-        return Math.sqrt(temp);
+    public float distanceCalculator(float x, float y) {
+        Double temp = Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2);
+        return (float) Math.sqrt(temp);
     }
 
     @Override

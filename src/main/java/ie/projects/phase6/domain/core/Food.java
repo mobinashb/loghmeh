@@ -8,11 +8,11 @@ public class Food{
     @JsonAlias("foodName")
     protected String name;
     protected String description;
-    protected double popularity;
+    protected float popularity;
     protected String image;
     protected String restaurantId;
-    protected double price;
-    private Double oldPrice = null;
+    protected float price;
+    private Float oldPrice = null;
 
     public Integer getCount() { return count; }
     public void setCount(Integer count) { this.count = count; }
@@ -23,8 +23,8 @@ public class Food{
     public String getDescription() {return description;}
     public void setDescription(String description) {this.description = description;}
 
-    public double getPopularity() {return popularity;}
-    public void setPopularity(double popularity) {this.popularity = popularity;}
+    public float getPopularity() {return popularity;}
+    public void setPopularity(float popularity) {this.popularity = popularity;}
 
     public String getImage() { return image; }
 
@@ -35,10 +35,10 @@ public class Food{
     public String getRestaurantId() { return restaurantId;}
     public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId;}
 
-    public double getPrice() {return price;}
-    public void setPrice(double price) {this.price = price;}
+    public float getPrice() {return price;}
+    public void setPrice(float price) {this.price = price;}
 
-    public Double getOldPrice() {return oldPrice;}
-    public void setOldPrice(Double price) {this.oldPrice = price;}
+    public Float getOldPrice() {return oldPrice;}
+    public void setOldPrice(Float price) {this.oldPrice = price;}
 
 }

@@ -4,8 +4,16 @@ public class RestaurantDAO {
     String id;
     String name;
     String logo;
-    double locationX;
-    double locationY;
+    float locationX;
+    float locationY;
+
+    public RestaurantDAO(String id, String nam, String logo, float locationX, float locationY){
+        this.id = id;
+        this.name = nam;
+        this.logo = logo;
+        this.locationX = locationX;
+        this.locationY = locationY;
+    }
 
     public String getId() {
         return id;
@@ -31,19 +39,19 @@ public class RestaurantDAO {
         this.logo = logo;
     }
 
-    public double getLocationX() {
+    public float getLocationX() {
         return locationX;
     }
 
-    public void setLocationX(double locationX) {
+    public void setLocationX(float locationX) {
         this.locationX = locationX;
     }
 
-    public double getLocationY() {
+    public float getLocationY() {
         return locationY;
     }
 
-    public void setLocationY(double locationY) {
+    public void setLocationY(float locationY) {
         this.locationY = locationY;
     }
 }
