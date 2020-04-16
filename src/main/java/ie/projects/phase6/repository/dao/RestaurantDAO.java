@@ -7,9 +7,9 @@ public class RestaurantDAO {
     float locationX;
     float locationY;
 
-    public RestaurantDAO(String id, String nam, String logo, float locationX, float locationY){
+    public RestaurantDAO(String id, String name, String logo, float locationX, float locationY){
         this.id = id;
-        this.name = nam;
+        this.name = name;
         this.logo = logo;
         this.locationX = locationX;
         this.locationY = locationY;

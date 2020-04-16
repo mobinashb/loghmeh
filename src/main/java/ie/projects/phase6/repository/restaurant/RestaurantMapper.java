@@ -1,6 +1,5 @@
 package ie.projects.phase6.repository.restaurant;
 
-import ie.projects.phase6.domain.core.Restaurant;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
@@ -11,37 +10,44 @@ import java.util.ArrayList;
 public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements IRestaurantMapper {
 
     private static RestaurantMapper instance;
-
     private static final String TABLE_NAME = "RESTAURANT";
 
-    private RestaurantMapper() throws SQLException {
-        Connection con = ConnectionPool.getConnection();
-        Statement st = con.createStatement();
-        st.executeUpdate(String.format("DROP TABLE IF EXISTS %s", TABLE_NAME));
-        st.executeUpdate(String.format(
-                "CREATE TABLE  %s " +
-                        "(id CHAR(24) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(255) NOT NULL, " +
-                        "logo VARCHAR(255) NOT NULL, " +
-                        "locationX DOUBLE NOT NULL, " +
-                        "locationY DOUBLE NOT NULL)",
-                TABLE_NAME));
-        st.close();
-        con.close();
+    @Override
+    protected String getFindAllStatement(String id) {
+        return null;
     }
 
-    public static RestaurantMapper getInstance() throws SQLException{
+    private RestaurantMapper() {
+    }
+
+    public static RestaurantMapper getInstance(){
         if(instance == null)
             instance = new RestaurantMapper();
         return instance;
     }
 
     @Override
+    protected String getDeleteTableStatement(){
+        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+    }
+
+    @Override
+    protected String getCreateTableStatement(){
+        return String.format(
+                "CREATE TABLE  %s " +
+                        "(id CHAR(24) NOT NULL PRIMARY KEY, " +
+                        "name VARCHAR(255) NOT NULL, " +
+                        "logo VARCHAR(255) NOT NULL, " +
+                        "locationX FLOAT NOT NULL, " +
+                        "locationY FLOAT NOT NULL)",
+                TABLE_NAME);
+    }
+
+    @Override
     protected String getFindStatement(String id) {
-        return "ali";
-//        return "SELECT " + COLUMNS +
-//                " FROM " + TABLE_NAME +
-//                " WHERE id = "+ id.toString() + ";";
+        return "SELECT " + "*" +
+                " FROM " + TABLE_NAME +
+                " WHERE id = '"+ id + "';";
     }
 
     @Override
@@ -56,7 +62,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
     }
 
     @Override
-    protected String getPreparedInsertStatement(RestaurantDAO restaurant){
+    protected String getPreparedInsertStatement(){
         return String.format("INSERT IGNORE INTO %s " +
                         "(id, name, logo, locationX, locationY) " +
                         "VALUES(?,?,?,?,?)",
@@ -69,8 +75,8 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
             statement.setString(1, restaurant.getId());
             statement.setString(2, restaurant.getName());
             statement.setString(3, restaurant.getLogo());
-            statement.setDouble(4, restaurant.getLocationX());
-            statement.setDouble(5, restaurant.getLocationY());
+            statement.setFloat(4, restaurant.getLocationX());
+            statement.setFloat(5, restaurant.getLocationY());
             statement.addBatch();
             return statement;
         }
@@ -88,39 +94,38 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
 
     @Override
     protected RestaurantDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return  new RestaurantDAO("a", "b", "c", 12, 13);
+        return  new RestaurantDAO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5));
+    }
+
+    @Override
+    protected ArrayList<RestaurantDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
+        return  new ArrayList<>();
 //                rs.getInt(1),
 //                rs.getString(2)
     }
 
-    @Override
-    public ArrayList<RestaurantDAO> getContainsText(String text) throws SQLException {
-        ArrayList<RestaurantDAO> result = new ArrayList<RestaurantDAO>();
-        String statement = "SELECT " + "COLUMNS" + " FROM " + TABLE_NAME +
-                " Where text LIKE " + "'%" + text + "%'";
-        try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(statement);
-        ) {
-            ResultSet resultSet;
-            try {
-                resultSet = st.executeQuery();
-                while (resultSet.next())
-                    result.add(convertResultSetToObject(resultSet));
-                return result;
-            } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
-                throw ex;
-            }
-        }
+    private String getRestaurantByPagingStatement(int pageNumber, int pageSize){
+        return String.format("SELECT *" +
+                        "FROM %s " +
+                        "LIMIT %d, %d;",
+                TABLE_NAME, (pageNumber-1) * pageSize, pageSize);
     }
 
-//    private void addRestaurant(RestaurantDAO restaurant, PreparedStatement statement) throws SQLException{
-////        statement.setString(1, restaurant.getId());
-////        statement.setString(2, restaurant.getName());
-////        statement.setString(3, restaurant.getLogo());
-////        statement.setDouble(4, restaurant.getLocationX());
-////        statement.setDouble(5, restaurant.getLocationY());
-////        statement.addBatch();
-//    }
+    @Override
+    public ArrayList<RestaurantDAO> getRestaurantsByPaging(int pageNumber, int pageSize){
+        ArrayList<RestaurantDAO> fetchedRestaurants = new ArrayList<>();
 
+        try (Connection conn = ConnectionPool.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(getRestaurantByPagingStatement(pageNumber, pageSize));) {
+            while (rs.next()) {
+                fetchedRestaurants.add(new RestaurantDAO(rs.getString(1), rs.getString(2),
+                        rs.getString(3), rs.getFloat(4), rs.getFloat(5)));
+            }
+        } catch (SQLException e) {
+            System.out.println("Can't get restaurants from wanted page");
+            e.printStackTrace();
+        }
+        return fetchedRestaurants;
+    }
 }

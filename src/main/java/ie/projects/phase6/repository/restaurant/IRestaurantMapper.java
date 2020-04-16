@@ -8,6 +8,5 @@ import java.util.ArrayList;
 
 public interface IRestaurantMapper extends IMapper<RestaurantDAO, String> {
 
-    ArrayList<RestaurantDAO> getContainsText(String text) throws SQLException;
-
+    ArrayList<RestaurantDAO> getRestaurantsByPaging(int pageNumber, int pageSize);
 }

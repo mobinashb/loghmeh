@@ -3,23 +3,24 @@ package ie.projects.phase6.repository.mapper;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Mapper<T, I> implements IMapper<T, I> {
 
-    protected Map<I, T> loadedMap = new HashMap<I, T>();
+    abstract protected String getDeleteTableStatement();
+
+    abstract protected String getCreateTableStatement();
 
     abstract protected String getFindStatement(I id);
 
+    abstract protected String getFindAllStatement(I id);
+
     abstract protected String getInsertStatement(T t);
 
-    abstract protected String getPreparedInsertStatement(T t);
+    abstract protected String getPreparedInsertStatement();
 
     abstract protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, T t);
 
@@ -27,11 +28,9 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
     abstract protected T convertResultSetToObject(ResultSet rs) throws SQLException;
 
-    public T find(I id) throws SQLException {
-        T result = loadedMap.get(id);
-        if (result != null)
-            return result;
+    abstract protected ArrayList<T> convertResultSetToObjects(ResultSet rs) throws SQLException;
 
+    public T find(I id) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindStatement(id))
         ) {
@@ -42,6 +41,30 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
                 return convertResultSetToObject(resultSet);
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
+    }
+
+    public void createTable() throws SQLException{
+        Connection con = ConnectionPool.getConnection();
+        Statement statement = con.createStatement();
+        statement.executeUpdate(getDeleteTableStatement());
+        statement.executeUpdate(getCreateTableStatement());
+        statement.close();
+        con.close();
+    }
+
+    public ArrayList<T> findAllById(I id) throws SQLException {
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getFindAllStatement(id))
+        ) {
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                return convertResultSetToObjects(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findAllByID query.");
                 throw ex;
             }
         }
@@ -61,7 +84,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
     }
 
     public void insertAll(ArrayList<T> objs) throws SQLException {
-        String sql = getPreparedInsertStatement(objs.get(0));
+        String sql = getPreparedInsertStatement();
         try (Connection con = ConnectionPool.getConnection();
              PreparedStatement statement = con.prepareStatement(sql))
         {
