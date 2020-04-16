@@ -1,14 +1,12 @@
 package ie.projects.phase6.repository.foodparty;
 
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.FoodpartyDAO;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
+import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
-
 import java.sql.*;
 import java.util.ArrayList;
 
-public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFoodpartyMapper {
+public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpartyMapper {
 
     private static FoodpartyMapper instance;
 
@@ -36,7 +34,7 @@ public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFo
                         "(restaurantId CHAR(24) NOT NULL, " +
                         "name VARCHAR(255) NOT NULL, " +
                         "count SMALLINT NOT NULL, " +
-                        "oldPrice FLOAT NOT NULL, " +
+                        "price FLOAT NOT NULL, " +
                         "PRIMARY KEY (restaurantID,name))",
                 TABLE_NAME);
     }
@@ -51,9 +49,15 @@ public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFo
 //                " WHERE id = "+ id.toString() + ";";
     }
 
-    public ArrayList<FoodpartyDAO> getParty() throws SQLException{
-        String sql = "SELECT * FROM " + TABLE_NAME + ";";
-        ArrayList<FoodpartyDAO> foods = new ArrayList<>();
+    public ArrayList<FoodDAO> getParty(String foodTableName) throws SQLException{
+        String sql = String.format("SELECT %s.restaurantId, %s.name, count, %s.price, description, popularity, image, %s.price " +
+                "FROM %s " +
+                "INNER JOIN %s " +
+                "ON %s.restaurantId = %s.restaurantId AND %s.name = %s.name;",
+                TABLE_NAME, TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName);
+
+
+        ArrayList<FoodDAO> foods = new ArrayList<>();
         try (Connection con = ConnectionPool.getConnection();
              Statement st = con.createStatement()
         ) {
@@ -61,11 +65,11 @@ public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFo
             try {
                 rs = st.executeQuery(sql);
                 while (rs.next()) {
-                    foods.add(new FoodpartyDAO(rs.getString(1), rs.getString(2),
-                            rs.getFloat(3), rs.getFloat(4)));
+                    foods.add(new FoodDAO(rs.getString(1), rs.getString(2), rs.getString(5), rs.getFloat(6),
+                    rs.getString(7), rs.getFloat(4), rs.getInt(3), rs.getFloat(8)));
                 }
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findAllByID query.");
+                System.out.println("error in Mapper.getParty query.");
                 throw ex;
             }
         }
@@ -81,7 +85,7 @@ public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFo
 
 
     @Override
-    protected String getInsertStatement(FoodpartyDAO restaurant) {
+    protected String getInsertStatement(FoodDAO restaurant) {
         return "ali";
 //        return "INSERT INTO " + TABLE_NAME +
 //                "(" + COLUMNS + ")" + " VALUES "+
@@ -94,18 +98,18 @@ public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFo
     @Override
     protected String getPreparedInsertStatement(){
         return String.format("REPLACE INTO %s " +
-                        "(restaurantId, name, count, oldPrice) " +
+                        "(restaurantId, name, count, price) " +
                         "VALUES(?,?,?,?)",
                 TABLE_NAME);
     }
 
     @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, FoodpartyDAO food){
+    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, FoodDAO food){
         try {
             statement.setString(1, food.getRestaurantId());
             statement.setString(2, food.getName());
             statement.setFloat(3, food.getCount());
-            statement.setFloat(4, food.getOldPrice());
+            statement.setFloat(4, food.getPrice());
             statement.addBatch();
             return statement;
         }
@@ -122,15 +126,15 @@ public class FoodpartyMapper extends Mapper<FoodpartyDAO, String> implements IFo
     }
 
     @Override
-    protected FoodpartyDAO convertResultSetToObject(ResultSet rs) throws SQLException {
+    protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return  null;//new FoodpartyDAO("a", "b", "c", 12, "a", 12);
 //                rs.getInt(1),
 //                rs.getString(2)
     }
 
     @Override
-    protected ArrayList<FoodpartyDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        ArrayList<FoodpartyDAO> foods = new ArrayList<>();
+    protected ArrayList<FoodDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
+        ArrayList<FoodDAO> foods = new ArrayList<>();
 //        while (rs.next()) {
 //            foods.add(new FoodpartyDAO(rs.getString(1), rs.getString(2),
 //                    rs.getString(3), rs.getFloat(4), rs.getString(5), rs.getFloat(6)));

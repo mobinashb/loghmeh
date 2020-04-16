@@ -3,7 +3,6 @@ package ie.projects.phase6.utilities;
 import ie.projects.phase6.domain.core.Food;
 import ie.projects.phase6.domain.core.Restaurant;
 import ie.projects.phase6.repository.dao.FoodDAO;
-import ie.projects.phase6.repository.dao.FoodpartyDAO;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 
 import java.util.ArrayList;
@@ -17,20 +16,22 @@ public class Converter {
         return result;
     }
 
-    public static ArrayList<FoodDAO> convertToFoodDAO(ArrayList<Restaurant> restaurants){
+    public static ArrayList<FoodDAO> convertToFoodDAO(ArrayList<Restaurant> restaurants, boolean isParty){
         ArrayList<FoodDAO> result = new ArrayList<>();
         for (Restaurant restaurant: restaurants){
-            for (Food food: restaurant.getMenu())
-                result.add(new FoodDAO(restaurant.getId(), food.getName(), food.getDescription(), food.getPopularity(), food.getImage(), food.getPrice()));
+            for (Food food: restaurant.getMenu()) {
+                float price = (isParty) ? food.getOldPrice() : food.getPrice();
+                result.add(new FoodDAO(restaurant.getId(), food.getName(), food.getDescription(), food.getPopularity(), food.getImage(), price));
+            }
         }
         return result;
     }
 
-    public static ArrayList<FoodpartyDAO> convertToFoodpartyDAO(ArrayList<Restaurant> restaurants){
-        ArrayList<FoodpartyDAO> result = new ArrayList<>();
+    public static ArrayList<FoodDAO> convertToFoodpartyDAO(ArrayList<Restaurant> restaurants){
+        ArrayList<FoodDAO> result = new ArrayList<>();
         for (Restaurant restaurant: restaurants){
             for (Food food: restaurant.getMenu())
-                result.add(new FoodpartyDAO(restaurant.getId(), food.getName(), food.getCount(), food.getOldPrice()));
+                result.add(new FoodDAO(restaurant.getId(), food.getName(), food.getCount(), food.getPrice()));
         }
         return result;
     }

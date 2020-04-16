@@ -28,8 +28,8 @@ public class FoodRepository {
         return instance;
     }
 
-    public void addFoods(ArrayList<Restaurant> restaurants) throws SQLException{
-        ArrayList<FoodDAO> foods = Converter.convertToFoodDAO(restaurants);
+    public void addFoods(ArrayList<Restaurant> restaurants, boolean isParty) throws SQLException{
+        ArrayList<FoodDAO> foods = Converter.convertToFoodDAO(restaurants, isParty);
         mapper.insertAll(foods);
     }
 

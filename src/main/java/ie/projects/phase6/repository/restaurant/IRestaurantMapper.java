@@ -9,4 +9,5 @@ import java.util.ArrayList;
 public interface IRestaurantMapper extends IMapper<RestaurantDAO, String> {
 
     ArrayList<RestaurantDAO> getRestaurantsByPaging(int pageNumber, int pageSize);
+    ArrayList<String> getRestaurantsNameById(ArrayList<String> restaurantsId) throws SQLException;
 }

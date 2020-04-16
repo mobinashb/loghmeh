@@ -2,7 +2,7 @@ package ie.projects.phase6.repository.foodparty;
 
 import ie.projects.phase6.domain.core.Restaurant;
 import ie.projects.phase6.repository.dao.FoodDAO;
-import ie.projects.phase6.repository.dao.FoodpartyDAO;
+import ie.projects.phase6.repository.food.FoodMapper;
 import ie.projects.phase6.utilities.Converter;
 
 import java.sql.SQLException;
@@ -15,7 +15,6 @@ public class FoodpartyRepository {
     private FoodpartyRepository() throws SQLException
     {
         mapper = FoodpartyMapper.getInstance();
-        mapper.createTable();
     }
 
     public static FoodpartyRepository getInstance() throws SQLException{
@@ -24,13 +23,20 @@ public class FoodpartyRepository {
         return instance;
     }
 
+    public void deleteTable() throws SQLException{
+        mapper.deleteTable();
+    }
+    public void createTable() throws SQLException{
+        mapper.createTable();
+    }
+
     public void addParty(ArrayList<Restaurant> restaurants) throws SQLException{
-        ArrayList<FoodpartyDAO> foods = Converter.convertToFoodpartyDAO(restaurants);
+        ArrayList<FoodDAO> foods = Converter.convertToFoodpartyDAO(restaurants);
         mapper.insertAll(foods);
     }
 
-    public ArrayList<FoodpartyDAO> getParty() throws SQLException{
-        return mapper.getParty();
+    public ArrayList<FoodDAO> getParty() throws SQLException{
+        return mapper.getParty(FoodMapper.getTableName());
     }
 }
 

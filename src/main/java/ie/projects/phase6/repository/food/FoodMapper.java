@@ -21,6 +21,10 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
         return instance;
     }
 
+    public static String getTableName() {
+        return TABLE_NAME;
+    }
+
     @Override
     protected String getDeleteTableStatement(){
         return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";

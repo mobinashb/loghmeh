@@ -1,11 +1,13 @@
 package ie.projects.phase6.repository.restaurant;
 
 import ie.projects.phase6.repository.ConnectionPool;
+import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements IRestaurantMapper {
 
@@ -24,6 +26,30 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
         if(instance == null)
             instance = new RestaurantMapper();
         return instance;
+    }
+
+    public ArrayList<String> getRestaurantsNameById(ArrayList<String> restaurantsId) throws SQLException{
+
+        ArrayList<String> restaurantsName = new ArrayList<>();
+        String sql = String.format("SELECT name FROM %s WHERE id = (?)", TABLE_NAME);
+
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement statement = con.prepareStatement(sql))
+        {
+            try {
+                for(int i=0; i < restaurantsId.size(); i++) {
+                    statement.setString(1, restaurantsId.get(i));
+                    ResultSet rs = statement.executeQuery();
+                    while (rs.next())
+                        restaurantsName.add(rs.getString(1));
+                }
+            }
+            catch (SQLException e1){
+                System.out.println("Error in find names by id");
+                throw e1;
+            }
+        }
+        return restaurantsName;
     }
 
     @Override

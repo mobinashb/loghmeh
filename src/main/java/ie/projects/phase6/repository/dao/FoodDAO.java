@@ -7,6 +7,8 @@ public class FoodDAO {
     float popularity;
     String image;
     float price;
+    int count;
+    float oldPrice;
 
     public FoodDAO(String restaurantId, String name, String description, float popularity, String image, float price){
         this.restaurantId = restaurantId;
@@ -15,6 +17,24 @@ public class FoodDAO {
         this.popularity = popularity;
         this.image = image;
         this.price = price;
+    }
+
+    public FoodDAO(String restaurantId, String name, int count, float price){
+        this.restaurantId = restaurantId;
+        this.name = name;
+        this.count = count;
+        this.price = price;
+    }
+
+    public FoodDAO(String restaurantId, String name, String description, float popularity, String image, float price, int count, float oldPrice){
+        this.restaurantId = restaurantId;
+        this.name = name;
+        this.description = description;
+        this.popularity = popularity;
+        this.image = image;
+        this.price = price;
+        this.count = count;
+        this.oldPrice = oldPrice;
     }
 
     public String getRestaurantId() {
@@ -63,5 +83,13 @@ public class FoodDAO {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public float getOldPrice() {
+        return oldPrice;
     }
 }

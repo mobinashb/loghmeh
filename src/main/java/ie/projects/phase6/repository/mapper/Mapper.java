@@ -55,6 +55,14 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
         con.close();
     }
 
+    public void deleteTable() throws SQLException{
+        Connection con = ConnectionPool.getConnection();
+        Statement statement = con.createStatement();
+        statement.executeUpdate(getDeleteTableStatement());
+        statement.close();
+        con.close();
+    }
+
     public ArrayList<T> findAllById(I id) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindAllStatement(id))
