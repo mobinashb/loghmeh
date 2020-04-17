@@ -1,4 +1,4 @@
-package ie.projects.phase6.exceptions.classes;
+package ie.projects.phase6.domain.exceptions;
 
 public class FoodPartyExpiration extends Exception{
     public FoodPartyExpiration(String msg){

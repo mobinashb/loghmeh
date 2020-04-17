@@ -1,11 +1,12 @@
 package ie.projects.phase6.utilities;
 
-import ie.projects.phase6.domain.FoodpartyManager;
 import ie.projects.phase6.domain.RestaurantManager;
 import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
-import ie.projects.phase6.service.controller.restaurant.FoodDTO;
-import ie.projects.phase6.service.controller.restaurant.RestaurantDTO;
+import ie.projects.phase6.repository.dao.UserDao;
+import ie.projects.phase6.service.restaurant.FoodDTO;
+import ie.projects.phase6.service.restaurant.RestaurantDTO;
+import ie.projects.phase6.service.user.UserDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,5 +47,9 @@ public class DAO_DTO {
         }
 
         return foodsDTO;
+    }
+
+    public static UserDTO userDAO_DTO(UserDao userDao){
+        return new UserDTO(userDao.getId(), userDao.getFirstName(), userDao.getLastName(), userDao.getPhoneNumber(), userDao.getEmail(), userDao.getCredit());
     }
 }

@@ -1,13 +1,11 @@
 package ie.projects.phase6.repository.restaurant;
 
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements IRestaurantMapper {
 
@@ -78,13 +76,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
 
     @Override
     protected String getInsertStatement(RestaurantDAO restaurant) {
-        return "ali";
-//        return "INSERT INTO " + TABLE_NAME +
-//                "(" + COLUMNS + ")" + " VALUES "+
-//                "("+
-//                example.getId().toString() + "," +
-//                '"' + example.getText() + '"' +
-//                ");";
+        return null;
     }
 
     @Override
@@ -107,7 +99,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
             return statement;
         }
         catch (SQLException e1){
-            System.out.println("Can't add new rpw to " + TABLE_NAME + " table");
+            System.out.println("Can't add new row to " + TABLE_NAME + " table");
         }
         return null;
     }
@@ -125,9 +117,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
 
     @Override
     protected ArrayList<RestaurantDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        return  new ArrayList<>();
-//                rs.getInt(1),
-//                rs.getString(2)
+        return  null;
     }
 
     private String getRestaurantByPagingStatement(int pageNumber, int pageSize){

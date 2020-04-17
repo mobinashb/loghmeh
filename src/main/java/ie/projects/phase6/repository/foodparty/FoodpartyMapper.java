@@ -39,14 +39,9 @@ public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpar
                 TABLE_NAME);
     }
 
-
-
     @Override
     protected String getFindStatement(String id) {
-        return "ali";
-//        return "SELECT " + COLUMNS +
-//                " FROM " + TABLE_NAME +
-//                " WHERE id = "+ id.toString() + ";";
+        return null;
     }
 
     public ArrayList<FoodDAO> getParty(String foodTableName) throws SQLException{
@@ -86,13 +81,7 @@ public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpar
 
     @Override
     protected String getInsertStatement(FoodDAO restaurant) {
-        return "ali";
-//        return "INSERT INTO " + TABLE_NAME +
-//                "(" + COLUMNS + ")" + " VALUES "+
-//                "("+
-//                example.getId().toString() + "," +
-//                '"' + example.getText() + '"' +
-//                ");";
+        return null;
     }
 
     @Override
@@ -127,18 +116,11 @@ public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpar
 
     @Override
     protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return  null;//new FoodpartyDAO("a", "b", "c", 12, "a", 12);
-//                rs.getInt(1),
-//                rs.getString(2)
+        return  null;
     }
 
     @Override
     protected ArrayList<FoodDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        ArrayList<FoodDAO> foods = new ArrayList<>();
-//        while (rs.next()) {
-//            foods.add(new FoodpartyDAO(rs.getString(1), rs.getString(2),
-//                    rs.getString(3), rs.getFloat(4), rs.getString(5), rs.getFloat(6)));
-//        }
-        return foods;
+        return null;
     }
 }

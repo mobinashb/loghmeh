@@ -1,4 +1,4 @@
-package ie.projects.phase6.service.controller.restaurant;
+package ie.projects.phase6.service.restaurant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

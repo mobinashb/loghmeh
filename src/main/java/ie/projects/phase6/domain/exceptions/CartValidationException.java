@@ -1,4 +1,4 @@
-package ie.projects.phase6.exceptions.classes;
+package ie.projects.phase6.domain.exceptions;
 
 public class CartValidationException extends Exception{
     public CartValidationException(String msg){

@@ -1,7 +1,7 @@
-package ie.projects.phase6.exceptions.handler;
+package ie.projects.phase6.service.exceptionHandler;
 
-import ie.projects.phase6.exceptions.classes.NoRestaurantsAround;
-import ie.projects.phase6.exceptions.classes.RestaurantNotFound;
+import ie.projects.phase6.domain.exceptions.NoRestaurantsAround;
+import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,6 +1,6 @@
-package ie.projects.phase6.exceptions.handler;
+package ie.projects.phase6.service.exceptionHandler;
 
-import ie.projects.phase6.exceptions.classes.NegativeCreditAmount;
+import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

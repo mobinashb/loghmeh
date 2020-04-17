@@ -46,10 +46,7 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
 
     @Override
     protected String getFindStatement(String id) {
-        return "ali";
-//        return "SELECT " + COLUMNS +
-//                " FROM " + TABLE_NAME +
-//                " WHERE id = "+ id.toString() + ";";
+        return null;
     }
 
     @Override
@@ -62,13 +59,7 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
 
     @Override
     protected String getInsertStatement(FoodDAO restaurant) {
-        return "ali";
-//        return "INSERT INTO " + TABLE_NAME +
-//                "(" + COLUMNS + ")" + " VALUES "+
-//                "("+
-//                example.getId().toString() + "," +
-//                '"' + example.getText() + '"' +
-//                ");";
+        return null;
     }
 
     @Override
@@ -100,14 +91,12 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
     @Override
     protected String getDeleteStatement(String id) {
         return "DELETE FROM " + TABLE_NAME +
-                " WHERE id = " + id.toString() + ";";
+                " WHERE id = " + id + ";";
     }
 
     @Override
     protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return  new FoodDAO("a", "b", "c", 12, "a", 12);
-//                rs.getInt(1),
-//                rs.getString(2)
+        return  null;
     }
 
     @Override

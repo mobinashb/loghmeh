@@ -1,4 +1,4 @@
-package ie.projects.phase6.exceptions.classes;
+package ie.projects.phase6.domain.exceptions;
 
 public class NoRestaurantsAround extends Exception{
     public NoRestaurantsAround(String msg){

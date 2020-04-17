@@ -1,8 +1,8 @@
-package ie.projects.phase6.exceptions.handler;
+package ie.projects.phase6.service.exceptionHandler;
 
-import ie.projects.phase6.exceptions.classes.CartNotFound;
-import ie.projects.phase6.exceptions.classes.CartValidationException;
-import ie.projects.phase6.exceptions.classes.FoodPartyExpiration;
+import ie.projects.phase6.domain.exceptions.CartNotFound;
+import ie.projects.phase6.domain.exceptions.CartValidationException;
+import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

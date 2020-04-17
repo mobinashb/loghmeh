@@ -1,4 +1,4 @@
-package ie.projects.phase6.exceptions.classes;
+package ie.projects.phase6.domain.exceptions;
 
 public class NegativeCreditAmount extends Exception {
     public NegativeCreditAmount(String msg){

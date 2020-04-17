@@ -1,4 +1,4 @@
-package ie.projects.phase6.exceptions.handler;
+package ie.projects.phase6.service.exceptionHandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

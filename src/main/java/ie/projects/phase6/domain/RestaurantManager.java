@@ -1,7 +1,7 @@
 package ie.projects.phase6.domain;
 
 import ie.projects.phase6.domain.core.Restaurant;
-import ie.projects.phase6.exceptions.classes.RestaurantNotFound;
+import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 import ie.projects.phase6.repository.food.FoodRepository;
 import ie.projects.phase6.repository.restaurant.RestaurantRepository;

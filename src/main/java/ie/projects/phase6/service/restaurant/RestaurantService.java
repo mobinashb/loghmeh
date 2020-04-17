@@ -1,10 +1,10 @@
-package ie.projects.phase6.service.controller.restaurant;
+package ie.projects.phase6.service.restaurant;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase6.domain.FoodManager;
 import ie.projects.phase6.domain.FoodpartyManager;
 import ie.projects.phase6.domain.RestaurantManager;
-import ie.projects.phase6.exceptions.classes.RestaurantNotFound;
+import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.repository.dao.RestaurantDAO;
 import ie.projects.phase6.utilities.DAO_DTO;
