@@ -1,4 +1,4 @@
-package ie.projects.phase6.repository.dao;
+package ie.projects.phase6.repository.food;
 
 public class FoodDAO {
     String restaurantId;

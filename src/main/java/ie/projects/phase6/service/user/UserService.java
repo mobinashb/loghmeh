@@ -4,7 +4,7 @@ package ie.projects.phase6.service.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase6.domain.UserManager;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
-import ie.projects.phase6.repository.dao.UserDao;
+import ie.projects.phase6.repository.user.UserDAO;
 import ie.projects.phase6.utilities.DAO_DTO;
 import ie.projects.phase6.utilities.JsonStringCreator;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,7 @@ public class UserService {
 
     @RequestMapping(value = "/v1/profile", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getUserProfile() throws IOException, SQLException {
-        UserDao userDao = UserManager.getInstance().getUserById("123456789123");
+        UserDAO userDao = UserManager.getInstance().getUserById("123456789123");
         return mapper.writeValueAsString(DAO_DTO.userDAO_DTO(userDao));
     }
 

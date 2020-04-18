@@ -1,13 +1,8 @@
 package ie.projects.phase6.repository.food;
 
-import ie.projects.phase6.domain.core.Food;
 import ie.projects.phase6.domain.core.Restaurant;
-import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.utilities.Converter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -36,4 +31,9 @@ public class FoodRepository {
     public ArrayList<FoodDAO> getFoods(String restaurantId) throws SQLException{
         return mapper.findAllById(restaurantId);
     }
+
+    public FoodDAO findFood(String restaurantId, String foodName) throws SQLException{
+        return this.mapper.find(restaurantId + "-" + foodName);
+    }
+
 }

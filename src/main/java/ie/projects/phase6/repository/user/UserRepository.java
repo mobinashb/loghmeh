@@ -1,7 +1,5 @@
 package ie.projects.phase6.repository.user;
 
-import ie.projects.phase6.repository.dao.UserDao;
-
 import java.sql.SQLException;
 
 public class UserRepository {
@@ -22,11 +20,11 @@ public class UserRepository {
     }
 
     public void insertTempUser() throws SQLException{
-        UserDao user = new UserDao("123456789123", "احسان", "خامس‌پناه", "09121111111", "ehsan.kp@gmail.com", 100000, 11, 1);
+        UserDAO user = new UserDAO("123456789123", "احسان", "خامس‌پناه", "09121111111", "ehsan.kp@gmail.com", 100000, 11, 1);
         mapper.insert(user);
     }
 
-    public UserDao findUser(String id) throws SQLException{
+    public UserDAO findUser(String id) throws SQLException{
         return mapper.find(id);
     }
 

@@ -1,6 +1,5 @@
 package ie.projects.phase6.repository.food;
 
-import ie.projects.phase6.repository.dao.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
@@ -40,13 +39,15 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
                         "popularity FLOAT NOT NULL, " +
                         "image VARCHAR(255) NOT NULL, " +
                         "price FLOAT NOT NULL, " +
-                        "PRIMARY KEY (restaurantID,name))",
+                        "PRIMARY KEY (restaurantId,name))",
                 TABLE_NAME);
     }
 
     @Override
-    protected String getFindStatement(String id) {
-        return null;
+    protected String getFindStatement(String id)
+    {
+        String[] key = id.split("-", 2);
+        return String.format("SELECT * FROM %s WHERE restaurantId = '%s' AND name = '%s';", TABLE_NAME, key[0], key[1]);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
 
     @Override
     protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return  null;
+        return  new FoodDAO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getString(5), rs.getFloat(6));
     }
 
     @Override

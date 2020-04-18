@@ -1,14 +1,12 @@
 package ie.projects.phase6.repository.user;
 
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
-import ie.projects.phase6.repository.dao.UserDao;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class UserMapper extends Mapper<UserDao, String> implements IUserMapper {
+public class UserMapper extends Mapper<UserDAO, String> implements IUserMapper {
     private static UserMapper instance;
     private static final String TABLE_NAME = "USER";
 
@@ -54,7 +52,7 @@ public class UserMapper extends Mapper<UserDao, String> implements IUserMapper {
     }
 
     @Override
-    protected String getInsertStatement(UserDao user) {
+    protected String getInsertStatement(UserDAO user) {
         return String.format(
                 "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
         TABLE_NAME, user.getId(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getEmail(), user.getCredit(), user.getLocationX(), user.getLocationY());
@@ -76,7 +74,7 @@ public class UserMapper extends Mapper<UserDao, String> implements IUserMapper {
     }
 
     @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, UserDao user){
+    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, UserDAO user){
         return null;
     }
 
@@ -86,13 +84,13 @@ public class UserMapper extends Mapper<UserDao, String> implements IUserMapper {
     }
 
     @Override
-    protected UserDao convertResultSetToObject(ResultSet rs) throws SQLException {
-        return new UserDao(rs.getString(1), rs.getString(2),
+    protected UserDAO convertResultSetToObject(ResultSet rs) throws SQLException {
+        return new UserDAO(rs.getString(1), rs.getString(2),
                 rs.getString(3), rs.getString(4), rs.getString(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8));
     }
 
     @Override
-    protected ArrayList<UserDao> convertResultSetToObjects(ResultSet rs) throws SQLException {
+    protected ArrayList<UserDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
         return null;
     }
 }

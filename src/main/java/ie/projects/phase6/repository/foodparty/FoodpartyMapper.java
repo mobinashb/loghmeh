@@ -1,12 +1,12 @@
 package ie.projects.phase6.repository.foodparty;
 
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.FoodDAO;
+import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpartyMapper {
+public class FoodpartyMapper extends Mapper<FoodDAO, Object[]> implements IFoodpartyMapper {
 
     private static FoodpartyMapper instance;
 
@@ -30,18 +30,18 @@ public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpar
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE  %s " +
+                "CREATE TABLE %s " +
                         "(restaurantId CHAR(24) NOT NULL, " +
                         "name VARCHAR(255) NOT NULL, " +
                         "count SMALLINT NOT NULL, " +
                         "price FLOAT NOT NULL, " +
-                        "PRIMARY KEY (restaurantID,name))",
+                        "PRIMARY KEY (restaurantId,name));",
                 TABLE_NAME);
     }
 
     @Override
-    protected String getFindStatement(String id) {
-        return null;
+    protected String getFindStatement(Object[] id) {
+        return  String.format("SELECT * FROM %s WHERE restaurantId = '%s' AND name = '%s';", TABLE_NAME, (String)id[0], (String)id[1]);
     }
 
     public ArrayList<FoodDAO> getParty(String foodTableName) throws SQLException{
@@ -71,11 +71,28 @@ public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpar
         return foods;
     }
 
+    public void updateFoodCount(Object[] id, int foodNum) throws SQLException{
+        String sql = String.format("UPDATE %s SET count -= %d WHERE restaurantId = '%s' AND name = '%s';" +
+                TABLE_NAME, foodNum, (String)id[0], (String)id[1]);
+
+        try (Connection con = ConnectionPool.getConnection();
+             Statement st = con.createStatement()
+        ) {
+            try {
+                st.executeQuery(sql);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.getParty query.");
+                throw ex;
+            }
+        }
+    }
+
     @Override
-    protected String getFindAllStatement(String id) {
-        return String.format(
-                "SELECT * FROM %s WHERE %s.restaurantId = '%s';",
-                TABLE_NAME, TABLE_NAME, id);
+    protected String getFindAllStatement(Object[] id) {
+        return null;
+//        return String.format(
+//                "SELECT * FROM %s WHERE %s.restaurantId = '%s';",
+//                TABLE_NAME, TABLE_NAME, id[0]);
     }
 
 
@@ -109,14 +126,15 @@ public class FoodpartyMapper extends Mapper<FoodDAO, String> implements IFoodpar
     }
 
     @Override
-    protected String getDeleteStatement(String id) {
-        return "DELETE FROM " + TABLE_NAME +
-                " WHERE id = " + id.toString() + ";";
+    protected String getDeleteStatement(Object[] id) {
+        return null;
+//        return "DELETE FROM " + TABLE_NAME +
+//                " WHERE id = " + id.toString() + ";";
     }
 
     @Override
     protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return  null;
+        return  new FoodDAO(rs.getString("restaurantId"), rs.getString("name"), rs.getInt("count"), rs.getFloat("price"));
     }
 
     @Override

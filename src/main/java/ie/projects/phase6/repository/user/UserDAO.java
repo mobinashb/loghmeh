@@ -1,6 +1,6 @@
-package ie.projects.phase6.repository.dao;
+package ie.projects.phase6.repository.user;
 
-public class UserDao {
+public class UserDAO {
     String id;
     String firstName;
     String lastName;
@@ -10,7 +10,7 @@ public class UserDao {
     float locationX;
     float locationY;
 
-    public UserDao(String id, String firstName, String lastName, String phoneNumber, String email, float credit, float locationX, float locationY){
+    public UserDAO(String id, String firstName, String lastName, String phoneNumber, String email, float credit, float locationX, float locationY){
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -1,11 +1,5 @@
 package ie.projects.phase6.repository.mapper;
 
-import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
-import org.springframework.test.context.jdbc.Sql;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

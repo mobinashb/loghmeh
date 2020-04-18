@@ -2,8 +2,8 @@ package ie.projects.phase6.utilities;
 
 import ie.projects.phase6.domain.core.Food;
 import ie.projects.phase6.domain.core.Restaurant;
-import ie.projects.phase6.repository.dao.FoodDAO;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
+import ie.projects.phase6.repository.food.FoodDAO;
+import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 
 import java.util.ArrayList;
 

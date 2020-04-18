@@ -2,7 +2,7 @@ package ie.projects.phase6.domain;
 
 import ie.projects.phase6.domain.core.Restaurant;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
+import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.food.FoodRepository;
 import ie.projects.phase6.repository.restaurant.RestaurantRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
@@ -42,7 +42,15 @@ public class RestaurantManager {
     }
 
     public ArrayList<String> getRestaurantsName(ArrayList<String> restaurantId) throws SQLException{
-        return restaurantRepository.getRestaurantsNameById(restaurantId);
+        return this.restaurantRepository.getRestaurantsNameById(restaurantId);
     }
 
+    public RestaurantDAO findRestaurantById(String restaurantId){
+        try {
+            return this.restaurantRepository.findRestaurantById(restaurantId);
+        }
+        catch (SQLException e1){
+            return null;
+        }
+    }
 }

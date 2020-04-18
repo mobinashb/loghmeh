@@ -1,7 +1,7 @@
 package ie.projects.phase6.domain;
 
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
-import ie.projects.phase6.repository.dao.FoodDAO;
+import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.food.FoodRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
@@ -29,6 +29,15 @@ public class FoodManager {
         }
         catch (SQLException e1){
             throw new RestaurantNotFound(JsonStringCreator.msgCreator("رستورانی با شناسه درخواست شده موجود نمی باشد"));
+        }
+    }
+
+    public FoodDAO findFood(String restaurantId, String foodName){
+        try {
+            return this.foodRepository.findFood(restaurantId, foodName);
+        }
+        catch (SQLException e1){
+            return null;
         }
     }
 }

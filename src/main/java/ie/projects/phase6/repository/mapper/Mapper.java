@@ -1,12 +1,10 @@
 package ie.projects.phase6.repository.mapper;
 
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class Mapper<T, I> implements IMapper<T, I> {
 
@@ -113,10 +111,10 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
     public void delete(I id) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getDeleteStatement(id))
+             Statement st = con.createStatement()
         ) {
             try {
-                st.executeUpdate();
+                st.executeUpdate(getDeleteStatement(id));
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.delete query.");
                 throw ex;

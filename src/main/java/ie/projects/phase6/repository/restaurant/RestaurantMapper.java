@@ -1,7 +1,6 @@
 package ie.projects.phase6.repository.restaurant;
 
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.dao.RestaurantDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
