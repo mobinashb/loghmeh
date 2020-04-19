@@ -6,7 +6,7 @@ import ie.projects.phase6.repository.mapper.Mapper;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class UserMapper extends Mapper<UserDAO, String> implements IUserMapper {
+public class UserMapper extends Mapper<UserDAO, String, String> implements IUserMapper {
     private static UserMapper instance;
     private static final String TABLE_NAME = "USER";
 

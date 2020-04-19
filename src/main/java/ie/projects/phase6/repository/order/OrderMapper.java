@@ -2,18 +2,22 @@ package ie.projects.phase6.repository.order;
 
 import ie.projects.phase6.domain.exceptions.CartValidationException;
 import ie.projects.phase6.repository.ConnectionPool;
+import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class OrderMapper extends Mapper<OrderDAO, Object[]> implements IOrderMapper {
+public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements IOrderMapper {
     private static OrderMapper instance;
     private static final String TABLE_NAME = "CART_ORDER";
 
     @Override
-    protected String getFindAllStatement(Object[] id) {
-        return null;
+    protected String getFindAllStatement(Integer id)
+    {
+        return String.format(
+                "SELECT * FROM %s WHERE cartId = %d;",
+                TABLE_NAME, id.intValue());
     }
 
     private OrderMapper() {
@@ -27,8 +31,8 @@ public class OrderMapper extends Mapper<OrderDAO, Object[]> implements IOrderMap
 
     public void updateFoodNum(OrderDAO obj) throws SQLException {
 
-        String sql = String.format("INSERT %s VALUES(%d, '%s', %d, %f) ON DUPLICATE KEY UPDATE foodNum = foodNum+%d;"
-                , TABLE_NAME, obj.getCartId(), obj.getFoodName(), obj.getFoodNum(), obj.getPrice(), obj.getFoodNum());
+        String sql = String.format("INSERT %s VALUES(%d, '%s', %d, %f, %b) ON DUPLICATE KEY UPDATE foodNum = foodNum+%d;"
+                , TABLE_NAME, obj.getCartId(), obj.getFoodName(), obj.getFoodNum(), obj.getPrice(), obj.getIsParty(), obj.getFoodNum());
 
         try (Connection con = ConnectionPool.getConnection();
              Statement st = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)
@@ -56,6 +60,7 @@ public class OrderMapper extends Mapper<OrderDAO, Object[]> implements IOrderMap
                         "foodName VARCHAR(255) NOT NULL, " +
                         "foodNum INT NOT NULL, " +
                         "price FLOAT NOT NULL, " +
+                        "isParty BOOL NOT NULL, " +
                         "PRIMARY KEY (cartId,foodName));",
                 TABLE_NAME);
     }
@@ -91,11 +96,16 @@ public class OrderMapper extends Mapper<OrderDAO, Object[]> implements IOrderMap
     @Override
     protected OrderDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return new OrderDAO(rs.getInt(1), rs.getString(2),
-                rs.getInt(3), rs.getFloat(4));
+                rs.getInt(3), rs.getFloat(4), rs.getBoolean("isParty"));
     }
 
     @Override
     protected ArrayList<OrderDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        return null;
+        ArrayList<OrderDAO> orders = new ArrayList<>();
+        while (rs.next()) {
+            orders.add(new OrderDAO(rs.getInt("cartId"), rs.getString("foodName"),
+                    rs.getInt("foodNum"), rs.getFloat("price"), rs.getBoolean("isParty")));
+        }
+        return orders;
     }
 }

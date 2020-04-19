@@ -1,15 +1,20 @@
 package ie.projects.phase6.utilities;
 
 import ie.projects.phase6.domain.RestaurantManager;
+import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.food.FoodDAO;
+import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.user.UserDAO;
+import ie.projects.phase6.service.cart.CartDTO;
+import ie.projects.phase6.service.cart.OrderDTO;
 import ie.projects.phase6.service.restaurant.FoodDTO;
 import ie.projects.phase6.service.restaurant.RestaurantDTO;
 import ie.projects.phase6.service.user.UserDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DAO_DTO {
 
@@ -51,5 +56,12 @@ public class DAO_DTO {
 
     public static UserDTO userDAO_DTO(UserDAO userDao){
         return new UserDTO(userDao.getId(), userDao.getFirstName(), userDao.getLastName(), userDao.getPhoneNumber(), userDao.getEmail(), userDao.getCredit());
+    }
+
+    public static CartDTO cartDAO_DTO(CartDAO cart, ArrayList<OrderDAO> orders) throws SQLException{
+        ArrayList<OrderDTO> resultOrders = new ArrayList<>();
+        for(OrderDAO order : orders)
+            resultOrders.add(new OrderDTO(order.getFoodName(), order.getFoodNum(), order.getPrice(), order.getIsParty()));
+        return new CartDTO(cart.getCartId(), cart.getRestaurantId(), RestaurantManager.getInstance().getRestaurantsName(new ArrayList<String>(Arrays.asList(cart.getRestaurantId()))).get(0), resultOrders);
     }
 }

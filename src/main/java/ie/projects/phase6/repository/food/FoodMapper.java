@@ -5,7 +5,7 @@ import ie.projects.phase6.repository.mapper.Mapper;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
+public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFoodMapper {
 
     private static FoodMapper instance;
 
@@ -44,10 +44,9 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
     }
 
     @Override
-    protected String getFindStatement(String id)
+    protected String getFindStatement(Object[] id)
     {
-        String[] key = id.split("-", 2);
-        return String.format("SELECT * FROM %s WHERE restaurantId = '%s' AND name = '%s';", TABLE_NAME, key[0], key[1]);
+        return String.format("SELECT * FROM %s WHERE restaurantId = '%s' AND name = '%s';", TABLE_NAME, (String)id[0], (String)id[1]);
     }
 
     @Override
@@ -90,9 +89,10 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
     }
 
     @Override
-    protected String getDeleteStatement(String id) {
-        return "DELETE FROM " + TABLE_NAME +
-                " WHERE id = " + id + ";";
+    protected String getDeleteStatement(Object[] id) {
+        return null;
+//        return "DELETE FROM " + TABLE_NAME +
+//                " WHERE id = " + id + ";";
     }
 
     @Override

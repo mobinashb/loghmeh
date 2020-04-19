@@ -6,7 +6,7 @@ import ie.projects.phase6.repository.mapper.Mapper;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements IRestaurantMapper {
+public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> implements IRestaurantMapper {
 
     private static RestaurantMapper instance;
     private static final String TABLE_NAME = "RESTAURANT";

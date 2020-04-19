@@ -33,7 +33,10 @@ public class FoodRepository {
     }
 
     public FoodDAO findFood(String restaurantId, String foodName) throws SQLException{
-        return this.mapper.find(restaurantId + "-" + foodName);
+        Object[] id = new Object[2];
+        id[0] = restaurantId;
+        id[1] = foodName;
+        return this.mapper.find(id);
     }
 
 }

@@ -6,7 +6,7 @@ import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 
-public abstract class Mapper<T, I> implements IMapper<T, I> {
+public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
 
     abstract protected String getDeleteTableStatement();
 
@@ -14,7 +14,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
     abstract protected String getFindStatement(I id);
 
-    abstract protected String getFindAllStatement(I id);
+    abstract protected String getFindAllStatement(S field);
 
     abstract protected String getInsertStatement(T t);
 
@@ -61,9 +61,9 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
         con.close();
     }
 
-    public ArrayList<T> findAllById(I id) throws SQLException {
+    public ArrayList<T> findAllById(S field) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getFindAllStatement(id))
+             PreparedStatement st = con.prepareStatement(getFindAllStatement(field))
         ) {
             ResultSet resultSet;
             try {

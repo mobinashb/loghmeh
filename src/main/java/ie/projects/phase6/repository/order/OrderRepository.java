@@ -25,8 +25,8 @@ public class OrderRepository {
         return instance;
     }
 
-    public void addNewOrder(int cartId, String foodName, int foodNum, float price, boolean isNew) throws SQLException, CartValidationException {
-        OrderDAO newOrder = new OrderDAO(cartId, foodName, foodNum, price);
+    public void addNewOrder(int cartId, String foodName, int foodNum, float price, boolean isParty, boolean isNew) throws SQLException, CartValidationException {
+        OrderDAO newOrder = new OrderDAO(cartId, foodName, foodNum, price, isParty);
 
         Object[] id = new Object[2];
         id[0] = cartId;
@@ -55,8 +55,11 @@ public class OrderRepository {
     }
 
     public ArrayList<OrderDAO> getOrdersOfCart(int cartId) throws SQLException{
-        this.mapper.findAllById(new Object[2]);
-        return null;
+        return this.mapper.findAllById(cartId);
+    }
+
+    public void delete(Object[] id) throws SQLException{
+        this.mapper.delete(id);
     }
 
 }

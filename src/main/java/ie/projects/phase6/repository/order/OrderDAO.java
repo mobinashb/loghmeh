@@ -5,12 +5,14 @@ public class OrderDAO {
     String foodName;
     int foodNum;
     float price;
+    boolean isParty;
 
-    public OrderDAO(int cartId, String foodName, int foodNum, float price){
+    public OrderDAO(int cartId, String foodName, int foodNum, float price, boolean isParty){
         this.cartId = cartId;
         this.foodName = foodName;
         this.foodNum = foodNum;
         this.price = price;
+        this.isParty = isParty;
     }
 
     public int getCartId() {
@@ -31,5 +33,9 @@ public class OrderDAO {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public boolean getIsParty(){
+        return this.isParty;
     }
 }

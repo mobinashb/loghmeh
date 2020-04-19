@@ -69,13 +69,16 @@ public class UserManager {
                 throw new CartValidationException(JsonStringCreator.msgCreator("رستوران مدنظر، شامل غذای درخواست‌شده نمی‌باشد"));
             price = food.getPrice();
         }
-        cartManager.addToCart(this.cartIdGenerator, userId, restaurantId, foodName, foodNum, price, isNew);
+        cartManager.addToCart(this.cartIdGenerator, userId, restaurantId, foodName, foodNum, price, isParty, isNew);
     }
 
-    public CartDAO getCart(String userId) throws SQLException{
+    public Object[] getCart(String userId) throws SQLException{
         CartDAO cart = CartManager.getInstance().getCartByUserId(userId);
         ArrayList<OrderDAO> orders = OrderManager.getInstance().getOrdersOfCart(cart.getCartId());
-        return null;
+        Object[] resultCart = new Object[2];
+        resultCart[0] = cart;
+        resultCart[1] = orders;
+        return resultCart;
     }
 
 }

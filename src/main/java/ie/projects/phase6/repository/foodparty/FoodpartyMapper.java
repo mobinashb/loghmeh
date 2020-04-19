@@ -6,7 +6,7 @@ import ie.projects.phase6.repository.mapper.Mapper;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class FoodpartyMapper extends Mapper<FoodDAO, Object[]> implements IFoodpartyMapper {
+public class FoodpartyMapper extends Mapper<FoodDAO, Object[], String> implements IFoodpartyMapper {
 
     private static FoodpartyMapper instance;
 
@@ -89,7 +89,7 @@ public class FoodpartyMapper extends Mapper<FoodDAO, Object[]> implements IFoodp
     }
 
     @Override
-    protected String getFindAllStatement(Object[] id) {
+    protected String getFindAllStatement(String id) {
         return null;
 //        return String.format(
 //                "SELECT * FROM %s WHERE %s.restaurantId = '%s';",

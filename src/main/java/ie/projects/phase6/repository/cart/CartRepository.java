@@ -40,7 +40,7 @@ public class CartRepository {
     }
 
     public CartDAO getCartByUserId(String userId) throws SQLException{
-        return this.mapper.getCartByUserId(userId);
+        return this.mapper.findAllById(userId).get(0);
     }
 
 }

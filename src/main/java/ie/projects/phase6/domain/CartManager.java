@@ -4,8 +4,6 @@ import ie.projects.phase6.domain.exceptions.CartValidationException;
 import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.cart.CartRepository;
-import ie.projects.phase6.repository.foodparty.FoodpartyRepository;
-import ie.projects.phase6.repository.order.OrderMapper;
 import ie.projects.phase6.repository.order.OrderRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
@@ -26,12 +24,12 @@ public class CartManager {
         return instance;
     }
 
-    public void addToCart(int cartId, String userId, String restaurantId, String foodName, int foodNum, float price, boolean isNew) throws SQLException, CartValidationException{
+    public void addToCart(int cartId, String userId, String restaurantId, String foodName, int foodNum, float price, boolean isParty, boolean isNew) throws SQLException, CartValidationException{
         if(this.cartRepository.checkRestaurantEqualityForCart(cartId, restaurantId)){
             if(foodNum == 0)
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید"));
             CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
-            OrderRepository.getInstance().addNewOrder(cartId, foodName, foodNum, price, isNew);
+            OrderRepository.getInstance().addNewOrder(cartId, foodName, foodNum, price, isParty, isNew);
 //            FoodpartyRepository.getInstance().updateFoodpartyCount(restaurantId, foodName, foodNum);
             return;
         }
@@ -46,7 +44,7 @@ public class CartManager {
             Object[] id = new Object[2];
             id[0] = cartId;
             id[1] = foodName;
-            OrderMapper.getInstance().delete(id);
+            OrderRepository.getInstance().delete(id);
             this.cartRepository.delete(cartId);
             throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
         }

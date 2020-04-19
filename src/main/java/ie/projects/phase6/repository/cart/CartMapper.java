@@ -6,13 +6,15 @@ import ie.projects.phase6.repository.mapper.Mapper;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CartMapper extends Mapper<CartDAO, Integer> implements ICartMapper {
+public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICartMapper {
     private static CartMapper instance;
     private static final String TABLE_NAME = "CART";
 
     @Override
-    protected String getFindAllStatement(Integer id) {
-        return null;
+    protected String getFindAllStatement(String id) {
+        return String.format(
+                "SELECT * FROM %s WHERE userId = '%s';",
+                TABLE_NAME, id);
     }
 
     private CartMapper() {
@@ -113,6 +115,10 @@ public class CartMapper extends Mapper<CartDAO, Integer> implements ICartMapper 
 
     @Override
     protected ArrayList<CartDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        return null;
+        ArrayList<CartDAO> carts = new ArrayList<>();
+        while (rs.next()) {
+            carts.add(new CartDAO(rs.getInt("id"), rs.getString("userId"), rs.getString("restaurantId")));
+        }
+        return carts;
     }
 }
