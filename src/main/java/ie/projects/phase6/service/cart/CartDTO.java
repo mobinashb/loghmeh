@@ -3,19 +3,19 @@ package ie.projects.phase6.service.cart;
 import java.util.ArrayList;
 
 public class CartDTO {
-    int cartId;
+    Integer cartId;
     String restaurantId;
     String restaurantName;
     ArrayList<OrderDTO> orders;
 
-    public CartDTO(int cartId, String restaurantId, String restaurantName, ArrayList<OrderDTO> orders){
+    public CartDTO(Integer cartId, String restaurantId, String restaurantName, ArrayList<OrderDTO> orders){
         this.cartId = cartId;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
         this.orders = orders;
     }
 
-    public int getCartId() {
+    public Integer getCartId() {
         return cartId;
     }
 

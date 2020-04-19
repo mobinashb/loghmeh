@@ -25,12 +25,13 @@ public class OrderRepository {
         return instance;
     }
 
-    public void addNewOrder(int cartId, String foodName, int foodNum, float price, boolean isParty, boolean isNew) throws SQLException, CartValidationException {
+    public void addNewOrder(int cartId, String userId, String restaurantId, String foodName, int foodNum, float price, boolean isParty, boolean isNew) throws SQLException, CartValidationException {
         OrderDAO newOrder = new OrderDAO(cartId, foodName, foodNum, price, isParty);
 
-        Object[] id = new Object[2];
+        Object[] id = new Object[3];
         id[0] = cartId;
         id[1] = foodName;
+        id[2] = isParty;
 
         OrderDAO order;
         try {
@@ -41,21 +42,29 @@ public class OrderRepository {
                 throw new CartValidationException(JsonStringCreator.msgCreator("غذای درخواست‌شده برای تغییر، موجود نمی‌باشد"));
             else if(foodNum <= 0)
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید."));
+
+            CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
             mapper.updateFoodNum(newOrder);
             return;
         }
         if(order.getFoodNum()+foodNum == 0) {
             mapper.delete(id);
-            CartRepository.getInstance().delete(cartId);
+            if(mapper.findAllById(cartId).size() == 0)
+                CartRepository.getInstance().delete(cartId);
         }
         else if(order.getFoodNum()+foodNum < 0)
             throw new CartValidationException(JsonStringCreator.msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد"));
-        else
+        else {
+            CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
             mapper.updateFoodNum(newOrder);
+        }
     }
 
     public ArrayList<OrderDAO> getOrdersOfCart(int cartId) throws SQLException{
-        return this.mapper.findAllById(cartId);
+        ArrayList<OrderDAO> orders = this.mapper.findAllById(cartId);
+        if(orders.size() == 0)
+            return null;
+        return orders;
     }
 
     public void delete(Object[] id) throws SQLException{

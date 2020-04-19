@@ -1,8 +1,6 @@
 package ie.projects.phase6.repository.order;
 
-import ie.projects.phase6.domain.exceptions.CartValidationException;
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
@@ -61,13 +59,13 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
                         "foodNum INT NOT NULL, " +
                         "price FLOAT NOT NULL, " +
                         "isParty BOOL NOT NULL, " +
-                        "PRIMARY KEY (cartId,foodName));",
+                        "PRIMARY KEY (cartId,foodName, isParty));",
                 TABLE_NAME);
     }
 
     @Override
     protected String getFindStatement(Object[] id) {
-        return  String.format("SELECT * FROM %s WHERE cartId = %d AND foodName = '%s';", TABLE_NAME, (int)id[0], (String)id[1]);
+        return  String.format("SELECT * FROM %s WHERE cartId = %d AND foodName = '%s' AND isParty = %b;", TABLE_NAME, (int)id[0], (String)id[1], (boolean) id[2]);
     }
 
     @Override
@@ -90,7 +88,7 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
 
     @Override
     protected String getDeleteStatement(Object[] id) {
-        return String.format("DELETE FROM %s WHERE cartId = %d AND foodName = '%s';", TABLE_NAME, (int)id[0], (String)id[1]);
+        return String.format("DELETE FROM %s WHERE cartId = %d AND foodName = '%s' AND isParty = %b;", TABLE_NAME, (int)id[0], (String)id[1], (boolean) id[2]);
     }
 
     @Override

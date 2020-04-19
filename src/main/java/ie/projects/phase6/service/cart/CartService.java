@@ -25,6 +25,8 @@ public class CartService {
     @RequestMapping(value = "/v1/cart", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getCart() throws SQLException, IOException {
         Object[] cart  = UserManager.getInstance().getCart("123456789123");
+        if(((CartDAO) cart[0] == null) && ((ArrayList< OrderDAO>) cart[1] == null))
+            return JsonStringCreator.msgCreator("سبد خرید شما خالی می‌باشد");
         return mapper.writeValueAsString(DAO_DTO.cartDAO_DTO((CartDAO) cart[0], (ArrayList< OrderDAO>) cart[1]));
     }
 

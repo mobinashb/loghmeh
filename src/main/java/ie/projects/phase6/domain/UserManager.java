@@ -74,11 +74,12 @@ public class UserManager {
 
     public Object[] getCart(String userId) throws SQLException{
         CartDAO cart = CartManager.getInstance().getCartByUserId(userId);
-        ArrayList<OrderDAO> orders = OrderManager.getInstance().getOrdersOfCart(cart.getCartId());
+        ArrayList<OrderDAO> orders = new ArrayList<>();
+        if(cart != null)
+            orders = OrderManager.getInstance().getOrdersOfCart(cart.getCartId());
         Object[] resultCart = new Object[2];
         resultCart[0] = cart;
         resultCart[1] = orders;
         return resultCart;
     }
-
 }

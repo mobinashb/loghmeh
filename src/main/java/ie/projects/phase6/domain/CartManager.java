@@ -28,8 +28,7 @@ public class CartManager {
         if(this.cartRepository.checkRestaurantEqualityForCart(cartId, restaurantId)){
             if(foodNum == 0)
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید"));
-            CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
-            OrderRepository.getInstance().addNewOrder(cartId, foodName, foodNum, price, isParty, isNew);
+            OrderRepository.getInstance().addNewOrder(cartId, userId, restaurantId, foodName, foodNum, price, isParty, isNew);
 //            FoodpartyRepository.getInstance().updateFoodpartyCount(restaurantId, foodName, foodNum);
             return;
         }
@@ -41,9 +40,10 @@ public class CartManager {
         if(cart == null)
             return;
         if(cart.getRestaurantId().equals(restaurantId)){
-            Object[] id = new Object[2];
+            Object[] id = new Object[3];
             id[0] = cartId;
             id[1] = foodName;
+            id[2] = true;
             OrderRepository.getInstance().delete(id);
             this.cartRepository.delete(cartId);
             throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));

@@ -59,6 +59,8 @@ public class DAO_DTO {
     }
 
     public static CartDTO cartDAO_DTO(CartDAO cart, ArrayList<OrderDAO> orders) throws SQLException{
+        if(cart == null)
+            return new CartDTO(null, null, null, null);
         ArrayList<OrderDTO> resultOrders = new ArrayList<>();
         for(OrderDAO order : orders)
             resultOrders.add(new OrderDTO(order.getFoodName(), order.getFoodNum(), order.getPrice(), order.getIsParty()));

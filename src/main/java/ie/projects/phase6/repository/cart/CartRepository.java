@@ -1,6 +1,7 @@
 package ie.projects.phase6.repository.cart;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CartRepository {
 
@@ -40,7 +41,10 @@ public class CartRepository {
     }
 
     public CartDAO getCartByUserId(String userId) throws SQLException{
-        return this.mapper.findAllById(userId).get(0);
+        ArrayList<CartDAO> carts = this.mapper.findAllById(userId);
+        if(carts.size() == 0)
+            return null;
+        return carts.get(0);
     }
 
 }
