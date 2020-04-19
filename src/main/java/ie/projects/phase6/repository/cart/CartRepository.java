@@ -38,4 +38,9 @@ public class CartRepository {
             return null;
         }
     }
+
+    public CartDAO getCartByUserId(String userId) throws SQLException{
+        return this.mapper.getCartByUserId(userId);
+    }
+
 }

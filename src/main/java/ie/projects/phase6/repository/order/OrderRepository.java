@@ -1,10 +1,12 @@
 package ie.projects.phase6.repository.order;
 
 import ie.projects.phase6.domain.exceptions.CartValidationException;
+import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.cart.CartRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class OrderRepository {
 
@@ -51,4 +53,10 @@ public class OrderRepository {
         else
             mapper.updateFoodNum(newOrder);
     }
+
+    public ArrayList<OrderDAO> getOrdersOfCart(int cartId) throws SQLException{
+        this.mapper.findAllById(new Object[2]);
+        return null;
+    }
+
 }

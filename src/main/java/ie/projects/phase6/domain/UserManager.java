@@ -6,13 +6,16 @@ import ie.projects.phase6.domain.exceptions.CartValidationException;
 import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
+import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.food.FoodDAO;
+import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.user.UserDAO;
 import ie.projects.phase6.repository.user.UserRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserManager {
     private static UserManager instance;
@@ -42,14 +45,11 @@ public class UserManager {
         this.userRepository.addCredit(userId, amount);
     }
 
-    public void addToCart(String userId, String foodName, int foodNum, String restaurantId, boolean isParty, boolean isNew)
-            throws CartValidationException, RestaurantNotFound, FoodPartyExpiration, SQLException {
+    public void addToCart(String userId, String foodName, int foodNum, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException, RestaurantNotFound, FoodPartyExpiration, SQLException {
+
         CartManager cartManager = CartManager.getInstance();
         OrderManager.getInstance();
-        RestaurantDAO restaurant;
-
         float price;
-
         if(isParty){
             FoodDAO foodDAO = FoodpartyManager.getInstance().findFoodpartyById(restaurantId, foodName);
             if(foodDAO == null) {
@@ -59,10 +59,9 @@ public class UserManager {
             if(foodDAO.getCount() < foodNum)
                 throw new CartValidationException(JsonStringCreator.msgCreator("غذای درخواست‌شده از جشن غذا موجودی خواسته‌شده را ندارد."));
             price = foodDAO.getPrice();
-            System.out.println(price);
         }
         else {
-            restaurant = RestaurantManager.getInstance().findRestaurantById(restaurantId);
+            RestaurantDAO restaurant = RestaurantManager.getInstance().findRestaurantById(restaurantId);
             if (restaurant == null)
                 throw new RestaurantNotFound(JsonStringCreator.msgCreator("رستورانی با شناسه درخواست‌شده موجود نمی‌باشد"));
             FoodDAO food = FoodManager.getInstance().findFood(restaurantId, foodName);
@@ -70,7 +69,13 @@ public class UserManager {
                 throw new CartValidationException(JsonStringCreator.msgCreator("رستوران مدنظر، شامل غذای درخواست‌شده نمی‌باشد"));
             price = food.getPrice();
         }
-        System.out.println(price);
         cartManager.addToCart(this.cartIdGenerator, userId, restaurantId, foodName, foodNum, price, isNew);
     }
+
+    public CartDAO getCart(String userId) throws SQLException{
+        CartDAO cart = CartManager.getInstance().getCartByUserId(userId);
+        ArrayList<OrderDAO> orders = OrderManager.getInstance().getOrdersOfCart(cart.getCartId());
+        return null;
+    }
+
 }

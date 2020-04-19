@@ -72,16 +72,17 @@ public class FoodpartyMapper extends Mapper<FoodDAO, Object[]> implements IFoodp
     }
 
     public void updateFoodCount(Object[] id, int foodNum) throws SQLException{
-        String sql = String.format("UPDATE %s SET count -= %d WHERE restaurantId = '%s' AND name = '%s';" +
+        String sql = String.format("UPDATE %s SET count = count-%d WHERE restaurantId = '%s' AND name = '%s';",
                 TABLE_NAME, foodNum, (String)id[0], (String)id[1]);
+        System.out.println(sql);
 
         try (Connection con = ConnectionPool.getConnection();
              Statement st = con.createStatement()
         ) {
             try {
-                st.executeQuery(sql);
+                st.executeUpdate(sql);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.getParty query.");
+                System.out.println("error in update food count query.");
                 throw ex;
             }
         }

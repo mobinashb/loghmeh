@@ -50,7 +50,7 @@ public class OrderMapper extends Mapper<OrderDAO, Object[]> implements IOrderMap
 
     @Override
     protected String getCreateTableStatement(){
-        String ali = String.format(
+        return String.format(
                 "CREATE TABLE %s " +
                         "(cartId INT NOT NULL, " +
                         "foodName VARCHAR(255) NOT NULL, " +
@@ -58,8 +58,6 @@ public class OrderMapper extends Mapper<OrderDAO, Object[]> implements IOrderMap
                         "price FLOAT NOT NULL, " +
                         "PRIMARY KEY (cartId,foodName));",
                 TABLE_NAME);
-        System.out.println(ali);
-        return ali;
     }
 
     @Override

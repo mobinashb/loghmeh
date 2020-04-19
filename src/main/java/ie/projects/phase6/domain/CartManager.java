@@ -32,7 +32,7 @@ public class CartManager {
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید"));
             CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
             OrderRepository.getInstance().addNewOrder(cartId, foodName, foodNum, price, isNew);
-            FoodpartyRepository.getInstance().updateFoodpartyCount(restaurantId, foodName, foodNum);
+//            FoodpartyRepository.getInstance().updateFoodpartyCount(restaurantId, foodName, foodNum);
             return;
         }
         throw new CartValidationException(JsonStringCreator.msgCreator("امکان ثبت سفارش از دو رستوران مجزا در یک سبد خرید وجود ندارد"));
@@ -51,5 +51,10 @@ public class CartManager {
             throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
         }
     }
+
+    public CartDAO getCartByUserId(String userId) throws SQLException{
+        return this.cartRepository.getCartByUserId(userId);
+    }
+
 
 }

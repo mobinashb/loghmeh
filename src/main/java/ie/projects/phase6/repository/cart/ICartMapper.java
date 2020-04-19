@@ -6,4 +6,5 @@ import java.sql.SQLException;
 
 public interface ICartMapper extends IMapper<CartDAO, Integer> {
     boolean checkRestaurantEqualityForCart(int cartId, String restaurantId) throws SQLException;
+    CartDAO getCartByUserId(String userId) throws SQLException;
 }
