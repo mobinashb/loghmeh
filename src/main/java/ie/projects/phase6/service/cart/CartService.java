@@ -41,6 +41,12 @@ public class CartService {
         UserManager.getInstance().addToCart("123456789123", request.getFoodName(), request.getNumber(), request.getRestaurantId(), request.getIsParty(), false);
         return JsonStringCreator.msgCreator( "سفارش شما با موفقیت ثبت شد.");
     }
+
+    @RequestMapping(value = "/v1/cart/finalize", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public String finalizeOrder() throws CartValidationException, FoodPartyExpiration, SQLException {
+        UserManager.getInstance().finalizeOrder("123456789123");
+        return JsonStringCreator.msgCreator("سفارش شما ثبت نهایی گردید");
+    }
 //
 //    @RequestMapping(value = "/v1/cart", method = RequestMethod.DELETE, produces = "text/plain;charset=UTF-8")
 //    public String deleteOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {

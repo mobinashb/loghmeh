@@ -3,6 +3,7 @@ package ie.projects.phase6.domain;
 import ie.projects.phase6.domain.repeatedTasks.UpdateFoodParty;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.foodparty.FoodpartyRepository;
+import ie.projects.phase6.repository.order.OrderDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -64,4 +65,18 @@ public class FoodpartyManager {
             return null;
         }
     }
+
+    public ArrayList<FoodDAO> getFoodpartyByRestaurantId(String restaurantId){
+        try {
+            return this.foodpartyRepository.getFoodpartyByRestaurantId(restaurantId);
+        }
+        catch (SQLException e1){
+            return null;
+        }
+    }
+
+    public void updateFoodpartyCount(String restaurantId, ArrayList<OrderDAO> orders) throws SQLException{
+        this.foodpartyRepository.updateFoodpartyCount(restaurantId, orders);
+    }
+
 }

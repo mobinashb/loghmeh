@@ -9,6 +9,7 @@ public interface IMapper<T, I, S> {
     T find(I id) throws SQLException;
     ArrayList<T> findAllById(S field) throws SQLException;
     void insert(T t) throws SQLException;
-    void delete(I id) throws SQLException;
     void insertAll(ArrayList<T> objs) throws SQLException;
+    void delete(I id) throws SQLException;
+    void deleteAll(S field) throws SQLException;
 }

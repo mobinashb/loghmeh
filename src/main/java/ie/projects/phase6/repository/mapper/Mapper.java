@@ -24,6 +24,8 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
 
     abstract protected String getDeleteStatement(I id);
 
+    abstract protected String getDeleteAllStatement(S filed);
+
     abstract protected T convertResultSetToObject(ResultSet rs) throws SQLException;
 
     abstract protected ArrayList<T> convertResultSetToObjects(ResultSet rs) throws SQLException;
@@ -117,6 +119,19 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
                 st.executeUpdate(getDeleteStatement(id));
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.delete query.");
+                throw ex;
+            }
+        }
+    }
+
+    public void deleteAll(S field) throws SQLException {
+        try (Connection con = ConnectionPool.getConnection();
+             Statement st = con.createStatement()
+        ) {
+            try {
+                st.executeUpdate(getDeleteAllStatement(field));
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.deleteAll query.");
                 throw ex;
             }
         }

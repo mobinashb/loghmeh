@@ -109,6 +109,12 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
     }
 
     @Override
+    protected String getDeleteAllStatement(String id){
+        return null;
+    }
+
+
+    @Override
     protected CartDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return new CartDAO(rs.getInt("id"), rs.getString("userId"), rs.getString("restaurantId"));
     }

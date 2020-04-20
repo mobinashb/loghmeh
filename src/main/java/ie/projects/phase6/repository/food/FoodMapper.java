@@ -96,6 +96,12 @@ public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFo
     }
 
     @Override
+    protected String getDeleteAllStatement(String id){
+        return null;
+    }
+
+
+    @Override
     protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return  new FoodDAO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getString(5), rs.getFloat(6));
     }

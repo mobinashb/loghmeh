@@ -28,7 +28,7 @@ public class UserRepository {
         return mapper.find(id);
     }
 
-    public void addCredit(String id, float amount) throws SQLException{
+    public void updateUserCredit(String id, float amount) throws SQLException{
         this.mapper.addUserCredit(id, amount);
     }
 

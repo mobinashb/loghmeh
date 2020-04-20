@@ -7,6 +7,7 @@ import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.cart.CartDAO;
+import ie.projects.phase6.repository.finalizedCart.FinalizedCartRepository;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
@@ -42,7 +43,7 @@ public class UserManager {
     public void addCredit(String userId, float amount) throws NegativeCreditAmount, SQLException{
         if(amount <= 0)
             throw new NegativeCreditAmount(JsonStringCreator.msgCreator("برای افزایش اعتبار مقدار مثبتی را وارد نمایید"));
-        this.userRepository.addCredit(userId, amount);
+        this.userRepository.updateUserCredit(userId, amount);
     }
 
     public void addToCart(String userId, String foodName, int foodNum, String restaurantId, boolean isParty, boolean isNew) throws CartValidationException, RestaurantNotFound, FoodPartyExpiration, SQLException {
@@ -82,4 +83,32 @@ public class UserManager {
         resultCart[1] = orders;
         return resultCart;
     }
+
+
+    private boolean validateUserCredit(String userId, float price) throws SQLException{
+        return this.userRepository.findUser(userId).getCredit() >= price;
+    }
+
+    public void finalizeOrder(String userId) throws SQLException, CartValidationException, FoodPartyExpiration{
+        UserDAO user = getUserById(userId);
+        CartDAO cart = CartManager.getInstance().getCartByUserId(userId);
+        if(cart == null)
+            throw new CartValidationException(JsonStringCreator.msgCreator("سبد خریدی برای ثبت نهایی موجود نمی‌باشد"));
+
+        ArrayList<OrderDAO> orders = CartManager.getInstance().finalizeOrder(userId, cart.getCartId(), cart.getRestaurantId());
+
+
+        float price = CartManager.getInstance().getCartPrice(orders);
+
+        if(validateUserCredit(userId, price)){
+            this.userRepository.updateUserCredit(userId, -price);
+            this.cartIdGenerator++;
+            FoodpartyManager.getInstance().updateFoodpartyCount(cart.getRestaurantId(), orders);
+            FinalizedCartRepository.getInstance().addNewCart(cart);
+            CartManager.getInstance().clearCart(cart.getCartId());
+        }
+        else
+            throw new CartValidationException(JsonStringCreator.msgCreator("موجودی برای نهایی کردن سفارش کافی نمی‌باشد"));
+    }
+
 }

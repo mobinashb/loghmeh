@@ -54,7 +54,7 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     @Override
     protected String getInsertStatement(UserDAO user) {
         return String.format(
-                "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', %f, %f, %f);",
         TABLE_NAME, user.getId(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getEmail(), user.getCredit(), user.getLocationX(), user.getLocationY());
     }
 
@@ -82,6 +82,12 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     protected String getDeleteStatement(String id) {
         return null;
     }
+
+    @Override
+    protected String getDeleteAllStatement(String userId){
+        return null;
+    }
+
 
     @Override
     protected UserDAO convertResultSetToObject(ResultSet rs) throws SQLException {

@@ -71,4 +71,8 @@ public class OrderRepository {
         this.mapper.delete(id);
     }
 
+    public void deleteAll(int cartId) throws SQLException{
+        this.mapper.deleteAll(cartId);
+    }
+
 }

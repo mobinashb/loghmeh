@@ -92,6 +92,11 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
     }
 
     @Override
+    protected String getDeleteAllStatement(Integer cartId){
+        return String.format("DELETE FROM %s WHERE cartId = %d", TABLE_NAME, cartId);
+    }
+
+    @Override
     protected OrderDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return new OrderDAO(rs.getInt(1), rs.getString(2),
                 rs.getInt(3), rs.getFloat(4), rs.getBoolean("isParty"));

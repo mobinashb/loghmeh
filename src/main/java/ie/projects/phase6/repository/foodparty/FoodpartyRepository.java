@@ -3,6 +3,7 @@ package ie.projects.phase6.repository.foodparty;
 import ie.projects.phase6.domain.core.Restaurant;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.food.FoodMapper;
+import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.utilities.Converter;
 
 import java.sql.SQLException;
@@ -46,11 +47,12 @@ public class FoodpartyRepository {
         return this.mapper.find(id);
     }
 
-    public void updateFoodpartyCount(String restaurantId, String foodName, int foodNum) throws SQLException{
-        Object[] id = new Object[2];
-        id[0] = restaurantId;
-        id[1] = foodName;
-        this.mapper.updateFoodCount(id, foodNum);
+    public void updateFoodpartyCount(String restaurantId, ArrayList<OrderDAO> orders) throws SQLException{
+        this.mapper.updateFoodCount(restaurantId, orders);
+    }
+
+    public ArrayList<FoodDAO> getFoodpartyByRestaurantId(String restaurantId) throws SQLException{
+        return this.mapper.findAllById(restaurantId);
     }
 
 }

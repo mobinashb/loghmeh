@@ -110,6 +110,12 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
     }
 
     @Override
+    protected String getDeleteAllStatement(String id){
+        return null;
+    }
+
+
+    @Override
     protected RestaurantDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return  new RestaurantDAO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5));
     }

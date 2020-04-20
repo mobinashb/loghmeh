@@ -4,10 +4,13 @@ import ie.projects.phase6.domain.exceptions.CartValidationException;
 import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.cart.CartRepository;
+import ie.projects.phase6.repository.food.FoodDAO;
+import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.repository.order.OrderRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CartManager {
     private static CartManager instance;
@@ -28,11 +31,19 @@ public class CartManager {
         if(this.cartRepository.checkRestaurantEqualityForCart(cartId, restaurantId)){
             if(foodNum == 0)
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید"));
-            OrderRepository.getInstance().addNewOrder(cartId, userId, restaurantId, foodName, foodNum, price, isParty, isNew);
-//            FoodpartyRepository.getInstance().updateFoodpartyCount(restaurantId, foodName, foodNum);
+            OrderManager.getInstance().addNewOrder(cartId, userId, restaurantId, foodName, foodNum, price, isParty, isNew);
             return;
         }
         throw new CartValidationException(JsonStringCreator.msgCreator("امکان ثبت سفارش از دو رستوران مجزا در یک سبد خرید وجود ندارد"));
+    }
+
+    public void clearCart(int cartId) throws SQLException{
+        this.cartRepository.delete(cartId);
+        OrderManager.getInstance().deleteOrdersByCartId(cartId);
+    }
+
+    public void deleteCart(int cartId) throws SQLException{
+        this.cartRepository.delete(cartId);
     }
 
     public void deleteCartBeforeParty(String restaurantId, String foodName, int cartId) throws SQLException, FoodPartyExpiration{
@@ -40,19 +51,68 @@ public class CartManager {
         if(cart == null)
             return;
         if(cart.getRestaurantId().equals(restaurantId)){
-            Object[] id = new Object[3];
-            id[0] = cartId;
-            id[1] = foodName;
-            id[2] = true;
-            OrderRepository.getInstance().delete(id);
-            this.cartRepository.delete(cartId);
+            OrderManager.getInstance().deleteOrder(cartId, foodName, true);
+            this.deleteCart(cartId);
             throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
         }
     }
 
-    public CartDAO getCartByUserId(String userId) throws SQLException{
-        return this.cartRepository.getCartByUserId(userId);
+    public CartDAO getCartByUserId(String userId) {
+        try {
+            return this.cartRepository.getCartByUserId(userId);
+        }
+        catch (SQLException e1){
+            return null;
+        }
     }
 
+    private boolean hasPartyOrder(ArrayList<OrderDAO> orders){
+        for(OrderDAO order: orders) {
+            if (order.getIsParty())
+                return true;
+        }
+        return false;
+    }
+
+    private FoodDAO findFoodparty(ArrayList<FoodDAO> foods, String foodName){
+        for(FoodDAO food: foods){
+            if(food.getName().equals(foodName))
+                return food;
+        }
+        return null;
+    }
+
+    private void validateCart(ArrayList<OrderDAO> orders, ArrayList<FoodDAO> foods) throws CartValidationException{
+        for(OrderDAO order: orders){
+            if(order.getIsParty()){
+                if(order.getFoodNum() > findFoodparty(foods, order.getFoodName()).getCount())
+                    throw new CartValidationException(JsonStringCreator.msgCreator("غذا از جشن غذا برداشته شده‌است و یا موجودی کافی ندارد"));
+            }
+        }
+    }
+
+    public ArrayList<OrderDAO> finalizeOrder(String userId, int cartId, String restaurantId) throws SQLException, CartValidationException, FoodPartyExpiration{
+        ArrayList<OrderDAO> orders = OrderManager.getInstance().getOrdersOfCart(cartId);
+        if(orders == null)
+            throw new CartValidationException(JsonStringCreator.msgCreator("سفارشی برای ثبت نهایی موجود نمی‌باشد"));
+
+        if(hasPartyOrder(orders)){
+            ArrayList<FoodDAO> foods = FoodpartyManager.getInstance().getFoodpartyByRestaurantId(restaurantId);
+            if(foods == null){
+                CartManager.getInstance().deleteCart(cartId);
+                OrderManager.getInstance().deleteOrdersByCartId(cartId);
+                throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
+            }
+            validateCart(orders, foods);
+        }
+        return orders;
+    }
+
+    public float getCartPrice(ArrayList<OrderDAO> orders){
+        float price = 0;
+        for(OrderDAO order: orders)
+            price += order.getPrice() * order.getFoodNum();
+        return price;
+    }
 
 }
