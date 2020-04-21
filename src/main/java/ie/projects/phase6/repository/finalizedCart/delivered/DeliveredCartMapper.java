@@ -39,8 +39,7 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
                         "(cartId INT PRIMARY KEY, " +
                         "userId VARCHAR(255) NOT NULL, " +
                         "restaurantId CHAR(24) NOT NULL, " +
-                        "deliveryManId VARCHAR(255) NOT NULL, " +
-                        "orderStatus SMALLINT NOT NULL)",
+                        "deliveryManId VARCHAR(255) NOT NULL)",
                 TABLE_NAME);
     }
 
@@ -52,10 +51,9 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
 
     @Override
     protected String getInsertStatement(FinalizedCartDAO cart) {
-        return null;
-//        return String.format(
-//                "INSERT IGNORE INTO %s VALUES ('%d', '%s', '%s');",
-//                TABLE_NAME, cart.getCartId(), cart.getUserId(), cart.getRestaurantId());
+        return String.format(
+                "INSERT INTO %s VALUES (%d, '%s', '%s', '%s');",
+                TABLE_NAME, cart.getCartId(), cart.getUserId(), cart.getRestaurantId(), cart.getDeliveryManId());
     }
 
     @Override

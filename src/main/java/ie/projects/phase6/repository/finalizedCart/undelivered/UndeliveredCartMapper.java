@@ -1,8 +1,14 @@
 package ie.projects.phase6.repository.finalizedCart.undelivered;
 
+import ie.projects.phase6.domain.LoghmehManger;
+import ie.projects.phase6.domain.core.DeliveryMan;
+import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
+import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
+import ie.projects.phase6.repository.finalizedCart.delivered.DeliveredCartMapper;
 import ie.projects.phase6.repository.mapper.Mapper;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,8 +48,8 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
                         "userId VARCHAR(255) NOT NULL, " +
                         "restaurantId CHAR(24) NOT NULL, " +
                         "deliveryManId VARCHAR(255), " +
-                        "orderStatus SMALLINT NOT NULL, " +
-                        "deliveryManTimeToReach BIGINT, " +
+                        "orderStatus int NOT NULL, " +
+                        "deliveryManTimeToReach DOUBLE, " +
                         "deliveryManFoundedTime DOUBLE)",
                         TABLE_NAME);
     }
@@ -51,7 +57,6 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
     @Override
     protected String getFindStatement(Integer id) {
         return null;
-//        return String.format("SELECT * FROM %s WHERE id = %d;", TABLE_NAME, id.intValue());
     }
 
     @Override
@@ -74,7 +79,6 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
     @Override
     protected String getDeleteStatement(Integer id) {
         return null;
-//        return String.format("DELETE FROM %s WHERE id = %d;", TABLE_NAME, id.intValue());
     }
 
     @Override
@@ -82,20 +86,56 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
         return null;
     }
 
-
     @Override
     protected FinalizedCartDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return null;
-//        return new FinalizedCartDAO(rs.getInt("id"), rs.getString("userId"), rs.getString("restaurantId"));
     }
 
     @Override
     protected ArrayList<FinalizedCartDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
         return null;
-//        ArrayList<FinalizedCartDAO> carts = new ArrayList<>();
-//        while (rs.next()) {
-//            carts.add(new FinalizedCartDAO(rs.getInt("id"), rs.getString("userId"), rs.getString("restaurantId")));
-//        }
-//        return carts;
+    }
+
+    public void checkState(){
+        String sql = "SELECT * FROM " + TABLE_NAME;
+
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = st.executeQuery()
+        ) {
+            while (rs.next()) {
+                if(rs.getInt("orderStatus") == 1){
+                    DeliveryMan deliveryMan = LoghmehManger.getInstance().selectDeliveryManForOrder(rs.getString("userId"), rs.getString("restaurantId"));
+//                    System.out.println(">");
+                    if(deliveryMan == null)
+                        continue;
+//                    System.out.println("???????????????????????????????????????????");
+//                    System.out.println(deliveryMan.getTimeToReach());
+                    rs.updateInt("orderStatus", 2);
+                    rs.updateString("deliveryManId", deliveryMan.getId());
+                    rs.updateDouble("deliveryManTimeToReach", deliveryMan.getTimeToReach());
+                    rs.updateDouble("deliveryManFoundedTime", (double) System.currentTimeMillis());
+                    rs.updateRow();
+                }
+                else if(rs.getInt("orderStatus") == 2){
+                    if ((System.currentTimeMillis() - rs.getDouble("deliveryManFoundedTime")) > (rs.getDouble("deliveryManTimeToReach") * 1000)) {
+                        rs.updateInt("orderStatus", 3);
+                        rs.updateRow();
+                    }
+                }
+                else if(rs.getInt("orderStatus") == 3){
+                    FinalizedCartDAO cart = new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("userId"),
+                            rs.getString("restaurantId"), rs.getString("deliveryManId"));
+                    DeliveredCartMapper.getInstance().insert(cart);
+                    rs.deleteRow();
+                }
+            }
+        }
+        catch (SQLException e1){
+            e1.printStackTrace();
+        }
+        catch (RestaurantNotFound e1){
+            e1.printStackTrace();
+        }
     }
 }

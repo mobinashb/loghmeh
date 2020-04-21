@@ -44,13 +44,4 @@ public class RestaurantManager {
     public ArrayList<String> getRestaurantsName(ArrayList<String> restaurantId) throws SQLException{
         return this.restaurantRepository.getRestaurantsNameById(restaurantId);
     }
-
-    public RestaurantDAO findRestaurantById(String restaurantId){
-        try {
-            return this.restaurantRepository.findRestaurantById(restaurantId);
-        }
-        catch (SQLException e1){
-            return null;
-        }
-    }
 }

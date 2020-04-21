@@ -62,7 +62,7 @@ public class UserManager {
             price = foodDAO.getPrice();
         }
         else {
-            RestaurantDAO restaurant = RestaurantManager.getInstance().findRestaurantById(restaurantId);
+            RestaurantDAO restaurant = RestaurantManager.getInstance().getRestaurantById(restaurantId);
             if (restaurant == null)
                 throw new RestaurantNotFound(JsonStringCreator.msgCreator("رستورانی با شناسه درخواست‌شده موجود نمی‌باشد"));
             FoodDAO food = FoodManager.getInstance().findFood(restaurantId, foodName);
@@ -109,6 +109,14 @@ public class UserManager {
         }
         else
             throw new CartValidationException(JsonStringCreator.msgCreator("موجودی برای نهایی کردن سفارش کافی نمی‌باشد"));
+    }
+
+    public void deleteCart(String userId) throws SQLException, CartValidationException{
+        CartManager cartManager = CartManager.getInstance();
+        CartDAO cart = cartManager.getCartByUserId(userId);
+        if(cart == null)
+            throw new CartValidationException(JsonStringCreator.msgCreator("سبد خریدی برای جذف موجود نمی‌باشد"));
+        cartManager.clearCart(cart.getCartId());
     }
 
 }

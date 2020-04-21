@@ -21,6 +21,12 @@ public class FinalizedCartDAO {
         this.remainingTimeToDeliver = 0;
     }
 
+    public FinalizedCartDAO(int cartId, String userId, String restaurantId, String deliveryManId){
+        this.cartId = cartId;
+        this.userId = userId;
+        this.restaurantId = restaurantId;
+        this.deliveryManId = deliveryManId;
+    }
 
     public int getCartId() {
         return cartId;

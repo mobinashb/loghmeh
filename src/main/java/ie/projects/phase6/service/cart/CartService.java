@@ -47,11 +47,11 @@ public class CartService {
         UserManager.getInstance().finalizeOrder("123456789123");
         return JsonStringCreator.msgCreator("سفارش شما ثبت نهایی گردید");
     }
-//
-//    @RequestMapping(value = "/v1/cart", method = RequestMethod.DELETE, produces = "text/plain;charset=UTF-8")
-//    public String deleteOrder(@RequestBody CartRequest request) throws CartValidationException, RestaurantNotFound {
-//        loghmeh.getUsers().get(0).deleteCart();
-//        return new JSONStringCreator().msgCreator("سبد خرید شما با موفقیت حذف شد.");
-//    }
+
+    @RequestMapping(value = "/v1/cart", method = RequestMethod.DELETE, produces = "text/plain;charset=UTF-8")
+    public String deleteOrder(@RequestBody CartRequest request) throws CartValidationException, SQLException {
+        UserManager.getInstance().deleteCart("123456789123");
+        return JsonStringCreator.msgCreator("سبد خرید شما با موفقیت حذف شد");
+    }
 
 }

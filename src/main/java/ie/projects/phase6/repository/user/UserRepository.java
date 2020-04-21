@@ -20,7 +20,7 @@ public class UserRepository {
     }
 
     public void insertTempUser() throws SQLException{
-        UserDAO user = new UserDAO("123456789123", "احسان", "خامس‌پناه", "09121111111", "ehsan.kp@gmail.com", 100000, 11, 1);
+        UserDAO user = new UserDAO("123456789123", "احسان", "خامس‌پناه", "09121111111", "ehsan.kp@gmail.com", 100000, 0, 0);
         mapper.insert(user);
     }
 

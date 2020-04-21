@@ -38,11 +38,6 @@ public class RestaurantRepository {
     public ArrayList<String> getRestaurantsNameById(ArrayList<String> id) throws SQLException{
         return mapper.getRestaurantsNameById(id);
     }
-
-    public RestaurantDAO findRestaurantById(String restaurantId) throws SQLException{
-        return mapper.find(restaurantId);
-    }
-
 }
 
 
