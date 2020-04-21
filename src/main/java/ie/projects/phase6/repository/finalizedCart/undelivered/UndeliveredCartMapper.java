@@ -19,11 +19,10 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
     private static final String TABLE_NAME = "UNDELIVERED_CART";
 
     @Override
-    protected String getFindAllStatement(String id) {
-        return null;
-//        return String.format(
-//                "SELECT * FROM %s WHERE userId = '%s';",
-//                TABLE_NAME, id);
+    protected String getFindAllStatement(String field) {
+        return String.format(
+                "SELECT * FROM %s WHERE userId = '%s';",
+                TABLE_NAME, field);
     }
 
     private UndeliveredCartMapper() {
@@ -56,7 +55,7 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
 
     @Override
     protected String getFindStatement(Integer id) {
-        return null;
+        return String.format("SELECT * FROM %s WHERE cartId = %d;", TABLE_NAME, id.intValue());
     }
 
     @Override
@@ -88,12 +87,15 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
 
     @Override
     protected FinalizedCartDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return null;
+        return new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), rs.getInt("orderStatus"));
     }
 
     @Override
     protected ArrayList<FinalizedCartDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        return null;
+        ArrayList<FinalizedCartDAO> carts = new ArrayList<>();
+        while (rs.next())
+            carts.add(new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), rs.getInt("orderStatus")));
+        return carts;
     }
 
     public void checkState(){

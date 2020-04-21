@@ -11,11 +11,10 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
     private static final String TABLE_NAME = "DELIVERED_CART";
 
     @Override
-    protected String getFindAllStatement(String id) {
-        return null;
-//        return String.format(
-//                "SELECT * FROM %s WHERE userId = '%s';",
-//                TABLE_NAME, id);
+    protected String getFindAllStatement(String field) {
+        return String.format(
+                "SELECT * FROM %s WHERE userId = '%s';",
+                TABLE_NAME, field);
     }
 
     private DeliveredCartMapper() {
@@ -45,8 +44,7 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
 
     @Override
     protected String getFindStatement(Integer id) {
-        return null;
-//        return String.format("SELECT * FROM %s WHERE id = %d;", TABLE_NAME, id.intValue());
+        return String.format("SELECT * FROM %s WHERE cartId = %d;", TABLE_NAME, id.intValue());
     }
 
     @Override
@@ -80,17 +78,14 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
 
     @Override
     protected FinalizedCartDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return null;
-//        return new FinalizedCartDAO(rs.getInt("id"), rs.getString("userId"), rs.getString("restaurantId"));
+        return new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), 4);
     }
 
     @Override
     protected ArrayList<FinalizedCartDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
-        return null;
-//        ArrayList<FinalizedCartDAO> carts = new ArrayList<>();
-//        while (rs.next()) {
-//            carts.add(new FinalizedCartDAO(rs.getInt("id"), rs.getString("userId"), rs.getString("restaurantId")));
-//        }
-//        return carts;
+        ArrayList<FinalizedCartDAO> carts = new ArrayList<>();
+        while (rs.next())
+            carts.add(new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), 4));
+        return carts;
     }
 }

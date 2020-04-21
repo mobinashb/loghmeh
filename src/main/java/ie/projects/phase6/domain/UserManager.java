@@ -7,6 +7,7 @@ import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.cart.CartDAO;
+import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartRepository;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.order.OrderDAO;
@@ -116,7 +117,13 @@ public class UserManager {
         CartDAO cart = cartManager.getCartByUserId(userId);
         if(cart == null)
             throw new CartValidationException(JsonStringCreator.msgCreator("سبد خریدی برای جذف موجود نمی‌باشد"));
-        cartManager.clearCart(cart.getCartId());
+        cartManager.clearCartAndOrders(cart.getCartId());
     }
 
+    public ArrayList<FinalizedCartDAO> getAllOrders(String userId) throws SQLException{
+        ArrayList<FinalizedCartDAO> deliveredOrders = FinalizedCartRepository.getInstance().getDeliveredOrders(userId);
+        ArrayList<FinalizedCartDAO> undeliveredOrders = FinalizedCartRepository.getInstance().getUndeliveredOrders(userId);
+        deliveredOrders.addAll(undeliveredOrders);
+        return deliveredOrders;
+    }
 }

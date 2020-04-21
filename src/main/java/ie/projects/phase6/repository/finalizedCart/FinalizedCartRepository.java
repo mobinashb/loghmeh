@@ -9,6 +9,7 @@ import ie.projects.phase6.repository.finalizedCart.undelivered.IUndeliveredCartM
 import ie.projects.phase6.repository.finalizedCart.undelivered.UndeliveredCartMapper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Timer;
 
 public class FinalizedCartRepository {
@@ -46,6 +47,28 @@ public class FinalizedCartRepository {
             schedulerSet = true;
             Timer timer = new Timer();
             timer.schedule(new CheckOrderStatus(), 0, this.CHECK_ORDER_STATUS_PERIOD);
+        }
+    }
+
+    public ArrayList<FinalizedCartDAO> getDeliveredOrders(String userId) throws SQLException{
+        return this.deliveredMapper.findAllById(userId);
+    }
+
+    public ArrayList<FinalizedCartDAO> getUndeliveredOrders(String userId) throws SQLException{
+        return this.undeliveredMapper.findAllById(userId);
+    }
+
+    public FinalizedCartDAO getCart(int cartId){
+        try{
+            return this.deliveredMapper.find(cartId);
+        }
+        catch (SQLException e1){
+            try {
+                return this.undeliveredMapper.find(cartId);
+            }
+            catch (SQLException e2){
+                return null;
+            }
         }
     }
 

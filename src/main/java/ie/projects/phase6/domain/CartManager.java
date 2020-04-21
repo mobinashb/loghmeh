@@ -6,7 +6,6 @@ import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.cart.CartRepository;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.order.OrderDAO;
-import ie.projects.phase6.repository.order.OrderRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
 import java.sql.SQLException;
@@ -37,9 +36,13 @@ public class CartManager {
         throw new CartValidationException(JsonStringCreator.msgCreator("امکان ثبت سفارش از دو رستوران مجزا در یک سبد خرید وجود ندارد"));
     }
 
-    public void clearCart(int cartId) throws SQLException{
+    public void clearCartAndOrders(int cartId) throws SQLException{
         this.cartRepository.delete(cartId);
         OrderManager.getInstance().deleteOrdersByCartId(cartId);
+    }
+
+    public void clearCart(int cartId) throws SQLException{
+        this.cartRepository.delete(cartId);
     }
 
     public void deleteCart(int cartId) throws SQLException{
@@ -47,7 +50,7 @@ public class CartManager {
     }
 
     public void deleteCartBeforeParty(String restaurantId, String foodName, int cartId) throws SQLException, FoodPartyExpiration{
-        CartDAO cart = this.cartRepository.findCartById(cartId);
+        CartDAO cart = this.cartRepository.getCart(cartId);
         if(cart == null)
             return;
         if(cart.getRestaurantId().equals(restaurantId)){

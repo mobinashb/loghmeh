@@ -31,7 +31,7 @@ public class CartRepository {
         this.mapper.delete(new Integer(cartId));
     }
 
-    public CartDAO findCartById(int cartId) throws SQLException{
+    public CartDAO getCart(int cartId){
         try {
             return this.mapper.find(new Integer(cartId));
         }
