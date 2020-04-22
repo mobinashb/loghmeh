@@ -29,7 +29,6 @@ public class LoghmehManger {
     }
 
     private Restaurant addRestaurant(String jsonData){
-        System.out.println(jsonData);
         ObjectMapper mapper = new ObjectMapper();
         try{
             return mapper.readValue(jsonData, Restaurant.class);
