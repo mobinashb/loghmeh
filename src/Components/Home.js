@@ -9,6 +9,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
 import Timer from 'react-compound-timer';
+import InfiniteScroll from 'react-infinite-scroller';
 
 function Search() {
   return (
@@ -66,25 +67,19 @@ class Home extends CartBasedComponent {
       error: null,
       isLoaded: false,
       restaurants: [],
-      restaurantsInParty: [],
+      foodParty: [],
       partyRemainingTime: null,
-      cart: {}
+      cart: {},
+      pageNum: 1,
+      pageSize: 10,
+      hasMore: true
     };
   }
   render() {
-    const { error, isLoaded, restaurants, restaurantsInParty, partyRemainingTime, toShow, cart} = this.state;
+    const { error, isLoaded, restaurants, foodParty, partyRemainingTime, toShow, cart} = this.state;
     let cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length;
-    var foodPartyList = [];
-    restaurantsInParty.map((restaurant) => {
-      restaurant.menu.map((food) => {
-        food.restaurantName = restaurant.name;
-        foodPartyList.push(food);
-        return food;
-      });
-      return restaurant;
-    });
     if (error) {
       return <Error code={500}/>;
     }
@@ -117,7 +112,7 @@ class Home extends CartBasedComponent {
               </div>
           </div>
           <div className="scrolling-wrapper shadow-box">
-            {foodPartyList.map(item => (
+            {foodParty.map(item => (
               <div className="card shadow-box" key={item.restaurantId+'-'+item.name}>
                 <FoodDetails whereAmI="foodparty"
                 name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
@@ -138,7 +133,16 @@ class Home extends CartBasedComponent {
           <div className="title">
             رستوران ها
           </div>
-          <RestaurantList restaurants={restaurants}/>
+          {isLoaded &&
+          <InfiniteScroll
+              pageStart={1}
+              loadMore={this.loadMoreRestaurants.bind(this)}
+              hasMore={this.state.hasMore}
+              loader={<div className="loader" key={0}>در حال بارگذاری ...</div>}
+          >
+            <RestaurantList restaurants={restaurants}/>
+          </InfiniteScroll>
+          }
         </div>
         <Modal className="modal fade" role="dialog"
           show={toShow === "cart"}
@@ -160,13 +164,19 @@ class Home extends CartBasedComponent {
     }
   }
 
+  loadMoreRestaurants() {
+    setTimeout( () => {
+      this.fetchRestaurants();
+    }, 2000);
+  }
+
   fetchFoodParty() {
     fetch("http://localhost:8080/v1/foodparty")
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
-            restaurantsInParty: result.restaurants,
+            foodParty: result.restaurants,
             error: (!this.state.error) ? result.msg : this.state.error,
             partyRemainingTime: result.remainingTime,
             isLoaded: true
@@ -182,14 +192,26 @@ class Home extends CartBasedComponent {
   }
 
   fetchRestaurants() {
-    fetch("http://localhost:8080/v1/restaurants")
+    const pageNum = this.state.pageNum;
+    const pageSize = this.state.pageSize;
+    const page = String(pageNum).concat("/").concat(String(pageSize));
+    fetch("http://localhost:8080/v1/restaurants/".concat(page))
       .then(res => res.json())
       .then(
         (result) => {
-          this.setState({
-            restaurants: result,
-            error: (!this.state.error) ? result.msg : this.state.error,
-          });
+          if (result.length > 0) {
+            this.setState({
+              restaurants: this.state.restaurants.concat(result),
+              error: (!this.state.error) ? result.msg : this.state.error,
+              hasMore: true,
+              pageNum: this.state.pageNum + 1
+            });
+          }
+          else {
+            this.setState({
+              hasMore: false
+            });
+          }
         },
         (error) => {
           this.setState({
@@ -202,9 +224,10 @@ class Home extends CartBasedComponent {
 
 
   componentDidMount() {
+    this.fetchRestaurants();
     this.fetchFoodParty();
     this.fetchCart();
-    this.fetchRestaurants();
+
   }
 }
 

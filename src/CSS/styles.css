@@ -786,3 +786,10 @@ thead tr th {
     filter: blur(0.6rem);
     -webkit-filter: blur(0.6rem);
 }
+
+.loader {
+    color: #1A535C;
+    font-weight: bold;
+    font-size: 2em;
+    padding: 2em;
+}

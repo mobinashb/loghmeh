@@ -92,9 +92,11 @@ class CartBasedComponent extends React.Component {
   async addToCart(food) {
     var cartNew = JSON.parse(JSON.stringify(this.state.cart));
     cartNew.restaurantId = food.restaurantId;
-    if (cartNew.orders === undefined) {
+    if (cartNew.orders === undefined || cartNew.orders === null) {
       cartNew.orders = []
     }
+    console.log(cartNew)
+    console.log(food)
     cartNew.orders = cartNew.orders.concat(food);
     let response = POST(food, "http://localhost:8080/v1/cart");
     const res = await response;

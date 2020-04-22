@@ -65,7 +65,7 @@ class Restaurant extends CartBasedComponent {
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length;
     if (error) {
-      if (error.includes("یافت")) return <Error code={404}/>;
+      if (error.includes("یافت نشد")) return <Error code={404}/>;
       return <Error code={500}/>;
     } else {
       return (
