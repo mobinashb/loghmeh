@@ -71,7 +71,7 @@ class Home extends CartBasedComponent {
       partyRemainingTime: null,
       cart: {},
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 8,
       hasMore: true
     };
   }
