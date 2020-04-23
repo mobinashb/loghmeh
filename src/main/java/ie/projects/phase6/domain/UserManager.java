@@ -1,7 +1,6 @@
 package ie.projects.phase6.domain;
 
 
-import ie.projects.phase6.domain.core.Order;
 import ie.projects.phase6.domain.exceptions.CartValidationException;
 import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
@@ -23,11 +22,12 @@ public class UserManager {
     private static UserManager instance;
 
     private UserRepository userRepository;
+
     private int cartIdGenerator;
 
     private UserManager() throws SQLException {
         this.userRepository = UserRepository.getInstance();
-        this.userRepository.insertTempUser();
+//        this.userRepository.insertTempUser();
         this.cartIdGenerator = 0;
     }
 
@@ -91,12 +91,11 @@ public class UserManager {
     }
 
     public void finalizeOrder(String userId) throws SQLException, CartValidationException, FoodPartyExpiration{
-        UserDAO user = getUserById(userId);
         CartDAO cart = CartManager.getInstance().getCartByUserId(userId);
         if(cart == null)
             throw new CartValidationException(JsonStringCreator.msgCreator("سبد خریدی برای ثبت نهایی موجود نمی‌باشد"));
 
-        ArrayList<OrderDAO> orders = CartManager.getInstance().finalizeOrder(userId, cart.getCartId(), cart.getRestaurantId());
+        ArrayList<OrderDAO> orders = CartManager.getInstance().finalizeOrder(cart.getCartId(), cart.getRestaurantId());
 
 
         float price = CartManager.getInstance().getCartPrice(orders);

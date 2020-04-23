@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import ie.projects.phase6.domain.RestaurantManager;
-import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.order.OrderDAO;
 
@@ -22,7 +21,7 @@ public class JsonStringCreator {
     public static String foodpartyJson(JsonNode foodparty, double remainingTime){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.putPOJO("restaurants", foodparty);
+        objectNode.putPOJO("foodparty", foodparty);
         objectNode.put("remainingTime", remainingTime);
         return objectNode.toString();
     }

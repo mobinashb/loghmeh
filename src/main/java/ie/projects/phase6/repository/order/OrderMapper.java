@@ -53,7 +53,7 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE %s " +
+                "CREATE TABLE IF NOT EXISTS %s " +
                         "(cartId INT NOT NULL, " +
                         "foodName VARCHAR(255) NOT NULL, " +
                         "foodNum INT NOT NULL, " +

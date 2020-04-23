@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DAO_DTO {
+public class ConvertDAOToDTO {
 
     public static ArrayList<RestaurantDTO> restaurantDAO_DTO(ArrayList<RestaurantDAO> restaurants){
         ArrayList<RestaurantDTO> result = new ArrayList<>();
@@ -43,17 +43,16 @@ public class DAO_DTO {
         return RestaurantManager.getInstance().getRestaurantsName(restaurantsId);
     }
 
-    public static ArrayList<FoodDTO> foodpartyDAO_DTO(ArrayList<FoodDAO> foods) throws SQLException {
-        ArrayList<String> restaurantsName = getRestaurantsNameForFoods(foods);
-        ArrayList<FoodDTO> foodsDTO = new ArrayList<>();
+    public static ArrayList<FoodDTO> foodpartyDAO_DTO(ArrayList<FoodDAO> foodList) throws SQLException {
+        ArrayList<String> restaurantsName = getRestaurantsNameForFoods(foodList);
+        ArrayList<FoodDTO> foodListDTO = new ArrayList<>();
         int i = 0;
-        for(FoodDAO foodDAO: foods) {
-            foodsDTO.add(new FoodDTO(foodDAO.getName(), foodDAO.getDescription(), foodDAO.getPopularity(), foodDAO.getImage(),
+        for(FoodDAO foodDAO: foodList) {
+            foodListDTO.add(new FoodDTO(foodDAO.getName(), foodDAO.getDescription(), foodDAO.getPopularity(), foodDAO.getImage(),
                     foodDAO.getPrice(), foodDAO.getRestaurantId(), restaurantsName.get(i), foodDAO.getCount(), foodDAO.getOldPrice()));
             i += 1;
         }
-
-        return foodsDTO;
+        return foodListDTO;
     }
 
     public static UserDTO userDAO_DTO(UserDAO userDao){

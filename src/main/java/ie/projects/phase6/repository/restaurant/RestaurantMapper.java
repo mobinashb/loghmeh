@@ -57,7 +57,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE  %s " +
+                "CREATE TABLE IF NOT EXISTS %s " +
                         "(id CHAR(24) NOT NULL PRIMARY KEY, " +
                         "name VARCHAR(255) NOT NULL, " +
                         "logo VARCHAR(255) NOT NULL, " +
@@ -106,7 +106,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
     @Override
     protected String getDeleteStatement(String id) {
         return "DELETE FROM " + TABLE_NAME +
-                " WHERE id = " + id.toString() + ";";
+                " WHERE id = " + id + ";";
     }
 
     @Override
@@ -132,13 +132,43 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
                 TABLE_NAME, (pageNumber-1) * pageSize, pageSize);
     }
 
-    @Override
     public ArrayList<RestaurantDAO> getRestaurantsByPaging(int pageNumber, int pageSize){
         ArrayList<RestaurantDAO> fetchedRestaurants = new ArrayList<>();
 
         try (Connection conn = ConnectionPool.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(getRestaurantByPagingStatement(pageNumber, pageSize));) {
+            while (rs.next()) {
+                fetchedRestaurants.add(new RestaurantDAO(rs.getString(1), rs.getString(2),
+                        rs.getString(3), rs.getFloat(4), rs.getFloat(5)));
+            }
+        } catch (SQLException e) {
+            System.out.println("Can't get restaurants from wanted page");
+            e.printStackTrace();
+        }
+        return fetchedRestaurants;
+    }
+
+    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName, String foodTableName) throws SQLException{
+        String sql;
+        if(restaurantName == null) {
+             sql = String.format("SELECT %s.* FROM %s, %s WHERE %s.id = %s.restaurantId AND %s.name = %s"
+                    , TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, foodTableName, foodName);
+        }
+        else if(foodName == null) {
+            sql = String.format("SELECT * FROM %s WHERE %s.name = %s"
+                    , TABLE_NAME, TABLE_NAME, restaurantName);
+        }
+        else {
+            sql = String.format("SELECT %s.* FROM %s, %s WHERE %s.id = %s.restaurantId AND %s.name = %s AND %s.name = %s"
+                    , TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, foodTableName, foodName, TABLE_NAME, restaurantName);
+        }
+
+        ArrayList<RestaurantDAO> fetchedRestaurants = new ArrayList<>();
+
+        try (Connection conn = ConnectionPool.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 fetchedRestaurants.add(new RestaurantDAO(rs.getString(1), rs.getString(2),
                         rs.getString(3), rs.getFloat(4), rs.getFloat(5)));

@@ -1,6 +1,7 @@
 package ie.projects.phase6.repository.restaurant;
 
-import ie.projects.phase6.domain.core.Restaurant;
+import ie.projects.phase6.domain.foreignServiceObjects.Restaurant;
+import ie.projects.phase6.repository.food.FoodMapper;
 import ie.projects.phase6.utilities.Converter;
 
 import java.sql.*;
@@ -38,6 +39,11 @@ public class RestaurantRepository {
     public ArrayList<String> getRestaurantsNameById(ArrayList<String> id) throws SQLException{
         return mapper.getRestaurantsNameById(id);
     }
+
+    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName) throws SQLException{
+        return mapper.searchRestaurants(restaurantName, foodName, FoodMapper.getTableName());
+    }
+
 }
 
 

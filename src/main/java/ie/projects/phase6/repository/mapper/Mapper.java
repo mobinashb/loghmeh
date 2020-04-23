@@ -32,11 +32,11 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
 
     public T find(I id) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getFindStatement(id))
+             Statement st = con.createStatement()
         ) {
             ResultSet resultSet;
             try {
-                resultSet = st.executeQuery();
+                resultSet = st.executeQuery(getFindStatement(id));
                 resultSet.next();
                 return convertResultSetToObject(resultSet);
             } catch (SQLException ex) {
@@ -49,7 +49,7 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
     public void createTable() throws SQLException{
         Connection con = ConnectionPool.getConnection();
         Statement statement = con.createStatement();
-        statement.executeUpdate(getDeleteTableStatement());
+//        statement.executeUpdate(getDeleteTableStatement());
         statement.executeUpdate(getCreateTableStatement());
         statement.close();
         con.close();
@@ -65,11 +65,11 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
 
     public ArrayList<T> findAllById(S field) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getFindAllStatement(field))
+             Statement st = con.createStatement()
         ) {
             ResultSet resultSet;
             try {
-                resultSet = st.executeQuery();
+                resultSet = st.executeQuery(getFindAllStatement(field));
                 return convertResultSetToObjects(resultSet);
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.findAllByID query.");
@@ -80,10 +80,10 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
 
     public void insert(T obj) throws SQLException {
         try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getInsertStatement(obj))
+             Statement st = con.createStatement()
         ) {
             try {
-                st.executeUpdate();
+                st.executeUpdate(getInsertStatement(obj));
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.insert query.");
                 throw ex;

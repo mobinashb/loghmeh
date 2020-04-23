@@ -32,7 +32,7 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE  %s " +
+                "CREATE TABLE IF NOT EXISTS %s " +
                         "(id CHAR(12) NOT NULL PRIMARY KEY, " +
                         "firstName VARCHAR(255) NOT NULL, " +
                         "lastName VARCHAR(255) NOT NULL, " +

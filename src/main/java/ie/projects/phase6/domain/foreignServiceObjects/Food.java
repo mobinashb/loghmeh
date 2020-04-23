@@ -1,4 +1,4 @@
-package ie.projects.phase6.domain.core;
+package ie.projects.phase6.domain.foreignServiceObjects;
 
 import com.fasterxml.jackson.annotation.*;
 

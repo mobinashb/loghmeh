@@ -1,6 +1,6 @@
 package ie.projects.phase6.repository.food;
 
-import ie.projects.phase6.domain.core.Restaurant;
+import ie.projects.phase6.domain.foreignServiceObjects.Restaurant;
 import ie.projects.phase6.utilities.Converter;
 
 import java.sql.SQLException;

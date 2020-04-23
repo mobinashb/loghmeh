@@ -43,11 +43,6 @@ public class FinalizedCartRepository {
     public void addNewCart(CartDAO cart) throws SQLException{
         FinalizedCartDAO finalizedCartDAO = new FinalizedCartDAO(cart.getCartId(), cart.getUserId(), cart.getRestaurantId(), "", 1, 0, 0);
         this.undeliveredMapper.insert(finalizedCartDAO);
-        if(!schedulerSet){
-            schedulerSet = true;
-            Timer timer = new Timer();
-            timer.schedule(new CheckOrderStatus(), 0, this.CHECK_ORDER_STATUS_PERIOD);
-        }
     }
 
     public ArrayList<FinalizedCartDAO> getDeliveredOrders(String userId) throws SQLException{

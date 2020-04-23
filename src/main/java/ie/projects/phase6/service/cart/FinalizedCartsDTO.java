@@ -1,7 +1,5 @@
 package ie.projects.phase6.service.cart;
 
-import java.util.ArrayList;
-
 public class FinalizedCartsDTO {
     Integer cartId;
     String restaurantId;

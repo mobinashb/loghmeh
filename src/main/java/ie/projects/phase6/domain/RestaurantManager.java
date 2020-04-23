@@ -1,6 +1,6 @@
 package ie.projects.phase6.domain;
 
-import ie.projects.phase6.domain.core.Restaurant;
+import ie.projects.phase6.domain.foreignServiceObjects.Restaurant;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.food.FoodRepository;
@@ -44,4 +44,14 @@ public class RestaurantManager {
     public ArrayList<String> getRestaurantsName(ArrayList<String> restaurantId) throws SQLException{
         return this.restaurantRepository.getRestaurantsNameById(restaurantId);
     }
+
+    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName){
+        try {
+            return this.restaurantRepository.searchRestaurants(restaurantName, foodName);
+        }
+        catch (SQLException e1){
+            return new ArrayList<>();
+        }
+    }
+
 }

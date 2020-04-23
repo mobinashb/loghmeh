@@ -10,13 +10,6 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
     private static CartMapper instance;
     private static final String TABLE_NAME = "CART";
 
-    @Override
-    protected String getFindAllStatement(String id) {
-        return String.format(
-                "SELECT * FROM %s WHERE userId = '%s';",
-                TABLE_NAME, id);
-    }
-
     private CartMapper() {
     }
 
@@ -34,7 +27,7 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE  %s " +
+                "CREATE TABLE IF NOT EXISTS  %s " +
                         "(id INT PRIMARY KEY, " +
                         "userId VARCHAR(255) NOT NULL, " +
                         "restaurantId VARCHAR(255) NOT NULL);",
@@ -47,10 +40,22 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
     }
 
     @Override
+    protected String getFindAllStatement(String id) {
+        return String.format(
+                "SELECT * FROM %s WHERE userId = '%s';",
+                TABLE_NAME, id);
+    }
+
+    @Override
     protected String getInsertStatement(CartDAO cart) {
         return String.format(
                 "INSERT IGNORE INTO %s VALUES ('%d', '%s', '%s');",
                 TABLE_NAME, cart.getCartId(), cart.getUserId(), cart.getRestaurantId());
+    }
+
+    @Override
+    protected String getPreparedInsertStatement(){
+        return null;
     }
 
     public boolean checkRestaurantEqualityForCart(int cartId, String restaurantId) throws SQLException{
@@ -90,11 +95,6 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
                 throw ex;
             }
         }
-        return null;
-    }
-
-    @Override
-    protected String getPreparedInsertStatement(){
         return null;
     }
 

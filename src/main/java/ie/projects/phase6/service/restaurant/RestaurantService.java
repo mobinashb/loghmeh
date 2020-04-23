@@ -7,12 +7,9 @@ import ie.projects.phase6.domain.RestaurantManager;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
-import ie.projects.phase6.utilities.DAO_DTO;
+import ie.projects.phase6.utilities.ConvertDAOToDTO;
 import ie.projects.phase6.utilities.JsonStringCreator;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,7 +24,7 @@ public class RestaurantService {
     public String getRestaurants(@PathVariable(value = "pageNum") int pageNumber, @PathVariable(value = "pageSize") int pageSize) throws SQLException, IOException {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         ArrayList<RestaurantDAO> restaurants = restaurantManager.getRestaurants(pageNumber, pageSize);
-        return mapper.writeValueAsString(DAO_DTO.restaurantDAO_DTO(restaurants));
+        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
     }
 
     @RequestMapping(value = "/v1/restaurants/{restaurantId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
@@ -36,7 +33,7 @@ public class RestaurantService {
         FoodManager foodManager = FoodManager.getInstance();
         RestaurantDAO restaurant = restaurantManager.getRestaurantById(restaurantId);
         ArrayList<FoodDAO> foods = foodManager.getFoods(restaurantId);
-        return mapper.writeValueAsString(DAO_DTO.singleRestaurantDAO_DTO(restaurant, foods));
+        return mapper.writeValueAsString(ConvertDAOToDTO.singleRestaurantDAO_DTO(restaurant, foods));
     }
 
     @RequestMapping(value = "/v1/foodparty", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
@@ -44,14 +41,23 @@ public class RestaurantService {
         FoodpartyManager foodpartyManager = FoodpartyManager.getInstance();
         if(foodpartyManager.setupScheduler()){
             try{
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(2);
             }catch (InterruptedException e1){
                 e1.printStackTrace();
             }
         }
         double remainingTime = foodpartyManager.getFoodpartyRemainingTime();
         ArrayList<FoodDAO> foods = foodpartyManager.getParty();
-        String foodpartyStr = mapper.writeValueAsString(DAO_DTO.foodpartyDAO_DTO(foods));
+        String foodpartyStr = mapper.writeValueAsString(ConvertDAOToDTO.foodpartyDAO_DTO(foods));
         return JsonStringCreator.foodpartyJson(mapper.readTree(foodpartyStr), remainingTime);
     }
+
+    @RequestMapping(value = "/v1/search", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    public String searchRestaurants(@RequestParam(value = "restaurantName", required = false) String restaurantName, @RequestParam(value = "foodName", required = false) String foodName) throws IOException, SQLException, RestaurantNotFound {
+        if((restaurantName == null) && (foodName == null))
+            return JsonStringCreator.msgCreator("هیچ‌کدام از فیلد‌های جست‌و‌جو تکمیل نشده‌اند");
+        ArrayList<RestaurantDAO> restaurants = RestaurantManager.getInstance().searchRestaurants(restaurantName, foodName);
+        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
+    }
+
 }

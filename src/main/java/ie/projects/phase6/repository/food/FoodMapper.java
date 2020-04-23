@@ -32,7 +32,7 @@ public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFo
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE  %s " +
+                "CREATE TABLE IF NOT EXISTS %s " +
                         "(restaurantId CHAR(24) NOT NULL, " +
                         "name VARCHAR(255) NOT NULL, " +
                         "description VARCHAR(255) NOT NULL, " +

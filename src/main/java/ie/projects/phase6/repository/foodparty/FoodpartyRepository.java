@@ -1,6 +1,6 @@
 package ie.projects.phase6.repository.foodparty;
 
-import ie.projects.phase6.domain.core.Restaurant;
+import ie.projects.phase6.domain.foreignServiceObjects.Restaurant;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.food.FoodMapper;
 import ie.projects.phase6.repository.order.OrderDAO;

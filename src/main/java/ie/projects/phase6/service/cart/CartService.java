@@ -1,7 +1,6 @@
 package ie.projects.phase6.service.cart;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ie.projects.phase6.domain.CartManager;
 import ie.projects.phase6.domain.OrderManager;
 import ie.projects.phase6.domain.UserManager;
 import ie.projects.phase6.domain.exceptions.CartNotFound;
@@ -12,7 +11,7 @@ import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartRepository;
 import ie.projects.phase6.repository.order.OrderDAO;
-import ie.projects.phase6.utilities.DAO_DTO;
+import ie.projects.phase6.utilities.ConvertDAOToDTO;
 import ie.projects.phase6.utilities.JsonStringCreator;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class CartService {
         Object[] cart  = UserManager.getInstance().getCart("123456789123");
         if(((CartDAO) cart[0] == null) && ((ArrayList< OrderDAO>) cart[1] == null))
             return JsonStringCreator.msgCreator("سبد خرید شما خالی می‌باشد");
-        return mapper.writeValueAsString(DAO_DTO.cartDAO_DTO((CartDAO) cart[0], (ArrayList< OrderDAO>) cart[1]));
+        return mapper.writeValueAsString(ConvertDAOToDTO.cartDAO_DTO((CartDAO) cart[0], (ArrayList< OrderDAO>) cart[1]));
     }
 
     @RequestMapping(value = "/v1/cart", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
@@ -59,7 +58,7 @@ public class CartService {
     @RequestMapping(value = "/v1/orders", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getAllCarts() throws SQLException, IOException {
         ArrayList<FinalizedCartDAO> carts = UserManager.getInstance().getAllOrders("123456789123");
-        return mapper.writeValueAsString(DAO_DTO.finalizedCartsDAO_DTO(carts));
+        return mapper.writeValueAsString(ConvertDAOToDTO.finalizedCartsDAO_DTO(carts));
     }
 
     @RequestMapping(value = "/v1/orders/{cartId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")

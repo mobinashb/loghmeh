@@ -1,4 +1,4 @@
-package ie.projects.phase6.domain.core;
+package ie.projects.phase6.domain.foreignServiceObjects;
 
 public class Order {
     private String foodName;

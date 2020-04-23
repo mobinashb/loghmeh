@@ -45,17 +45,13 @@ public class CartManager {
         this.cartRepository.delete(cartId);
     }
 
-    public void deleteCart(int cartId) throws SQLException{
-        this.cartRepository.delete(cartId);
-    }
-
     public void deleteCartBeforeParty(String restaurantId, String foodName, int cartId) throws SQLException, FoodPartyExpiration{
         CartDAO cart = this.cartRepository.getCart(cartId);
         if(cart == null)
             return;
         if(cart.getRestaurantId().equals(restaurantId)){
             OrderManager.getInstance().deleteOrder(cartId, foodName, true);
-            this.deleteCart(cartId);
+            this.clearCart(cartId);
             throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
         }
     }
@@ -94,7 +90,7 @@ public class CartManager {
         }
     }
 
-    public ArrayList<OrderDAO> finalizeOrder(String userId, int cartId, String restaurantId) throws SQLException, CartValidationException, FoodPartyExpiration{
+    public ArrayList<OrderDAO> finalizeOrder(int cartId, String restaurantId) throws SQLException, CartValidationException, FoodPartyExpiration{
         ArrayList<OrderDAO> orders = OrderManager.getInstance().getOrdersOfCart(cartId);
         if(orders == null)
             throw new CartValidationException(JsonStringCreator.msgCreator("سفارشی برای ثبت نهایی موجود نمی‌باشد"));
@@ -102,7 +98,7 @@ public class CartManager {
         if(hasPartyOrder(orders)){
             ArrayList<FoodDAO> foods = FoodpartyManager.getInstance().getFoodpartyByRestaurantId(restaurantId);
             if(foods == null){
-                CartManager.getInstance().deleteCart(cartId);
+                CartManager.getInstance().clearCart(cartId);
                 OrderManager.getInstance().deleteOrdersByCartId(cartId);
                 throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
             }

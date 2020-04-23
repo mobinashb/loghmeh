@@ -2,7 +2,7 @@ package ie.projects.phase6.domain.repeatedTasks;
 
 import ie.projects.phase6.domain.FoodpartyManager;
 import ie.projects.phase6.domain.LoghmehManger;
-import ie.projects.phase6.domain.core.Restaurant;
+import ie.projects.phase6.domain.foreignServiceObjects.Restaurant;
 import ie.projects.phase6.repository.food.FoodRepository;
 import ie.projects.phase6.repository.foodparty.FoodpartyRepository;
 import ie.projects.phase6.repository.restaurant.RestaurantRepository;

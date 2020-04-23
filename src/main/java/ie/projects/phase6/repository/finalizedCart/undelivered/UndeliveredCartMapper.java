@@ -1,7 +1,7 @@
 package ie.projects.phase6.repository.finalizedCart.undelivered;
 
 import ie.projects.phase6.domain.LoghmehManger;
-import ie.projects.phase6.domain.core.DeliveryMan;
+import ie.projects.phase6.domain.foreignServiceObjects.DeliveryMan;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
@@ -42,7 +42,7 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE %s " +
+                "CREATE TABLE IF NOT EXISTS %s " +
                         "(cartId INT PRIMARY KEY, " +
                         "userId VARCHAR(255) NOT NULL, " +
                         "restaurantId CHAR(24) NOT NULL, " +

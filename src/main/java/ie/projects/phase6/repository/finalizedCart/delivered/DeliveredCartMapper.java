@@ -34,7 +34,7 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
     @Override
     protected String getCreateTableStatement(){
         return String.format(
-                "CREATE TABLE %s " +
+                "CREATE TABLE IF NOT EXISTS %s " +
                         "(cartId INT PRIMARY KEY, " +
                         "userId VARCHAR(255) NOT NULL, " +
                         "restaurantId CHAR(24) NOT NULL, " +

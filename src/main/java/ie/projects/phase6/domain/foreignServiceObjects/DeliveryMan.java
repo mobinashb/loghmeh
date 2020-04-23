@@ -1,4 +1,4 @@
-package ie.projects.phase6.domain.core;
+package ie.projects.phase6.domain.foreignServiceObjects;
 
 public class DeliveryMan {
     private String id;
@@ -12,12 +12,6 @@ public class DeliveryMan {
     public GeoLocation getLocation() { return location; }
 
     public double getVelocity() { return velocity; }
-
-    public double calcReceiveToUserTime(GeoLocation restaurantLocation, double restaurantToUserDistance){
-        double restaurantToDeliveryManDistance = Math.sqrt(Math.pow(restaurantLocation.getx() - this.location.getx(), 2) + Math.pow(restaurantLocation.gety() - this.location.gety(), 2));
-        double distance = restaurantToDeliveryManDistance + restaurantToUserDistance;
-        return distance / this.velocity;
-    }
 
     public double getTimeToReach() {
         return timeToReach;

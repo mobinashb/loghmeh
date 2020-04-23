@@ -9,4 +9,5 @@ public interface IRestaurantMapper extends IMapper<RestaurantDAO, String, String
 
     ArrayList<RestaurantDAO> getRestaurantsByPaging(int pageNumber, int pageSize);
     ArrayList<String> getRestaurantsNameById(ArrayList<String> restaurantsId) throws SQLException;
+    ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName, String foodTableName) throws SQLException;
 }
