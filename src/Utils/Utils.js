@@ -80,6 +80,10 @@ function getQueryParams(url, name) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function toQueryParams(obj) {
+  return new URLSearchParams(obj).toString();
+}
+
 export {
     Header,
     Footer,
@@ -87,5 +91,6 @@ export {
     POST,
     PUT,
     DELETE,
-    getQueryParams
+    getQueryParams,
+    toQueryParams
 }

@@ -16,7 +16,7 @@ div {
 * {
     box-sizing: border-box;
     direction: rtl;
-    font-family: Vazir;
+    font-family: Vazir !important;
 }
 
 p {
@@ -402,7 +402,6 @@ footer {
     border-radius: 1.5em;
     text-align: center;
     padding: 1em;
-    font-weight: 300;
     font-size: 1.5em;
 }
 
@@ -575,16 +574,19 @@ form#login .btn, form#signup .btn {
     padding: 1vh 2vh;
 }
 
-.search input, .search input::placeholder {
+.search input {
     margin-left: 0.5em !important;
     font-size: 1em !important;
-    color: #8e8d8d !important;
     text-align: center;
     padding: 1.25em 0.3em !important;
     font-weight: 500 !important;
     border-radius: 0.4em;
 }
 
+.search input::placeholder {
+    color: #8e8d8d !important;
+    font-weight: 500 !important;
+}
 
 .scrolling-wrapper .card {
     margin-left: 5vh;

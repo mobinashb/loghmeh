@@ -1,5 +1,5 @@
 import React from 'react';
-import {Header, toPersianNum} from '../Utils/Utils';
+import {Header, toPersianNum, toQueryParams} from '../Utils/Utils';
 import FoodDetails from './FoodDetails';
 import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
@@ -10,20 +10,8 @@ import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
 import Timer from 'react-compound-timer';
 import InfiniteScroll from 'react-infinite-scroller';
-
-function Search() {
-  return (
-    <div className="search centered-flex">
-      <form className="form-inline justify-content-center shadow-box" action="">
-        <div className="form-group">
-          <input type="text" className="form-control bg-light" id="foodname" placeholder="نـــام غـــذا" />
-          <input type="text" className="form-control bg-light" id="restaurantname" placeholder="نـــام رســـتـــوران" />
-        </div>
-        <button type="submit" className="btn btn-default">جســـت‌و‌جـــو</button>
-      </form>
-    </div>
-  );
-}
+import SearchForm from './SearchForm';
+import swal from "sweetalert";
 
 function RestaurantList(props) {
   let restaurantList = [];
@@ -72,7 +60,8 @@ class Home extends CartBasedComponent {
       cart: {},
       pageNum: 1,
       pageSize: 8,
-      hasMore: true
+      hasMore: true,
+      api: "http://localhost:8080/v1/restaurants?"
     };
   }
   render() {
@@ -94,7 +83,7 @@ class Home extends CartBasedComponent {
         />}>
         <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow}/>
         <Header/>
-        <Search/>
+        <SearchForm updateRestaurants={this.updateRestaurants.bind(this)}/>
         <div className="menu">
           <div className="title">
             جشن غذا!
@@ -165,9 +154,27 @@ class Home extends CartBasedComponent {
   }
 
   loadMoreRestaurants() {
+    const pageNum = this.state.pageNum;
+    const pageSize = this.state.pageSize;
+    const params = toQueryParams({
+      pageNum: pageNum,
+      pageSize: pageSize
+    });
+    const path = this.state.api + params;
     setTimeout( () => {
-      this.fetchRestaurants();
+      this.fetchRestaurants(path);
     }, 2000);
+  }
+
+  updateRestaurants(searchQuery) {
+    const searchQueryString = toQueryParams(searchQuery);
+    const api = "http://localhost:8080/v1/search?";
+    this.setState({
+      restaurants: [],
+      pageNum: 1,
+      api: api + searchQueryString + "&",
+      hasMore: true
+    });
   }
 
   fetchFoodParty() {
@@ -176,7 +183,7 @@ class Home extends CartBasedComponent {
       .then(
         (result) => {
           this.setState({
-            foodParty: result.restaurants,
+            foodParty: result.foodparty,
             error: (!this.state.error) ? result.msg : this.state.error,
             partyRemainingTime: result.remainingTime,
             isLoaded: true
@@ -191,11 +198,9 @@ class Home extends CartBasedComponent {
       )
   }
 
-  fetchRestaurants() {
-    const pageNum = this.state.pageNum;
-    const pageSize = this.state.pageSize;
-    const page = String(pageNum).concat("/").concat(String(pageSize));
-    fetch("http://localhost:8080/v1/restaurants/".concat(page))
+  fetchRestaurants(path) {
+    if (this.state.hasMore === false) return;
+    fetch(path)
       .then(res => res.json())
       .then(
         (result) => {
@@ -211,6 +216,23 @@ class Home extends CartBasedComponent {
             this.setState({
               hasMore: false
             });
+            if (typeof this.state.restaurants === "undefined" ||
+                this.state.restaurants === null ||
+                this.state.restaurants.length === null ||
+                this.state.restaurants.length === 0) {
+              swal({
+                title: "هشدار",
+                text: "رستورانی مطابق با جستجوی شما یافت نشد!",
+                icon: "warning",
+                dangerMode: true,
+                button: {
+                  text: "بستن",
+                  value: null,
+                  visible: true,
+                  closeModal: true,
+                },
+              });
+            }
           }
         },
         (error) => {
@@ -222,12 +244,17 @@ class Home extends CartBasedComponent {
       )
   }
 
-
   componentDidMount() {
-    this.fetchRestaurants();
+    const pageNum = this.state.pageNum;
+    const pageSize = this.state.pageSize;
+    const params = toQueryParams({
+      pageNum: pageNum,
+      pageSize: pageSize
+    });
+    const path = this.state.api + params;
+    this.fetchRestaurants(path);
     this.fetchFoodParty();
     this.fetchCart();
-
   }
 }
 

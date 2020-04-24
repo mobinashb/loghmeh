@@ -83,7 +83,7 @@ class Profile extends CartBasedComponent {
     return (
       <div className="multiple-rows">
       {this.state.orders.slice(0).reverse().map((order, i) => (
-        <div className="row" key={order.id}>
+        <div className="row" key={order.cartId}>
           <div className="col-1 col-bordered bg-light">
             {toPersianNum(i+1)}
           </div>
@@ -91,17 +91,17 @@ class Profile extends CartBasedComponent {
             {order.restaurantName}
           </div>
           <div className="col-4 col-bordered bg-light">
-            {order.orderStatus === "delivering" &&
+            {order.orderStatus === 1 &&
+            <button disabled className="blue-btn small-btn">در جست‌و‌جوی پیک</button>
+            }
+            {order.orderStatus === 2 &&
               <button disabled className="green-btn small-btn">پیک در مسیر</button>
             }
-            {order.orderStatus === "finding delivery" &&
-              <button disabled className="blue-btn small-btn">در جست‌و‌جوی پیک</button>
-            }
-            {order.orderStatus === "delivered" &&
-              <button className="yellow-btn small-btn" onClick={() => this.showOrder(order.id)}>مشاهده فاکتور</button>
+            {order.orderStatus === 3 &&
+              <button className="yellow-btn small-btn" onClick={() => this.showOrder(order.cartId)}>مشاهده فاکتور</button>
             }
           </div>
-            {this.OrderDetails(order.id)}
+            {this.OrderDetails(order.cartId)}
         </div>
       ))}
     </div>
@@ -116,7 +116,7 @@ class Profile extends CartBasedComponent {
   OrderDetails(id) {
     const toShow = this.state.toShow;
     const order = this.state.orderToShow;
-    if (order === null || order.id !== id) return;
+    if (order === null) return;
     if (toShow === id)
     return (
       <Modal className="modal fade" role="dialog"

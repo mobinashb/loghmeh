@@ -13,10 +13,10 @@ class App extends React.Component {
        <BrowserRouter>
         <div>
             <Switch>
-             <Route path="/" component={Home} exact/>
+             <Route exact path="/" component={Home}/>
              <Route path="/login" component={LoginSignup}/>
              <Route path="/profile" component={Profile}/>
-             <Route path="/restaurant" component={Restaurant} exact/>
+             <Route path="/restaurant" component={Restaurant}/>
              <Route component={() => <Error code={404}/>} />
            </Switch>
         </div>

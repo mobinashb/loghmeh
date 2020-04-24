@@ -126,9 +126,9 @@ class SignupForm extends Form {
             closeModal: true,
         },
       });
-      return
     }
   }
+
   render() {
     return (
       <form className="text-center p-5" action="#" id="signup" onSubmit={this.mySubmitHandler}>
