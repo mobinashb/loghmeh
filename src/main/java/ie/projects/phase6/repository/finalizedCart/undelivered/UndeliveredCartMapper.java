@@ -8,15 +8,16 @@ import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.finalizedCart.delivered.DeliveredCartMapper;
 import ie.projects.phase6.repository.mapper.Mapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, String> implements IUndeliveredCartMapper {
     private static UndeliveredCartMapper instance;
     private static final String TABLE_NAME = "UNDELIVERED_CART";
+
+    public static String getTableName() {
+        return TABLE_NAME;
+    }
 
     @Override
     protected String getFindAllStatement(String field) {
@@ -139,5 +140,26 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
         catch (RestaurantNotFound e1){
             e1.printStackTrace();
         }
+    }
+
+    public int getMaxId(String deliveredCartTableName) throws SQLException {
+        String sql = String.format("SELECT IFNULL(MAX(cartId), 0) cartId FROM (SELECT cartId FROM %s " +
+                                    "UNION ALL SELECT cartId FROM %s) a"
+                , TABLE_NAME, deliveredCartTableName);
+
+        try (Connection con = ConnectionPool.getConnection();
+             Statement st = con.createStatement()
+        ) {
+            ResultSet rs;
+            try {
+                rs = st.executeQuery(sql);
+                if(rs.next())
+                    return rs.getInt(1);
+            } catch (SQLException ex) {
+                System.out.println("error in getMazId query.");
+                throw ex;
+            }
+        }
+        return -1;
     }
 }

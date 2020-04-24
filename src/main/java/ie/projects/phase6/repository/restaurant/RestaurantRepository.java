@@ -40,8 +40,8 @@ public class RestaurantRepository {
         return mapper.getRestaurantsNameById(id);
     }
 
-    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName) throws SQLException{
-        return mapper.searchRestaurants(restaurantName, foodName, FoodMapper.getTableName());
+    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName, int pageNumber, int pageSize) throws SQLException{
+        return mapper.searchRestaurants(restaurantName, foodName, FoodMapper.getTableName(), pageNumber, pageSize);
     }
 
 }

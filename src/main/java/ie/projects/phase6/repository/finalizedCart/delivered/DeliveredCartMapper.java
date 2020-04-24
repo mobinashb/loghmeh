@@ -10,6 +10,10 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
     private static DeliveredCartMapper instance;
     private static final String TABLE_NAME = "DELIVERED_CART";
 
+    public static String getTableName() {
+        return TABLE_NAME;
+    }
+
     @Override
     protected String getFindAllStatement(String field) {
         return String.format(

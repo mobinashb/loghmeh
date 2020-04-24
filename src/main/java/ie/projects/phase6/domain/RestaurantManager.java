@@ -45,9 +45,9 @@ public class RestaurantManager {
         return this.restaurantRepository.getRestaurantsNameById(restaurantId);
     }
 
-    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName){
+    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName, int pageNumber, int pageSize){
         try {
-            return this.restaurantRepository.searchRestaurants(restaurantName, foodName);
+            return this.restaurantRepository.searchRestaurants(restaurantName, foodName, pageNumber, pageSize);
         }
         catch (SQLException e1){
             return new ArrayList<>();

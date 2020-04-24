@@ -8,4 +8,5 @@ import java.sql.SQLException;
 
 public interface IUndeliveredCartMapper extends IMapper<FinalizedCartDAO, Integer, String> {
     void checkState();
+    int getMaxId(String deliveredCartTableName) throws SQLException;
 }

@@ -67,4 +67,8 @@ public class FinalizedCartRepository {
         }
     }
 
+    public int getLastId() throws SQLException{
+        return this.undeliveredMapper.getMaxId(DeliveredCartMapper.getTableName());
+    }
+
 }

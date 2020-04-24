@@ -149,19 +149,19 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
         return fetchedRestaurants;
     }
 
-    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName, String foodTableName) throws SQLException{
+    public ArrayList<RestaurantDAO> searchRestaurants(String restaurantName, String foodName, String foodTableName, int pageNumber, int pageSize) throws SQLException{
         String sql;
         if(restaurantName == null) {
-             sql = String.format("SELECT %s.* FROM %s, %s WHERE %s.id = %s.restaurantId AND %s.name = %s"
-                    , TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, foodTableName, foodName);
+             sql = String.format("SELECT %s.* FROM %s, %s WHERE %s.id = %s.restaurantId AND %s.name = %s LIMIT %d, %d;"
+                    , TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, foodTableName, foodName, (pageNumber-1) * pageSize, pageSize);
         }
         else if(foodName == null) {
-            sql = String.format("SELECT * FROM %s WHERE %s.name = %s"
-                    , TABLE_NAME, TABLE_NAME, restaurantName);
+            sql = String.format("SELECT * FROM %s WHERE %s.name = %s LIMIT %d, %d;"
+                    , TABLE_NAME, TABLE_NAME, restaurantName, (pageNumber-1) * pageSize, pageSize);
         }
         else {
-            sql = String.format("SELECT %s.* FROM %s, %s WHERE %s.id = %s.restaurantId AND %s.name = %s AND %s.name = %s"
-                    , TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, foodTableName, foodName, TABLE_NAME, restaurantName);
+            sql = String.format("SELECT %s.* FROM %s, %s WHERE %s.id = %s.restaurantId AND %s.name = %s AND %s.name = %s LIMIT %d, %d;"
+                    , TABLE_NAME, TABLE_NAME, foodTableName, TABLE_NAME, foodTableName, foodTableName, foodName, TABLE_NAME, restaurantName, (pageNumber-1) * pageSize, pageSize);
         }
 
         ArrayList<RestaurantDAO> fetchedRestaurants = new ArrayList<>();

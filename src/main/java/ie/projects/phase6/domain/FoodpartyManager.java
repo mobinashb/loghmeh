@@ -11,7 +11,7 @@ import java.util.Timer;
 
 public class FoodpartyManager {
     private static FoodpartyManager instance;
-    private static final long FOODPARTY_UPDATE_PERIOD = 18000000;
+    private static final long FOODPARTY_UPDATE_PERIOD = 1800000;
 
     private FoodpartyRepository foodpartyRepository;
     private long lastFoodpartyUpdateTime = 0;

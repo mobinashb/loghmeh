@@ -6,6 +6,7 @@ import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
 import ie.projects.phase6.repository.cart.CartDAO;
+import ie.projects.phase6.repository.cart.CartRepository;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartRepository;
 import ie.projects.phase6.repository.food.FoodDAO;
@@ -28,7 +29,7 @@ public class UserManager {
     private UserManager() throws SQLException {
         this.userRepository = UserRepository.getInstance();
 //        this.userRepository.insertTempUser();
-        this.cartIdGenerator = 0;
+        this.cartIdGenerator = FinalizedCartRepository.getInstance().getLastId()+1;
     }
 
     public static UserManager getInstance() throws SQLException {

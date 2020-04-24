@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 public class RestaurantService {
     ObjectMapper mapper = new ObjectMapper();
 
-    @RequestMapping(value = "/v1/restaurants/{pageNum}/{pageSize}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    public String getRestaurants(@PathVariable(value = "pageNum") int pageNumber, @PathVariable(value = "pageSize") int pageSize) throws SQLException, IOException {
+    @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    public String getRestaurants(@RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws SQLException, IOException {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         ArrayList<RestaurantDAO> restaurants = restaurantManager.getRestaurants(pageNumber, pageSize);
         return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
@@ -53,10 +53,11 @@ public class RestaurantService {
     }
 
     @RequestMapping(value = "/v1/search", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    public String searchRestaurants(@RequestParam(value = "restaurantName", required = false) String restaurantName, @RequestParam(value = "foodName", required = false) String foodName) throws IOException, SQLException, RestaurantNotFound {
+    public String searchRestaurants(@RequestParam(value = "restaurantName", required = false) String restaurantName, @RequestParam(value = "foodName", required = false) String foodName,
+                                    @RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws IOException, SQLException {
         if((restaurantName == null) && (foodName == null))
             return JsonStringCreator.msgCreator("هیچ‌کدام از فیلد‌های جست‌و‌جو تکمیل نشده‌اند");
-        ArrayList<RestaurantDAO> restaurants = RestaurantManager.getInstance().searchRestaurants(restaurantName, foodName);
+        ArrayList<RestaurantDAO> restaurants = RestaurantManager.getInstance().searchRestaurants(restaurantName, foodName, pageNumber, pageSize);
         return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
     }
 
