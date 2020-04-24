@@ -59,7 +59,7 @@ class Home extends CartBasedComponent {
       partyRemainingTime: null,
       cart: {},
       pageNum: 1,
-      pageSize: 8,
+      pageSize: 16,
       hasMore: true,
       api: "http://localhost:8080/v1/restaurants?"
     };
@@ -163,7 +163,7 @@ class Home extends CartBasedComponent {
     const path = this.state.api + params;
     setTimeout( () => {
       this.fetchRestaurants(path);
-    }, 2000);
+    }, 1000);
   }
 
   updateRestaurants(searchQuery) {
