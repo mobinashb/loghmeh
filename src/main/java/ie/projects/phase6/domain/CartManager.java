@@ -100,10 +100,10 @@ public class CartManager {
 
         if(hasPartyOrder(orders)){
             ArrayList<FoodDAO> foods = FoodpartyManager.getInstance().getFoodpartyByRestaurantId(restaurantId);
-            if(foods == null){
+            if(foods.size() == 0){
                 CartManager.getInstance().clearCart(cartId);
                 OrderManager.getInstance().deleteOrdersByCartId(cartId);
-                throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذی انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
+                throw new FoodPartyExpiration(JsonStringCreator.msgCreator("زمان جشن غذا برای غذای انتخاب‌شده به اتمام رسیده‌است. جشن غذاهای افزوده‌شده به سبد خرید پاک می‌شوند"));
             }
             validateCart(orders, foods);
         }
