@@ -82,14 +82,14 @@ public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Strin
 
     @Override
     protected FinalizedCartDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), 4);
+        return new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), 3);
     }
 
     @Override
     protected ArrayList<FinalizedCartDAO> convertResultSetToObjects(ResultSet rs) throws SQLException {
         ArrayList<FinalizedCartDAO> carts = new ArrayList<>();
         while (rs.next())
-            carts.add(new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), 4));
+            carts.add(new FinalizedCartDAO(rs.getInt("cartId"), rs.getString("restaurantId"), 3));
         return carts;
     }
 }
