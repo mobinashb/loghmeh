@@ -116,7 +116,7 @@ class Profile extends CartBasedComponent {
   OrderDetails(id) {
     const toShow = this.state.toShow;
     const order = this.state.orderToShow;
-    if (order === null) return;
+    if (order === null || id !== order.id) return;
     if (toShow === id)
     return (
       <Modal className="modal fade" role="dialog"

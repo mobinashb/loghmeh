@@ -178,6 +178,7 @@ class Home extends CartBasedComponent {
   }
 
   fetchFoodParty() {
+    fetch("http://localhost:8080/v1/foodparty");
     fetch("http://localhost:8080/v1/foodparty")
       .then(res => res.json())
       .then(

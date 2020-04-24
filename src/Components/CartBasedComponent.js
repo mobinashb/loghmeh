@@ -63,6 +63,7 @@ class CartBasedComponent extends React.Component {
       }
     }
     else {
+      this.fetchCart();
       swal({
         title: "خطا",
         text: JSON.parse(text).msg,
@@ -151,6 +152,7 @@ class CartBasedComponent extends React.Component {
       }
     }
     else {
+      this.fetchCart();
       swal({
         title: "خطا",
         text: JSON.parse(text).msg,
