@@ -2,7 +2,7 @@ import React from 'react';
 import {Header} from '../Utils/Utils';
 import swal from "sweetalert";
 import Form from './Form';
-import {LoginButton} from '../Utils/GoogleAuth';
+import {LoginButton} from '../Authentication/GoogleAuth';
 
 function Panels() {
   return (
@@ -54,6 +54,9 @@ class LoginForm extends Form {
     console.log('Name: ' + profile.getName());
     console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    this.setState({
+      loggedIn: true
+    });
   }
 
   render() {
@@ -74,7 +77,7 @@ class LoginForm extends Form {
         <div className="d-flex justify-content-around">
           <button className="btn cyan-btn" type="submit">ورود</button>
         </div>
-        <div className="d-flex justify-content-around">
+        <div className="d-flex justify-content-around google-login-btn">
           <LoginButton text={buttonText} onSignIn={this.onSignIn}/>
         </div>
       </form>

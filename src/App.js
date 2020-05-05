@@ -6,6 +6,7 @@ import Profile from './Components/Profile';
 import {Footer} from './Utils/Utils';
 import Restaurant from './Components/Restaurant';
 import Error from './Error/Error';
+import ProtectedRoute from './Authentication/ProtectedRoute';
 
 class App extends React.Component {
   render() {
@@ -13,10 +14,10 @@ class App extends React.Component {
        <BrowserRouter>
         <div>
             <Switch>
-             <Route exact path="/" component={Home}/>
+             <ProtectedRoute exact path="/" component={Home}/>
              <Route path="/login" component={LoginSignup}/>
-             <Route path="/profile" component={Profile}/>
-             <Route path="/restaurant" component={Restaurant}/>
+             <ProtectedRoute path="/profile" component={Profile}/>
+             <ProtectedRoute path="/restaurant" component={Restaurant}/>
              <Route component={() => <Error code={404}/>} />
            </Switch>
         </div>

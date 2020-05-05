@@ -23,6 +23,7 @@ function LoginButton(props) {
           buttonText= {props.text}
           onSuccess={props.onSignIn}
           cookiePolicy={'single_host_origin'}
+          isSignedIn={true}
       />
   );
 }

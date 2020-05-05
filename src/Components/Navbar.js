@@ -2,7 +2,7 @@ import React from 'react';
 import logo from '../Assets/LOGO.png';
 import {toPersianNum} from '../Utils/Utils';
 import PropTypes from "prop-types";
-import {LogoutButton} from '../Utils/GoogleAuth';
+import {LogoutButton} from '../Authentication/GoogleAuth';
 
 class Navbar extends React.Component {
   showCart() {

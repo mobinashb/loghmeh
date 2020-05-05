@@ -795,3 +795,7 @@ thead tr th {
     font-size: 2em;
     padding: 2em;
 }
+
+.google-login-btn {
+    margin-top: 2em;
+}
