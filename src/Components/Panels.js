@@ -3,6 +3,10 @@ import LoginForm from '../Forms/LoginForm';
 import SignupForm from '../Forms/SignupForm';
 
 class Panels extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
         <div className="warpper">
@@ -14,10 +18,10 @@ class Panels extends React.Component {
           </div>
           <div className="panels">
             <div className="panel row-sm-5" id="one-panel">
-              <LoginForm/>
+              <LoginForm redirect={this.props.redirect}/>
             </div>
             <div className="panel row-sm-5" id="two-panel">
-              <SignupForm/>
+              <SignupForm redirect={this.props.redirect}/>
             </div>
           </div>
         </div>

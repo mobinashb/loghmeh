@@ -9,16 +9,20 @@ class SignupForm extends Form {
       firstname: '',
       lastname: '',
       email: '',
-      password: ''
+      password: '',
+      passwordrepeat: ''
     };
     this.myChangeHandler = this.myChangeHandler.bind(this);
   }
   mySubmitHandler = (event) => {
+    event.preventDefault();
     let password = event.target.password;
     let passwordRep = event.target.passwordrepeat;
-    let name = (event.target.firstname.value).concat(event.target.lastname.value);
+    let firstname = event.target.firstname;
+    let lastname = event.target.lastname;
+    let email = event.target.email;
+    let name = (firstname.value).concat(lastname.value);
     if (!(name.match(/^[a-zA-Z]+$/)) && !(name.match(/^[\u0600-\u06FF\s]+$/))) {
-      event.preventDefault();
       swal({
         title: "خطا",
         text: "نام و نام خانوادگی شما اشتباه وارد شده است!",
@@ -34,7 +38,6 @@ class SignupForm extends Form {
       return
     }
     if (password.value !== passwordRep.value) {
-      event.preventDefault();
       swal({
         title: "خطا",
         text: "تکرار رمز عبور اشتباه وارد شده است!",
@@ -48,11 +51,30 @@ class SignupForm extends Form {
         },
       });
     }
+    else {
+      console.log(this.state)
+      let response = this.signup();
+      if (response.ok) {
+        this.setState({
+          firstname: '',
+          lastname: '',
+          email: '',
+          password: '',
+          passwordrepeat: ''
+        })
+        password.value = '';
+        passwordRep.value = '';
+        firstname.value = '';
+        lastname.value = '';
+        email.value = '';
+        this.props.redirect("/login");
+      }
+    }
   }
 
   render() {
     return (
-        <form className="text-center p-5" action="#" id="signup" onSubmit={this.mySubmitHandler}>
+        <form className="text-center p-5" id="signup" onSubmit={this.mySubmitHandler}>
           <p className="h4 mb-4">ثبت نام</p>
           <input type="text" required name="firstname" className="form-control mb-4" placeholder="نام" onChange={this.myChangeHandler}/>
           <input type="text" required name="lastname" className="form-control mb-4" placeholder="نام خانوادگی" onChange={this.myChangeHandler}/>
@@ -62,6 +84,26 @@ class SignupForm extends Form {
           <button className="btn cyan-btn" type="submit">ثبت نام</button>
         </form>
     );
+  }
+
+  signup() {
+    let response;
+    let body = this.state;
+    fetch("http://localhost:8080/v1/users", {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+        }
+    )
+        .then(res => res.json())
+        .then(
+            (result) => {
+              response = result;
+            }
+        );
+    return response;
   }
 }
 

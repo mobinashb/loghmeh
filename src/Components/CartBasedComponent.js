@@ -207,10 +207,8 @@ class CartBasedComponent extends React.Component {
   }
 
   logout() {
-    // let history = useHistory();
     localStorage.removeItem("jwt");
     console.log('logged out!');
-    // history.push("/")
     this.props.history.push('/login');
   }
 
