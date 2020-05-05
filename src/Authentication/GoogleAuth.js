@@ -20,10 +20,10 @@ function LoginButton(props) {
   return (
       <GoogleLogin
           render={renderProps => (
-              <a className="btn btn-light google-login-btn" onClick={renderProps.onClick} href="">
+              <button className="btn btn-light google-login-btn" onClick={renderProps.onClick}>
                 {props.text}
                 <img src={google} alt="Google"/>
-              </a>
+              </button>
           )}
           clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
           buttonText= {props.text}
