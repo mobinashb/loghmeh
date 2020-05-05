@@ -3,4 +3,8 @@ function authenticate(email, isGoogleAuth) {
   return null;
 }
 
-export default authenticate;
+function isAuthenticated() {
+  return true;
+}
+
+export {authenticate, isAuthenticated};

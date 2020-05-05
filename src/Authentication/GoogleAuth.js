@@ -4,12 +4,12 @@ import {GoogleLogin, GoogleLogout} from 'react-google-login';
 function LogoutButton() {
   return (
       <GoogleLogout
-          render={() => (
-              <a className="nav-link logout">خروج</a>
+          render={renderProps => (
+              <a className="nav-link logout" onClick={renderProps.onClick} href="/login">خروج</a>
           )}
           clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
           buttonText="Logout"
-          onLogoutSuccess={console.log("signed outtttt")}
+          onLogoutSuccess={onLogout}
       >
       </GoogleLogout>
   );
@@ -25,6 +25,10 @@ function LoginButton(props) {
           isSignedIn={true}
       />
   );
+}
+
+function onLogout() {
+  console.log('logged out!');
 }
 
 export {

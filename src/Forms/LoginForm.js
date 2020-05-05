@@ -1,5 +1,5 @@
 import Form from "./Form";
-import authenticate from "../Authentication/Auth";
+import {authenticate} from "../Authentication/Auth";
 import {LoginButton} from "../Authentication/GoogleAuth";
 import React from "react";
 
