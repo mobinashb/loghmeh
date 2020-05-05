@@ -12,7 +12,6 @@ import Error from '../Error/Error';
 function Banner(props) {
   let name = props.firstname + ' ' + props.lastname;
   let email = props.email;
-  let phonenumber = props.phonenumber;
   let credit = props.credit;
   return (
     <header className="container-fluid banner row-sm-12">
@@ -22,10 +21,6 @@ function Banner(props) {
       </div>
       <div className="col-sm-6">
           <ul>
-          <li>
-              <i dir="ltr" className="flaticon-phone"/>
-              {phonenumber}
-          </li>
           <li>
               <i dir="ltr" className="flaticon-mail"/>
               {email}
@@ -45,7 +40,6 @@ Banner.propTypes = {
   firstname: PropTypes.string,
   lastname: PropTypes.string,
   email: PropTypes.string,
-  phonenumber: PropTypes.string,
   credit: PropTypes.number
 };
 
@@ -53,7 +47,6 @@ Banner.defaultProps = {
   firstname: '',
   lastname: '',
   email: '',
-  phonenumber: '',
   credit: 0
 };
 
@@ -64,7 +57,6 @@ class Profile extends CartBasedComponent {
       firstname: '',
       lastname: '',
       email: '',
-      phonenumber: '',
       credit: 0,
       orders: [],
       toShow: null,
@@ -166,7 +158,6 @@ class Profile extends CartBasedComponent {
     const {firstname,
     lastname,
     email,
-    phonenumber,
     credit,
     orders,
     toShow,
@@ -191,7 +182,7 @@ class Profile extends CartBasedComponent {
           loading={!this.state.isLoaded}
         />}>
         <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow}/>
-        <Banner firstname={firstname} lastname={lastname} email={email} phonenumber={toPersianNum(phonenumber)} credit={credit}/>
+        <Banner firstname={firstname} lastname={lastname} email={email} credit={credit}/>
         <div className="warpper">
           <input className="radio" id="one" name="group" type="radio" defaultChecked={true}/>
           <input className="radio" id="two" name="group" type="radio"/>

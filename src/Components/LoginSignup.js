@@ -92,7 +92,6 @@ class SignupForm extends Form {
       firstname: '',
       lastname: '',
       email: '',
-      phonenumber: '',
       password: ''
     };
     this.myChangeHandler = this.myChangeHandler.bind(this);
@@ -100,29 +99,12 @@ class SignupForm extends Form {
   mySubmitHandler = (event) => {
     let password = event.target.password;
     let passwordRep = event.target.passwordrepeat;
-    let phoneNum = event.target.phonenumber;
     let name = (event.target.firstname.value).concat(event.target.lastname.value);
     if (!(name.match(/^[a-zA-Z]+$/)) && !(name.match(/^[\u0600-\u06FF\s]+$/))) {
       event.preventDefault();
       swal({
         title: "خطا",
         text: "نام و نام خانوادگی شما اشتباه وارد شده است!",
-        icon: "error",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      });
-      return
-    }
-    if (!phoneNum.value.match(/^[0-9]+$/)) {
-      event.preventDefault();
-      swal({
-        title: "خطا",
-        text: "شماره تلفن اشتباه وارد شده است!",
         icon: "error",
         dangerMode: true,
         button: {
@@ -158,7 +140,6 @@ class SignupForm extends Form {
         <input type="text" required name="firstname" className="form-control mb-4" placeholder="نام" onChange={this.myChangeHandler}/>
         <input type="text" required name="lastname" className="form-control mb-4" placeholder="نام خانوادگی" onChange={this.myChangeHandler}/>
         <input type="email" required name="email" className="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
-        <input type="text" required name="phonenumber" className="form-control mb-4" placeholder="شماره تماس" onChange={this.myChangeHandler}/>
         <input type="password" required name="password" className="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
         <input type="password" required name="passwordrepeat" className="form-control mb-4" placeholder="تکرار رمز عبور"/>
         <button className="btn cyan-btn" type="submit">ثبت نام</button>
