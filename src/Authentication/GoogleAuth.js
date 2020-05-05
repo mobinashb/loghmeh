@@ -1,5 +1,6 @@
 import React from "react";
 import {GoogleLogin, GoogleLogout} from 'react-google-login';
+import google from '../Assets/google.png';
 
 function LogoutButton() {
   return (
@@ -18,6 +19,12 @@ function LogoutButton() {
 function LoginButton(props) {
   return (
       <GoogleLogin
+          render={renderProps => (
+              <a className="btn btn-light google-login-btn" onClick={renderProps.onClick} href="">
+                {props.text}
+                <img src={google} alt="Google"/>
+              </a>
+          )}
           clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
           buttonText= {props.text}
           onSuccess={props.onSignIn}

@@ -2,6 +2,7 @@ import Form from "./Form";
 import {authenticate} from "../Authentication/Auth";
 import {LoginButton} from "../Authentication/GoogleAuth";
 import React from "react";
+import swal from "sweetalert";
 
 class LoginForm extends Form {
   constructor(props) {
@@ -21,17 +22,34 @@ class LoginForm extends Form {
     this.setState({
       loggedIn: true
     });
-    if (authenticate(email, true) !== null) {
-      localStorage.setItem("token", profile.getEmail());
-      console.log(localStorage.getItem("token"))
+    let jwt = authenticate(email, true);
+    if (jwt) {
+      localStorage.setItem("jwt", jwt);
+      console.log(localStorage.getItem("jwt"))
     }
     else {
-      this.props.toSignup();
+      const auth2 = window.gapi.auth2.getAuthInstance()
+      if (auth2 != null) {
+        swal({
+          text: "شما قبلا ثبت نام نکرده اید!",
+          icon: "warning",
+          dangerMode: true,
+          button: {
+            text: "بستن",
+            value: null,
+            visible: true,
+            closeModal: true,
+          },
+        });
+        auth2.signOut().then(
+            auth2.disconnect().then(this.props.onLogoutSuccess)
+        )
+      }
     }
   }
 
   render() {
-    const buttonText = this.state.loggedIn ? "Signed in" : "Sign in";
+    const buttonText = this.state.loggedIn ? "وارد شده" : "ورود با گوگل";
     return(
         <form className="text-center p-5" action="/" id="login">
           <p className="h4 mb-4">ورود</p>
@@ -48,7 +66,7 @@ class LoginForm extends Form {
           <div className="d-flex justify-content-around">
             <button className="btn cyan-btn" type="submit">ورود</button>
           </div>
-          <div className="d-flex justify-content-around google-login-btn">
+          <div className="d-flex justify-content-around">
             <LoginButton text={buttonText} onSignIn={this.onSignIn}/>
           </div>
         </form>
