@@ -21,7 +21,7 @@ public class CORSFilter implements Filter {
     public void destroy() {
 
     }
-    //start
+
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
 

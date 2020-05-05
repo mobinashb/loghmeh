@@ -1,10 +1,7 @@
 package ie.projects.phase6.domain;
 
 
-import ie.projects.phase6.domain.exceptions.CartValidationException;
-import ie.projects.phase6.domain.exceptions.FoodPartyExpiration;
-import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
-import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
+import ie.projects.phase6.domain.exceptions.*;
 import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.cart.CartRepository;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
@@ -16,11 +13,14 @@ import ie.projects.phase6.repository.user.UserDAO;
 import ie.projects.phase6.repository.user.UserRepository;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
+import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserManager {
     private static UserManager instance;
+
+    private static final String SALT_FOR_HASH = "loghmeh-user";
 
     private UserRepository userRepository;
 
@@ -28,7 +28,6 @@ public class UserManager {
 
     private UserManager() throws SQLException {
         this.userRepository = UserRepository.getInstance();
-//        this.userRepository.insertTempUser();
         this.cartIdGenerator = FinalizedCartRepository.getInstance().getLastId()+1;
     }
 
@@ -36,6 +35,29 @@ public class UserManager {
         if (instance == null)
             instance = new UserManager();
         return instance;
+    }
+
+    private String hashGenerator(String name){
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(name.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void registerUser(String firstName, String lastName, String email, String password) throws DuplicateEmail {
+        String hashedPassword = hashGenerator(SALT_FOR_HASH + password);
+        this.userRepository.insertUser(firstName, lastName, email, hashedPassword);
     }
 
     public UserDAO getUserById(String id) throws SQLException{

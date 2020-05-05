@@ -56,7 +56,7 @@ public class ConvertDAOToDTO {
     }
 
     public static UserDTO userDAO_DTO(UserDAO userDao){
-        return new UserDTO(userDao.getId(), userDao.getFirstName(), userDao.getLastName(), userDao.getPhoneNumber(), userDao.getEmail(), userDao.getCredit());
+        return new UserDTO(userDao.getFirstName(), userDao.getLastName(), userDao.getEmail(), userDao.getCredit());
     }
 
     public static CartDTO cartDAO_DTO(CartDAO cart, ArrayList<OrderDAO> orders) throws SQLException{

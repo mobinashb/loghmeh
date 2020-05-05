@@ -3,6 +3,7 @@ package ie.projects.phase6.service.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase6.domain.UserManager;
+import ie.projects.phase6.domain.exceptions.DuplicateEmail;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import ie.projects.phase6.repository.user.UserDAO;
 import ie.projects.phase6.utilities.ConvertDAOToDTO;
@@ -19,9 +20,15 @@ import java.sql.SQLException;
 public class UserService {
     ObjectMapper mapper = new ObjectMapper();
 
-    @RequestMapping(value = "/v1/profile", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/user", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public String registerUser(@RequestBody SignupRequest request) throws DuplicateEmail, SQLException {
+        UserManager.getInstance().registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword());
+        return JsonStringCreator.msgCreator("ثبت‌نام شما با موفقیت انجام شد");
+    }
+
+    @RequestMapping(value = "/v1/user", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getUserProfile() throws IOException, SQLException {
-        UserDAO userDao = UserManager.getInstance().getUserById("123456789123");
+        UserDAO userDao = UserManager.getInstance().getUserById("omid.bodaghi79@gmail.com");
         return mapper.writeValueAsString(ConvertDAOToDTO.userDAO_DTO(userDao));
     }
 

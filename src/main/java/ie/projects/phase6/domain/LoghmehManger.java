@@ -77,8 +77,8 @@ public class LoghmehManger {
             try{
                 newDeliveryMan = mapper.readValue(deliverMenStr, DeliveryMan.class);
                 double bestScore = Double.POSITIVE_INFINITY;
-                double restaurantToUserDistance = Math.sqrt( Math.pow(user.getLocationX()-restaurant.getLocationX(), 2) +
-                        Math.pow(user.getLocationY()-restaurant.getLocationY(), 2));
+                double restaurantToUserDistance = Math.sqrt( Math.pow(0-restaurant.getLocationX(), 2) +
+                        Math.pow(0-restaurant.getLocationY(), 2));
 
                 double deliveryManToRestaurantDistance = Math.sqrt( Math.pow(restaurant.getLocationX()-newDeliveryMan.getLocation().getx(), 2) +
                         Math.pow(restaurant.getLocationY()-newDeliveryMan.getLocation().gety(), 2));

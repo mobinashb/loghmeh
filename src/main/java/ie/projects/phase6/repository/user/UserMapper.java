@@ -33,33 +33,31 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     protected String getCreateTableStatement(){
         return String.format(
                 "CREATE TABLE IF NOT EXISTS %s " +
-                        "(id CHAR(12) NOT NULL PRIMARY KEY, " +
-                        "firstName VARCHAR(255) NOT NULL, " +
-                        "lastName VARCHAR(255) NOT NULL, " +
-                        "phoneNumber VARCHAR(255) NOT NULL, " +
-                        "email VARCHAR(255) NOT NULL, " +
-                        "credit FLOAT NOT NULL, " +
-                        "locationX FLOAT NOT NULL, " +
-                        "locationY FLOAT NOT NULL)",
+                        "(email VARCHAR(255) NOT NULL PRIMARY KEY, " +
+                        "firstName VARCHAR(255), " +
+                        "lastName VARCHAR(255), " +
+                        "password VARCHAR(255) NOT NULL, " +
+                        "credit FLOAT)",
                 TABLE_NAME);
     }
 
     @Override
-    protected String getFindStatement(String id) {
+    protected String getFindStatement(String email) {
         return "SELECT " + "*" +
                 " FROM " + TABLE_NAME +
-                " WHERE id = '"+ id + "';";
+                " WHERE email = '"+ email + "';";
     }
 
     @Override
     protected String getInsertStatement(UserDAO user) {
         return String.format(
-                "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', %f, %f, %f);",
-        TABLE_NAME, user.getId(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getEmail(), user.getCredit(), user.getLocationX(), user.getLocationY());
+                "INSERT INTO %s (firstName, lastName, email, password) " +
+                "values ('%s','%s','%s','%s');",
+        TABLE_NAME, user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
     }
 
-    public void addUserCredit(String userId, float amount) throws SQLException {
-        String sql = String.format("UPDATE %s SET credit = credit+%f WHERE id = '%s';", TABLE_NAME, amount, userId);
+    public void addUserCredit(String email, float amount) throws SQLException {
+        String sql = String.format("UPDATE %s SET credit = credit+%f WHERE email = '%s';", TABLE_NAME, amount, email);
 
         Connection con = ConnectionPool.getConnection();
         Statement statement = con.createStatement();
@@ -91,8 +89,8 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
 
     @Override
     protected UserDAO convertResultSetToObject(ResultSet rs) throws SQLException {
-        return new UserDAO(rs.getString(1), rs.getString(2),
-                rs.getString(3), rs.getString(4), rs.getString(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8));
+        return new UserDAO(rs.getString("firstName"), rs.getString("lastName"),
+                rs.getString("password"), rs.getString("email"), rs.getFloat("credit"));
     }
 
     @Override

@@ -1,32 +1,18 @@
 package ie.projects.phase6.repository.user;
 
 public class UserDAO {
-    String id;
     String firstName;
     String lastName;
-    String phoneNumber;
     String email;
+    String password;
     float credit;
-    float locationX;
-    float locationY;
 
-    public UserDAO(String id, String firstName, String lastName, String phoneNumber, String email, float credit, float locationX, float locationY){
-        this.id = id;
+    public UserDAO(String firstName, String lastName, String email, String password, float credit){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.password = password;
         this.credit = credit;
-        this.locationX = locationX;
-        this.locationY = locationY;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -41,19 +27,11 @@ public class UserDAO {
         return email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     public float getCredit() {
         return credit;
     }
 
-    public float getLocationX() {
-        return locationX;
-    }
-
-    public float getLocationY() {
-        return locationY;
+    public String getPassword() {
+        return password;
     }
 }

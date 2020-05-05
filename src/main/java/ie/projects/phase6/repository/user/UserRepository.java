@@ -1,5 +1,8 @@
 package ie.projects.phase6.repository.user;
 
+import ie.projects.phase6.domain.exceptions.DuplicateEmail;
+import ie.projects.phase6.utilities.JsonStringCreator;
+
 import java.sql.SQLException;
 
 public class UserRepository {
@@ -19,9 +22,14 @@ public class UserRepository {
         return instance;
     }
 
-    public void insertTempUser() throws SQLException{
-        UserDAO user = new UserDAO("123456789123", "احسان", "خامس‌پناه", "09121111111", "ehsan.kp@gmail.com", 100000, 0, 0);
-        mapper.insert(user);
+    public void insertUser(String firstName, String lastName, String email, String password) throws DuplicateEmail{
+        try {
+            UserDAO user = new UserDAO(firstName, lastName, email, password, 0);
+            mapper.insert(user);
+        }
+        catch (SQLException e1){
+            throw new DuplicateEmail(JsonStringCreator.msgCreator("کاربری با ایمیل وارد شده قبلا در سایت ثبت نام کرده‌است"));
+        }
     }
 
     public UserDAO findUser(String id) throws SQLException{
