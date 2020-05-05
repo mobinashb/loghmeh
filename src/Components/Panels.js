@@ -18,7 +18,7 @@ class Panels extends React.Component {
     const showSignup = this.state.showSignup;
     return (
         <div className="warpper">
-          <input className="radio" id="one" name="group" type="radio" checked={!showSignup}/>
+          <input className="radio" id="one" name="group" type="radio" defaultChecked={true}/>
           <input className="radio" id="two" name="group" type="radio" checked={showSignup}/>
           <div className="tabs">
             <label className="tab" id="one-tab" htmlFor="one">ورود</label>
