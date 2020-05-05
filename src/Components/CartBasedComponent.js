@@ -15,6 +15,7 @@ class CartBasedComponent extends React.Component {
     this.handleHide = this.handleHide.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.finalizeOrder = this.finalizeOrder.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   handleShow(id) {
@@ -27,7 +28,7 @@ class CartBasedComponent extends React.Component {
 
   getSum(orders) {
     return orders.reduce(function(prev, current) {
-      return prev + +(current.price * current.number)
+      return prev +(current.price * current.number)
     }, 0);
   }
 
@@ -205,8 +206,21 @@ class CartBasedComponent extends React.Component {
     );
   }
 
+  logout() {
+    // let history = useHistory();
+    localStorage.removeItem("jwt");
+    console.log('logged out!');
+    // history.push("/")
+    this.props.history.push('/login');
+  }
+
   fetchCart() {
-    fetch("http://localhost:8080/v1/cart")
+    const jwt = localStorage.getItem("jwt")
+    fetch("http://localhost:8080/v1/cart", {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
       .then(res => res.json())
       .then(
         (result) => {

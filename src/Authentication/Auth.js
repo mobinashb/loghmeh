@@ -1,5 +1,5 @@
 function authenticate(email, isGoogleAuth) {
-  return null;
+  return "this is a jwt!";
 }
 
 function isAuthenticated() {

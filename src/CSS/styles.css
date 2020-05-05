@@ -38,6 +38,10 @@ p {
     font-size: 1.1em;
 }
 
+.navbar-nav li {
+    cursor: pointer;
+}
+
 .navbar-nav li a {
     color:  #363636;
 }

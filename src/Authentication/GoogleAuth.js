@@ -1,16 +1,18 @@
 import React from "react";
 import {GoogleLogin, GoogleLogout} from 'react-google-login';
 import google from '../Assets/google.png';
+import swal from "sweetalert";
 
-function LogoutButton() {
+function LogoutButton(props) {
   return (
       <GoogleLogout
           render={renderProps => (
-              <a className="nav-link logout" onClick={renderProps.onClick} href="/login">خروج</a>
+              // eslint-disable-next-line
+              <a className="nav-link logout" onClick={renderProps.onClick}>خروج</a>
           )}
           clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
           buttonText="Logout"
-          onLogoutSuccess={onLogout}
+          onLogoutSuccess={props.logout}
       >
       </GoogleLogout>
   );
@@ -27,15 +29,26 @@ function LoginButton(props) {
           )}
           clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
           buttonText= {props.text}
-          onSuccess={props.onSignIn}
+          onSuccess={props.login}
+          onFailure={alertLoginFailure}
           cookiePolicy={'single_host_origin'}
           isSignedIn={true}
       />
   );
 }
 
-function onLogout() {
-  console.log('logged out!');
+function alertLoginFailure() {
+  swal({
+    text: "خطا در ورود با گوگل",
+    icon: "error",
+    dangerMode: true,
+    button: {
+      text: "بستن",
+      value: null,
+      visible: true,
+      closeModal: true,
+    },
+  });
 }
 
 export {

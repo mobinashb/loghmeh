@@ -13,19 +13,19 @@ class LoginForm extends Form {
       loggedIn: false
     };
     this.myChangeHandler = this.myChangeHandler.bind(this);
-    this.onSignIn = this.onSignIn.bind(this);
+    this.login = this.login.bind(this);
   }
 
-  onSignIn(googleUser) {
+  login(googleUser) {
     const profile = googleUser.getBasicProfile();
     const email = profile.getEmail();
-    this.setState({
-      loggedIn: true
-    });
     let jwt = authenticate(email, true);
     if (jwt) {
       localStorage.setItem("jwt", jwt);
-      console.log(localStorage.getItem("jwt"))
+      console.log(localStorage.getItem("jwt"));
+      this.setState({
+        loggedIn: true
+      });
     }
     else {
       const auth2 = window.gapi.auth2.getAuthInstance()
@@ -67,7 +67,7 @@ class LoginForm extends Form {
             <button className="btn cyan-btn" type="submit">ورود</button>
           </div>
           <div className="d-flex justify-content-around">
-            <LoginButton text={buttonText} onSignIn={this.onSignIn}/>
+            <LoginButton text={buttonText} login={this.login}/>
           </div>
         </form>
     );

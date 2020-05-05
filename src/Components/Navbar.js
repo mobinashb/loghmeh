@@ -29,7 +29,7 @@ class Navbar extends React.Component {
           </li>
           {profileNavlink}
           <li className="nav-item">
-            <LogoutButton/>
+            <LogoutButton logout={this.props.logout}/>
           </li>
         </ul>
       </nav>

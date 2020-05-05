@@ -181,7 +181,7 @@ class Profile extends CartBasedComponent {
           color={"#ff6b6b"}
           loading={!this.state.isLoaded}
         />}>
-        <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow}/>
+        <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <Banner firstname={firstname} lastname={lastname} email={email} credit={credit}/>
         <div className="warpper">
           <input className="radio" id="one" name="group" type="radio" defaultChecked={true}/>

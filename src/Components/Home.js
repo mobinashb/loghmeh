@@ -81,7 +81,7 @@ class Home extends CartBasedComponent {
           color={"#ff6b6b"}
           loading={!isLoaded}
         />}>
-        <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow}/>
+        <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <Header/>
         <SearchForm updateRestaurants={this.updateRestaurants.bind(this)}/>
         <div className="menu">
@@ -256,12 +256,6 @@ class Home extends CartBasedComponent {
     this.fetchRestaurants(path);
     this.fetchFoodParty();
     this.fetchCart();
-
-    // const script = document.createElement("script");
-    // script.src = "https://apis.google.com/js/platform.js";
-    // script.async = true;
-    // script.defer = true;
-    // document.body.appendChild(script);
   }
 
 }
