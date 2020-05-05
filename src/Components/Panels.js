@@ -3,10 +3,6 @@ import LoginForm from '../Forms/LoginForm';
 import SignupForm from '../Forms/SignupForm';
 
 class Panels extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
         <div className="warpper">

@@ -43,7 +43,7 @@ class CreditForm extends Form {
     return (
       <form className="form-inline justify-content-center" id="credit" onSubmit={this.mySubmitHandler} onReset={this.resetForm}>
       <div className="form-group">
-        <input type="text" id="amount" value={amount} className="form-control bg-light" placeholder="میزان افزایش اعتبار" onChange={this.myChangeHandler} />
+        <input type="text" name="amount" value={amount} className="form-control bg-light" placeholder="میزان افزایش اعتبار" onChange={this.myChangeHandler} />
       </div>
       <button type="submit" className="btn cyan-btn" disabled={isNaN(this.state.amount) || !this.state.amount}>افزایش</button>
     </form>

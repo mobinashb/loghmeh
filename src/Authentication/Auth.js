@@ -19,7 +19,7 @@ function authenticate(email, password, isGoogleAuth) {
             response = result.msg;
           }
       );
-  return ["jwt", response];
+  return [null, response];
 }
 
 function isAuthenticated() {

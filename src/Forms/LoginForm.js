@@ -31,19 +31,18 @@ class LoginForm extends Form {
     else {
       const auth2 = window.gapi.auth2.getAuthInstance()
       if (auth2 != null) {
-        swal({
-          text: "شما قبلا ثبت نام نکرده اید!",
-          icon: "warning",
-          dangerMode: true,
-          button: {
-            text: "بستن",
-            value: null,
-            visible: true,
-            closeModal: true,
-          },
-        });
         auth2.signOut().then(
-            auth2.disconnect().then(this.props.onLogoutSuccess)
+            auth2.disconnect().then(swal({
+              text: "شما قبلا ثبت نام نکرده اید!",
+              icon: "warning",
+              dangerMode: true,
+              button: {
+                text: "بستن",
+                value: null,
+                visible: true,
+                closeModal: true,
+              },
+            }))
         )
       }
     }

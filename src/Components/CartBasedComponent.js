@@ -16,6 +16,7 @@ class CartBasedComponent extends React.Component {
     this.addToCart = this.addToCart.bind(this);
     this.finalizeOrder = this.finalizeOrder.bind(this);
     this.logout = this.logout.bind(this);
+    window.addEventListener('storage', this.logout);
   }
 
   handleShow(id) {
