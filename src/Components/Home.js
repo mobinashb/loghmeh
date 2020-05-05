@@ -10,7 +10,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
 import Timer from 'react-compound-timer';
 import InfiniteScroll from 'react-infinite-scroller';
-import SearchForm from './SearchForm';
+import SearchForm from '../Forms/SearchForm';
 import swal from "sweetalert";
 
 function RestaurantList(props) {

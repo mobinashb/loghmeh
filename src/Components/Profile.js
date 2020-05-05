@@ -3,7 +3,7 @@ import {toPersianNum} from '../Utils/Utils'
 import PropTypes from 'prop-types';
 import Navbar from './Navbar';
 import Modal from "react-bootstrap/Modal";
-import CreditForm from './CreditForm';
+import CreditForm from '../Forms/CreditForm';
 import CartBasedComponent from './CartBasedComponent';
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
