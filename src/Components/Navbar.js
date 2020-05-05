@@ -2,6 +2,7 @@ import React from 'react';
 import logo from '../Assets/LOGO.png';
 import {toPersianNum} from '../Utils/Utils';
 import PropTypes from "prop-types";
+import {LogoutButton} from '../Utils/GoogleAuth';
 
 class Navbar extends React.Component {
   showCart() {
@@ -28,7 +29,8 @@ class Navbar extends React.Component {
           </li>
           {profileNavlink}
           <li className="nav-item">
-            <a className="nav-link logout" href="/">خروج</a>
+            <LogoutButton/>
+            {/*<a className="nav-link logout" onClick={signOut}>خروج</a>*/}
           </li>
         </ul>
       </nav>

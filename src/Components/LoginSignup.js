@@ -2,6 +2,7 @@ import React from 'react';
 import {Header} from '../Utils/Utils';
 import swal from "sweetalert";
 import Form from './Form';
+import {LoginButton} from '../Utils/GoogleAuth';
 
 function Panels() {
   return (
@@ -39,11 +40,24 @@ class LoginForm extends Form {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      loggedIn: false
     };
     this.myChangeHandler = this.myChangeHandler.bind(this);
+    this.onSignIn = this.onSignIn.bind(this);
   }
+
+  onSignIn(googleUser) {
+    console.log("hi");
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  }
+
   render() {
+    const buttonText = this.state.loggedIn ? "Signed in" : "Sign in";
     return(
       <form className="text-center p-5" action="/" id="login">
         <p className="h4 mb-4">ورود</p>
@@ -57,7 +71,12 @@ class LoginForm extends Form {
                 </div>
             </div>
         </div>
-        <button className="btn cyan-btn" type="submit">ورود</button>
+        <div className="d-flex justify-content-around">
+          <button className="btn cyan-btn" type="submit">ورود</button>
+        </div>
+        <div className="d-flex justify-content-around">
+          <LoginButton text={buttonText} onSignIn={this.onSignIn}/>
+        </div>
       </form>
     );
   }

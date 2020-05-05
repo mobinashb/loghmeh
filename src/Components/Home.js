@@ -256,7 +256,14 @@ class Home extends CartBasedComponent {
     this.fetchRestaurants(path);
     this.fetchFoodParty();
     this.fetchCart();
+
+    // const script = document.createElement("script");
+    // script.src = "https://apis.google.com/js/platform.js";
+    // script.async = true;
+    // script.defer = true;
+    // document.body.appendChild(script);
   }
+
 }
 
 export default Home;
