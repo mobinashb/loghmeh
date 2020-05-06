@@ -1,6 +1,7 @@
 package ie.projects.phase6.repository.cart;
 
 import ie.projects.phase6.repository.ConnectionPool;
+import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
@@ -35,27 +36,69 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
     }
 
     @Override
-    protected String getFindStatement(Integer id) {
-        return String.format("SELECT * FROM %s WHERE id = %d;", TABLE_NAME, id.intValue());
+    protected String getFindByIdStatement() {
+        return String.format("SELECT * FROM %s WHERE id = ?;", TABLE_NAME);
     }
 
     @Override
-    protected String getFindAllStatement(String id) {
+    protected void fillFindByIdStatement(PreparedStatement statement, Integer id) throws SQLException{
+        statement.setInt(1, id);
+    }
+
+    @Override
+    protected String getFindAllStatement() {
         return String.format(
-                "SELECT * FROM %s WHERE userId = '%s';",
-                TABLE_NAME, id);
+                "SELECT * FROM %s WHERE userId = ?;",
+                TABLE_NAME);
     }
 
     @Override
-    protected String getInsertStatement(CartDAO cart) {
+    protected void fillFindAllStatement(PreparedStatement statement, String field) throws SQLException{
+        statement.setString(1, field);
+    }
+
+    @Override
+    protected String getInsertStatement() {
         return String.format(
-                "INSERT IGNORE INTO %s VALUES ('%d', '%s', '%s');",
-                TABLE_NAME, cart.getCartId(), cart.getUserId(), cart.getRestaurantId());
+                "INSERT IGNORE INTO %s VALUES (?, ?, ?);",
+                TABLE_NAME);
     }
 
     @Override
-    protected String getPreparedInsertStatement(){
+    protected void fillInsertStatement(PreparedStatement statement, CartDAO cart) throws SQLException{
+        statement.setInt(1, cart.getCartId());
+        statement.setString(2, cart.getUserId());
+        statement.setString(3, cart.getRestaurantId());
+    }
+
+    @Override
+    protected String getInsertAllStatement(){
         return null;
+    }
+
+    @Override
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, CartDAO user){
+        return null;
+    }
+
+    @Override
+    protected String getDeleteStatement() {
+        return String.format("DELETE FROM %s WHERE id = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected void fillDeleteStatement(PreparedStatement statement, Integer id) throws SQLException{
+        statement.setInt(1, id);
+    }
+
+    @Override
+    protected String getDeleteAllStatement(){
+        return null;
+    }
+
+    @Override
+    protected void fillDeleteAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
     }
 
     public boolean checkRestaurantEqualityForCart(int cartId, String restaurantId) throws SQLException{
@@ -78,26 +121,6 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
         }
     }
 
-    public CartDAO getCartByUserId(String userId) throws SQLException{
-
-        String sql = String.format("SELECT * FROM %s WHERE userId = '%s';", TABLE_NAME, userId);
-
-        try (Connection con = ConnectionPool.getConnection();
-             Statement st = con.createStatement()
-        ) {
-            ResultSet rs;
-            try {
-                rs = st.executeQuery(sql);
-                if(rs.next())
-                    return new CartDAO(rs.getInt("cartId"), rs.getString("userId"), rs.getString("restaurantId"));
-            } catch (SQLException ex) {
-                System.out.println("error in get cart by id.");
-                throw ex;
-            }
-        }
-        return null;
-    }
-
     public int getMaxId() throws SQLException {
         String sql = String.format("SELECT MAX(id) AS 'MAXIMUM' FROM %s;", TABLE_NAME);
 
@@ -116,22 +139,6 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
         }
         return -1;
     }
-
-    @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, CartDAO user){
-        return null;
-    }
-
-    @Override
-    protected String getDeleteStatement(Integer id) {
-        return String.format("DELETE FROM %s WHERE id = %d;", TABLE_NAME, id.intValue());
-    }
-
-    @Override
-    protected String getDeleteAllStatement(String id){
-        return null;
-    }
-
 
     @Override
     protected CartDAO convertResultSetToObject(ResultSet rs) throws SQLException {

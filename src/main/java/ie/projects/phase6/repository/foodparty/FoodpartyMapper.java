@@ -4,6 +4,7 @@ import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 import ie.projects.phase6.repository.order.OrderDAO;
+import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -25,11 +26,6 @@ public class FoodpartyMapper extends Mapper<FoodDAO, Object[], String> implement
     }
 
     @Override
-    protected String getDeleteTableStatement(){
-        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
-    }
-
-    @Override
     protected String getCreateTableStatement(){
         return String.format(
                 "CREATE TABLE IF NOT EXISTS %s " +
@@ -42,8 +38,83 @@ public class FoodpartyMapper extends Mapper<FoodDAO, Object[], String> implement
     }
 
     @Override
-    protected String getFindStatement(Object[] id) {
-        return  String.format("SELECT * FROM %s WHERE restaurantId = '%s' AND name = '%s';", TABLE_NAME, (String)id[0], (String)id[1]);
+    protected String getDeleteTableStatement(){
+        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+    }
+
+    @Override
+    protected String getFindByIdStatement() {
+        return  String.format("SELECT * FROM %s WHERE restaurantId = ? AND name = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected void fillFindByIdStatement(PreparedStatement statement, Object[] id) throws SQLException{
+        statement.setString(1, (String) id[0]);
+        statement.setString(2, (String) id[1]);
+    }
+
+    @Override
+    protected String getFindAllStatement() {
+        return String.format(
+                "SELECT * FROM %s WHERE restaurantId = ?;",
+                TABLE_NAME);
+    }
+
+    @Override
+    protected void fillFindAllStatement(PreparedStatement statement, String field) throws SQLException{
+        statement.setString(1, field);
+    }
+
+    @Override
+    protected String getInsertStatement() {
+        return null;
+    }
+
+    @Override
+    protected void fillInsertStatement(PreparedStatement statement, FoodDAO food) throws SQLException{
+        return;
+    }
+
+    @Override
+    protected String getInsertAllStatement(){
+        return String.format("REPLACE INTO %s " +
+                        "(restaurantId, name, count, price) " +
+                        "VALUES(?,?,?,?)",
+                TABLE_NAME);
+    }
+
+    @Override
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, FoodDAO food){
+        try {
+            statement.setString(1, food.getRestaurantId());
+            statement.setString(2, food.getName());
+            statement.setFloat(3, food.getCount());
+            statement.setFloat(4, food.getPrice());
+            statement.addBatch();
+            return statement;
+        }
+        catch (SQLException e1){
+            System.out.println("Can't add new row to " + TABLE_NAME + " table");
+        }
+        return null;
+    }
+
+    @Override
+    protected String getDeleteStatement() {
+        return null;
+    }
+
+    @Override
+    protected void fillDeleteStatement(PreparedStatement statement, Object[] id){return;}
+
+    @Override
+    protected String getDeleteAllStatement(){
+        return null;
+    }
+
+    @Override
+    protected void fillDeleteAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
     }
 
     public ArrayList<FoodDAO> getParty(String foodTableName) throws SQLException{
@@ -96,56 +167,6 @@ public class FoodpartyMapper extends Mapper<FoodDAO, Object[], String> implement
             }
         }
     }
-
-    @Override
-    protected String getFindAllStatement(String id) {
-        return String.format(
-                "SELECT * FROM %s WHERE restaurantId = '%s';",
-                TABLE_NAME, id);
-    }
-
-
-    @Override
-    protected String getInsertStatement(FoodDAO restaurant) {
-        return null;
-    }
-
-    @Override
-    protected String getPreparedInsertStatement(){
-        return String.format("REPLACE INTO %s " +
-                        "(restaurantId, name, count, price) " +
-                        "VALUES(?,?,?,?)",
-                TABLE_NAME);
-    }
-
-    @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, FoodDAO food){
-        try {
-            statement.setString(1, food.getRestaurantId());
-            statement.setString(2, food.getName());
-            statement.setFloat(3, food.getCount());
-            statement.setFloat(4, food.getPrice());
-            statement.addBatch();
-            return statement;
-        }
-        catch (SQLException e1){
-            System.out.println("Can't add new row to " + TABLE_NAME + " table");
-        }
-        return null;
-    }
-
-    @Override
-    protected String getDeleteStatement(Object[] id) {
-        return null;
-//        return "DELETE FROM " + TABLE_NAME +
-//                " WHERE id = " + id.toString() + ";";
-    }
-
-    @Override
-    protected String getDeleteAllStatement(String id){
-        return null;
-    }
-
 
     @Override
     protected FoodDAO convertResultSetToObject(ResultSet rs) throws SQLException {

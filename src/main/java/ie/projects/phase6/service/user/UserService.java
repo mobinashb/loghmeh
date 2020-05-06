@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class UserService {
     ObjectMapper mapper = new ObjectMapper();
 
-    @RequestMapping(value = "/v1/login", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/login", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String loginUser(@RequestBody LoginRequest request) throws SQLException{
         return UserManager.getInstance().authenticateUser(request.getEmail(), request.getPassword());
     }

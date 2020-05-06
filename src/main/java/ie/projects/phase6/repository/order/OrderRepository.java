@@ -44,7 +44,8 @@ public class OrderRepository {
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید."));
 
             CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
-            mapper.updateFoodNum(newOrder);
+//            mapper.updateFoodNum(newOrder);
+            mapper.insert(newOrder);
             return;
         }
         if(order.getFoodNum()+foodNum == 0) {
@@ -56,7 +57,8 @@ public class OrderRepository {
             throw new CartValidationException(JsonStringCreator.msgCreator("تعداد درخواستی برای حذف، بیشتر از تعداد انتخاب شده می‌باشد"));
         else {
             CartRepository.getInstance().addNewCart(cartId, userId, restaurantId);
-            mapper.updateFoodNum(newOrder);
+//            mapper.updateFoodNum(newOrder);
+            mapper.insert(newOrder);
         }
     }
 

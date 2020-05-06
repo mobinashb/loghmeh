@@ -2,6 +2,7 @@ package ie.projects.phase6.repository.order;
 
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.mapper.Mapper;
+import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,44 +11,13 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
     private static OrderMapper instance;
     private static final String TABLE_NAME = "CART_ORDER";
 
-    @Override
-    protected String getFindAllStatement(Integer id)
-    {
-        return String.format(
-                "SELECT * FROM %s WHERE cartId = %d;",
-                TABLE_NAME, id.intValue());
-    }
-
     private OrderMapper() {
     }
 
-    public static OrderMapper getInstance(){
-        if(instance == null)
+    public static OrderMapper getInstance() {
+        if (instance == null)
             instance = new OrderMapper();
         return instance;
-    }
-
-    public void updateFoodNum(OrderDAO obj) throws SQLException {
-
-        String sql = String.format("INSERT %s VALUES(%d, '%s', %d, %f, %b) ON DUPLICATE KEY UPDATE foodNum = foodNum+%d;"
-                , TABLE_NAME, obj.getCartId(), obj.getFoodName(), obj.getFoodNum(), obj.getPrice(), obj.getIsParty(), obj.getFoodNum());
-
-        try (Connection con = ConnectionPool.getConnection();
-             Statement st = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)
-        ) {
-            try {
-                st.executeUpdate(sql);
-
-            } catch (SQLException ex) {
-                System.out.println("error in update order query.");
-                throw ex;
-            }
-        }
-    }
-
-    @Override
-    protected String getDeleteTableStatement(){
-        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
 
     @Override
@@ -64,36 +34,84 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
     }
 
     @Override
-    protected String getFindStatement(Object[] id) {
-        return  String.format("SELECT * FROM %s WHERE cartId = %d AND foodName = '%s' AND isParty = %b;", TABLE_NAME, (int)id[0], (String)id[1], (boolean) id[2]);
+    protected String getDeleteTableStatement(){
+        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
 
     @Override
-    protected String getInsertStatement(OrderDAO user) {
+    protected String getFindByIdStatement() {
+        return  String.format("SELECT * FROM %s WHERE cartId = ? AND foodName = ? AND isParty = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected void fillFindByIdStatement(PreparedStatement statement, Object[] id) throws SQLException{
+        statement.setInt(1, (int)id[0]);
+        statement.setString(2, (String) id[1]);
+        statement.setBoolean(3, (boolean)id[2]);
+
+    }
+
+    @Override
+    protected String getFindAllStatement()
+    {
+        return String.format(
+                "SELECT * FROM %s WHERE cartId = ?;",
+                TABLE_NAME);
+    }
+
+    @Override
+    protected void fillFindAllStatement(PreparedStatement statement, Integer field) throws SQLException{
+        statement.setInt(1, field);
+    }
+
+
+    @Override
+    protected String getInsertStatement() {
+        return String.format("INSERT %s VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE foodNum = foodNum + ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected void fillInsertStatement(PreparedStatement statement, OrderDAO order) throws SQLException{
+        statement.setInt(1, order.getCartId());
+        statement.setString(2, order.getFoodName());
+        statement.setInt(3, order.getFoodNum());
+        statement.setFloat(4, order.getPrice());
+        statement.setBoolean(5, order.getIsParty());
+        statement.setInt(6, order.getFoodNum());
+    }
+
+    @Override
+    protected String getInsertAllStatement(){
         return null;
-//        return String.format(
-//                "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
-//                TABLE_NAME, user.getId(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getEmail(), user.getCredit(), user.getLocationX(), user.getLocationY());
     }
 
     @Override
-    protected String getPreparedInsertStatement(){
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, OrderDAO user){
         return null;
     }
 
     @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, OrderDAO user){
-        return null;
+    protected String getDeleteStatement() {
+        return String.format("DELETE FROM %s WHERE cartId = ? AND foodName = ? AND isParty = ?;", TABLE_NAME);
+    }
+
+
+    @Override
+    protected void fillDeleteStatement(PreparedStatement statement, Object[] id) throws SQLException{
+        statement.setInt(1, (int)id[0]);
+        statement.setString(2, (String)id[1]);
+        statement.setBoolean(3, (boolean)id[2]);
+    }
+
+
+    @Override
+    protected String getDeleteAllStatement(){
+        return String.format("DELETE FROM %s WHERE cartId = ?", TABLE_NAME);
     }
 
     @Override
-    protected String getDeleteStatement(Object[] id) {
-        return String.format("DELETE FROM %s WHERE cartId = %d AND foodName = '%s' AND isParty = %b;", TABLE_NAME, (int)id[0], (String)id[1], (boolean) id[2]);
-    }
-
-    @Override
-    protected String getDeleteAllStatement(Integer cartId){
-        return String.format("DELETE FROM %s WHERE cartId = %d", TABLE_NAME, cartId);
+    protected void fillDeleteAllStatement(PreparedStatement statement, Integer cartId) throws SQLException{
+        statement.setInt(1, cartId);
     }
 
     @Override
@@ -111,4 +129,25 @@ public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements 
         }
         return orders;
     }
+
+
+
+//    public void updateFoodNum(OrderDAO obj) throws SQLException {
+//
+//        String sql = String.format("INSERT %s VALUES(%d, '%s', %d, %f, %b) ON DUPLICATE KEY UPDATE foodNum = foodNum+%d;"
+//                , TABLE_NAME, obj.getCartId(), obj.getFoodName(), obj.getFoodNum(), obj.getPrice(), obj.getIsParty(), obj.getFoodNum());
+//
+//        try (Connection con = ConnectionPool.getConnection();
+//             Statement st = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)
+//        ) {
+//            try {
+//                st.executeUpdate(sql);
+//
+//            } catch (SQLException ex) {
+//                System.out.println("error in update order query.");
+//                throw ex;
+//            }
+//        }
+//    }
+
 }

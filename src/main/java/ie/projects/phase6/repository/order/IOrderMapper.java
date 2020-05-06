@@ -7,5 +7,5 @@ import java.sql.SQLException;
 
 public interface IOrderMapper extends IMapper<OrderDAO, Object[], Integer> {
 
-    void updateFoodNum(OrderDAO orderDAO) throws SQLException, CartValidationException;
+//    void updateFoodNum(OrderDAO orderDAO) throws SQLException, CartValidationException;
 }

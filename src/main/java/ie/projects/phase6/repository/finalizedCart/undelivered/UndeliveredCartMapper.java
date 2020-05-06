@@ -19,13 +19,6 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
         return TABLE_NAME;
     }
 
-    @Override
-    protected String getFindAllStatement(String field) {
-        return String.format(
-                "SELECT * FROM %s WHERE userId = '%s';",
-                TABLE_NAME, field);
-    }
-
     private UndeliveredCartMapper() {
     }
 
@@ -55,35 +48,70 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
     }
 
     @Override
-    protected String getFindStatement(Integer id) {
-        return String.format("SELECT * FROM %s WHERE cartId = %d;", TABLE_NAME, id.intValue());
+    protected String getFindByIdStatement() {
+        return String.format("SELECT * FROM %s WHERE cartId = ?;", TABLE_NAME);
     }
 
     @Override
-    protected String getInsertStatement(FinalizedCartDAO cart) {
+    protected void fillFindByIdStatement(PreparedStatement statement, Integer id) throws SQLException{
+        statement.setInt(1, id);
+    }
+
+    @Override
+    protected String getFindAllStatement() {
         return String.format(
-                "INSERT INTO %s(cartId, userId, restaurantId, orderStatus) VALUES (%d, '%s', '%s', %d);",
-                TABLE_NAME, cart.getCartId(), cart.getUserId(), cart.getRestaurantId(), 1);
+                "SELECT * FROM %s WHERE userId = ?;",
+                TABLE_NAME);
     }
 
     @Override
-    protected String getPreparedInsertStatement(){
+    protected void fillFindAllStatement(PreparedStatement statement, String field) throws SQLException{
+        statement.setString(1, field);
+    }
+
+    @Override
+    protected String getInsertStatement() {
+        return String.format(
+                "INSERT INTO %s (cartId, userId, restaurantId, orderStatus) VALUES (?, ?, ?, ?);",
+                TABLE_NAME);
+    }
+
+    @Override
+    protected void fillInsertStatement(PreparedStatement statement, FinalizedCartDAO cart) throws SQLException{
+        statement.setInt(1, cart.getCartId());
+        statement.setString(2, cart.getUserId());
+        statement.setString(3, cart.getRestaurantId());
+        statement.setInt(4, 1);
+    }
+
+    @Override
+    protected String getInsertAllStatement(){
         return null;
     }
 
     @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, FinalizedCartDAO cart){
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, FinalizedCartDAO cart){
         return null;
     }
 
     @Override
-    protected String getDeleteStatement(Integer id) {
+    protected String getDeleteStatement() {
         return null;
     }
 
     @Override
-    protected String getDeleteAllStatement(String id){
+    protected void fillDeleteStatement(PreparedStatement statement, Integer id) throws SQLException{
+        return;
+    }
+
+    @Override
+    protected String getDeleteAllStatement(){
         return null;
+    }
+
+    @Override
+    protected void fillDeleteAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
     }
 
     @Override

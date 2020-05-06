@@ -10,6 +10,5 @@ import java.sql.Statement;
 
 public interface ICartMapper extends IMapper<CartDAO, Integer, String> {
     boolean checkRestaurantEqualityForCart(int cartId, String restaurantId) throws SQLException;
-    CartDAO getCartByUserId(String userId) throws SQLException;
     int getMaxId() throws SQLException;
 }

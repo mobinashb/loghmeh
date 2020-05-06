@@ -44,26 +44,43 @@ public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFo
     }
 
     @Override
-    protected String getFindStatement(Object[] id)
+    protected String getFindByIdStatement()
     {
-        return String.format("SELECT * FROM %s WHERE restaurantId = '%s' AND name = '%s';", TABLE_NAME, (String)id[0], (String)id[1]);
+        return String.format("SELECT * FROM %s WHERE restaurantId = ? AND name = ?;", TABLE_NAME);
     }
 
     @Override
-    protected String getFindAllStatement(String id) {
+    protected void fillFindByIdStatement(PreparedStatement statement, Object[] id) throws SQLException{
+        statement.setString(1, (String) id[0]);
+        statement.setString(2, (String) id[1]);
+
+    }
+
+    @Override
+    protected String getFindAllStatement() {
         return String.format(
-                "SELECT * FROM %s WHERE %s.restaurantId = '%s';",
-                TABLE_NAME, TABLE_NAME, id);
+                "SELECT * FROM %s WHERE %s.restaurantId = ?;",
+                TABLE_NAME, TABLE_NAME);
+    }
+
+    @Override
+    protected void fillFindAllStatement(PreparedStatement statement, String field) throws SQLException{
+        statement.setString(1, field);
     }
 
 
     @Override
-    protected String getInsertStatement(FoodDAO restaurant) {
+    protected String getInsertStatement() {
         return null;
     }
 
     @Override
-    protected String getPreparedInsertStatement(){
+    protected void fillInsertStatement(PreparedStatement statement, FoodDAO food) throws SQLException{
+        return;
+    }
+
+    @Override
+    protected String getInsertAllStatement(){
         return String.format("INSERT IGNORE INTO %s " +
                         "(restaurantId, name, description, popularity, image, price) " +
                         "VALUES(?,?,?,?,?,?)",
@@ -71,7 +88,7 @@ public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFo
     }
 
     @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, FoodDAO food){
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, FoodDAO food){
         try {
             statement.setString(1, food.getRestaurantId());
             statement.setString(2, food.getName());
@@ -89,15 +106,21 @@ public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFo
     }
 
     @Override
-    protected String getDeleteStatement(Object[] id) {
+    protected String getDeleteStatement() {
         return null;
-//        return "DELETE FROM " + TABLE_NAME +
-//                " WHERE id = " + id + ";";
     }
 
     @Override
-    protected String getDeleteAllStatement(String id){
+    protected void fillDeleteStatement(PreparedStatement statement, Object[] id){return;}
+
+    @Override
+    protected String getDeleteAllStatement(){
         return null;
+    }
+
+    @Override
+    protected void fillDeleteAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
     }
 
 

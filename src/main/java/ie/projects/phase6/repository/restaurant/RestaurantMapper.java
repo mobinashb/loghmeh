@@ -2,6 +2,7 @@ package ie.projects.phase6.repository.restaurant;
 
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.mapper.Mapper;
+import ie.projects.phase6.repository.user.UserDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,11 +12,6 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
     private static RestaurantMapper instance;
     private static final String TABLE_NAME = "RESTAURANT";
 
-    @Override
-    protected String getFindAllStatement(String id) {
-        return null;
-    }
-
     private RestaurantMapper() {
     }
 
@@ -23,6 +19,80 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
         if(instance == null)
             instance = new RestaurantMapper();
         return instance;
+    }
+
+    @Override
+    protected String getCreateTableStatement(){
+        return String.format(
+                "CREATE TABLE IF NOT EXISTS %s " +
+                        "(id CHAR(24) NOT NULL PRIMARY KEY, " +
+                        "name VARCHAR(255) NOT NULL, " +
+                        "logo VARCHAR(255) NOT NULL, " +
+                        "locationX FLOAT NOT NULL, " +
+                        "locationY FLOAT NOT NULL)",
+                TABLE_NAME);
+    }
+
+    @Override
+    protected String getDeleteTableStatement(){
+        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+    }
+
+    @Override
+    protected String getFindByIdStatement() {
+        return "SELECT " + "*" +
+                " FROM " + TABLE_NAME +
+                " WHERE id = ?;";
+    }
+
+    @Override
+    protected void fillFindByIdStatement(PreparedStatement statement, String id) throws SQLException{
+        statement.setString(1, id);
+    }
+
+    @Override
+    protected String getFindAllStatement() {
+        return null;
+    }
+
+    @Override
+    protected void fillFindAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
+    }
+
+    @Override
+    protected String getInsertStatement() {
+        return null;
+    }
+
+    @Override
+    protected void fillInsertStatement(PreparedStatement statement, RestaurantDAO restaurant) throws SQLException{
+        return;
+    }
+
+    @Override
+    protected String getInsertAllStatement(){
+        return String.format("INSERT IGNORE INTO %s " +
+                        "(id, name, logo, locationX, locationY) " +
+                        "VALUES(?,?,?,?,?)",
+                TABLE_NAME);
+    }
+
+    @Override
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, RestaurantDAO restaurant){
+        try {
+            statement.setString(1, restaurant.getId());
+            statement.setString(2, restaurant.getName());
+            statement.setString(3, restaurant.getLogo());
+            statement.setFloat(4, restaurant.getLocationX());
+            statement.setFloat(5, restaurant.getLocationY());
+            statement.addBatch();
+            return statement;
+        }
+        catch (SQLException e1){
+            System.out.println("Can't add new row to " + TABLE_NAME + " table");
+        }
+        return null;
     }
 
     public ArrayList<String> getRestaurantsNameById(ArrayList<String> restaurantsId) throws SQLException{
@@ -50,68 +120,25 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
     }
 
     @Override
-    protected String getDeleteTableStatement(){
-        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
-    }
-
-    @Override
-    protected String getCreateTableStatement(){
-        return String.format(
-                "CREATE TABLE IF NOT EXISTS %s " +
-                        "(id CHAR(24) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(255) NOT NULL, " +
-                        "logo VARCHAR(255) NOT NULL, " +
-                        "locationX FLOAT NOT NULL, " +
-                        "locationY FLOAT NOT NULL)",
-                TABLE_NAME);
-    }
-
-    @Override
-    protected String getFindStatement(String id) {
-        return "SELECT " + "*" +
-                " FROM " + TABLE_NAME +
-                " WHERE id = '"+ id + "';";
-    }
-
-    @Override
-    protected String getInsertStatement(RestaurantDAO restaurant) {
-        return null;
-    }
-
-    @Override
-    protected String getPreparedInsertStatement(){
-        return String.format("INSERT IGNORE INTO %s " +
-                        "(id, name, logo, locationX, locationY) " +
-                        "VALUES(?,?,?,?,?)",
-                TABLE_NAME);
-    }
-
-    @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, RestaurantDAO restaurant){
-        try {
-            statement.setString(1, restaurant.getId());
-            statement.setString(2, restaurant.getName());
-            statement.setString(3, restaurant.getLogo());
-            statement.setFloat(4, restaurant.getLocationX());
-            statement.setFloat(5, restaurant.getLocationY());
-            statement.addBatch();
-            return statement;
-        }
-        catch (SQLException e1){
-            System.out.println("Can't add new row to " + TABLE_NAME + " table");
-        }
-        return null;
-    }
-
-    @Override
-    protected String getDeleteStatement(String id) {
+    protected String getDeleteStatement() {
         return "DELETE FROM " + TABLE_NAME +
-                " WHERE id = " + id + ";";
+                " WHERE id = ?;";
     }
 
     @Override
-    protected String getDeleteAllStatement(String id){
+    protected void fillDeleteStatement(PreparedStatement statement, String id) throws SQLException{
+        statement.setString(1, id);
+    }
+
+
+    @Override
+    protected String getDeleteAllStatement(){
         return null;
+    }
+
+    @Override
+    protected void fillDeleteAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
     }
 
 

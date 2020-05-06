@@ -37,7 +37,6 @@ public class UserRepository {
             return mapper.validateUser(email, password);
         }
         catch (SQLException e1){
-            System.out.println("SQL EXCEPTION");
             return false;
         }
     }

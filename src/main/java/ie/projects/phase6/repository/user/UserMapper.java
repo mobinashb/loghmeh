@@ -10,11 +10,6 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     private static UserMapper instance;
     private static final String TABLE_NAME = "USER";
 
-    @Override
-    protected String getFindAllStatement(String id) {
-        return null;
-    }
-
     private UserMapper() {
     }
 
@@ -22,11 +17,6 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
         if(instance == null)
             instance = new UserMapper();
         return instance;
-    }
-
-    @Override
-    protected String getDeleteTableStatement(){
-        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
 
     @Override
@@ -42,18 +32,47 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     }
 
     @Override
-    protected String getFindStatement(String email) {
-        return "SELECT " + "*" +
-                " FROM " + TABLE_NAME +
-                " WHERE email = '"+ email + "';";
+    protected String getDeleteTableStatement(){
+        return "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
 
     @Override
-    protected String getInsertStatement(UserDAO user) {
+    protected String getFindByIdStatement() {
+        return "SELECT " + "*" +
+                " FROM " + TABLE_NAME +
+                " WHERE email = ?;";
+    }
+
+    @Override
+    protected void fillFindByIdStatement(PreparedStatement statement, String id) throws SQLException{
+        statement.setString(1, id);
+    }
+
+    @Override
+    protected String getFindAllStatement() {
+        return null;
+    }
+
+    @Override
+    protected void fillFindAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
+    }
+
+    @Override
+    protected String getInsertStatement() {
         return String.format(
                 "INSERT INTO %s (firstName, lastName, email, password, credit) " +
-                "values ('%s','%s','%s','%s', %f);",
-        TABLE_NAME, user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword(), 0.0);
+                "values (?,?,?,?,?);",
+        TABLE_NAME);
+    }
+
+    @Override
+    protected void fillInsertStatement(PreparedStatement statement, UserDAO user) throws SQLException{
+        statement.setString(1, user.getFirstName());
+        statement.setString(2, user.getLastName());
+        statement.setString(3, user.getEmail());
+        statement.setString(4, user.getPassword());
+        statement.setFloat(5, 0);
     }
 
     public void addUserCredit(String email, float amount) throws SQLException {
@@ -89,23 +108,31 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     }
 
     @Override
-    protected String getPreparedInsertStatement(){
+    protected String getInsertAllStatement(){
         return null;
     }
 
     @Override
-    protected PreparedStatement fillPreparedInsertStatement(PreparedStatement statement, UserDAO user){
+    protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, UserDAO user){
         return null;
     }
 
     @Override
-    protected String getDeleteStatement(String id) {
+    protected String getDeleteStatement() {
         return null;
     }
 
     @Override
-    protected String getDeleteAllStatement(String userId){
+    protected void fillDeleteStatement(PreparedStatement statement, String id){return;}
+
+    @Override
+    protected String getDeleteAllStatement(){
         return null;
+    }
+
+    @Override
+    protected void fillDeleteAllStatement(PreparedStatement statement, String field) throws SQLException{
+        return;
     }
 
 

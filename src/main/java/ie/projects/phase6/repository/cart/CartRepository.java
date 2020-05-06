@@ -30,12 +30,12 @@ public class CartRepository {
         return this.mapper.checkRestaurantEqualityForCart(cartId, restaurantId);
     }
     public void delete(int cartId) throws SQLException{
-        this.mapper.delete(new Integer(cartId));
+        this.mapper.delete(cartId);
     }
 
     public CartDAO getCart(int cartId){
         try {
-            return this.mapper.find(new Integer(cartId));
+            return this.mapper.find(cartId);
         }
         catch (SQLException e1){
             return null;
@@ -47,7 +47,6 @@ public class CartRepository {
         if(carts.size() == 0)
             return null;
         return carts.get(0);
-//        return this.getCartByUserId(userId);
     }
 
     public int getLastId(){
