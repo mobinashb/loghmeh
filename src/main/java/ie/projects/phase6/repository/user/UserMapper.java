@@ -66,6 +66,28 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
         con.close();
     }
 
+    public boolean validateUser(String email, String password) throws SQLException{
+        String sql = String.format("SELECT * FROM %s WHERE email = ? AND password = ?", TABLE_NAME);
+        boolean userValidated = false;
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement statement = con.prepareStatement(sql))
+        {
+            try {
+                statement.setString(1, email);
+                statement.setString(2, password);
+                ResultSet rs = statement.executeQuery();
+                if(rs.next())   userValidated = true;
+                rs.close();
+            }
+            catch (SQLException e1){
+                System.out.println("Error in validate user");
+                e1.printStackTrace();
+                throw e1;
+            }
+        }
+        return userValidated;
+    }
+
     @Override
     protected String getPreparedInsertStatement(){
         return null;

@@ -32,6 +32,16 @@ public class UserRepository {
         }
     }
 
+    public boolean validateUser(String email, String password){
+        try {
+            return mapper.validateUser(email, password);
+        }
+        catch (SQLException e1){
+            System.out.println("SQL EXCEPTION");
+            return false;
+        }
+    }
+
     public UserDAO findUser(String id) throws SQLException{
         return mapper.find(id);
     }

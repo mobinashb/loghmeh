@@ -1,6 +1,6 @@
 package ie.projects.phase6.service.user;
 
-public class SigninRequest {
+public class LoginRequest {
     String email;
     String password;
 

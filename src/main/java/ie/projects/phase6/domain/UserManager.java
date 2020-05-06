@@ -11,6 +11,7 @@ import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.user.UserDAO;
 import ie.projects.phase6.repository.user.UserRepository;
+import ie.projects.phase6.service.authentication.Authentication;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
 import java.security.MessageDigest;
@@ -58,6 +59,18 @@ public class UserManager {
     public void registerUser(String firstName, String lastName, String email, String password) throws DuplicateEmail {
         String hashedPassword = hashGenerator(SALT_FOR_HASH + password);
         this.userRepository.insertUser(firstName, lastName, email, hashedPassword);
+    }
+
+    private boolean validateUser(String email, String password){
+        String hashedPassword = hashGenerator(SALT_FOR_HASH + password);
+        return this.userRepository.validateUser(email, hashedPassword);
+    }
+
+    public String authenticateUser(String email, String password) throws SQLException{
+        if(!UserManager.getInstance().validateUser(email, password)){
+            return JsonStringCreator.msgCreator("رمز یا ایمیل وارد شده نادرست است");
+        }
+        return Authentication.createToken(email);
     }
 
     public UserDAO getUserById(String id) throws SQLException{
