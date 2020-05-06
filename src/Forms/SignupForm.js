@@ -1,6 +1,7 @@
 import Form from "./Form";
 import swal from "sweetalert";
 import React from "react";
+import {SERVER_URI} from "../Constants/Constants";
 
 class SignupForm extends Form {
   constructor(props) {
@@ -89,7 +90,7 @@ class SignupForm extends Form {
   signup() {
     let response;
     let body = this.state;
-    fetch("http://localhost:8080/v1/users", {
+    fetch(SERVER_URI + "/users", {
           method: 'POST',
           body: JSON.stringify(body),
           headers: {

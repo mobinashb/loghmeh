@@ -1,3 +1,5 @@
+import {SERVER_URI} from "../Constants/Constants";
+
 function authenticate(email, password, isGoogleAuth) {
   console.log(email, password, isGoogleAuth);
   let response = null;
@@ -5,7 +7,7 @@ function authenticate(email, password, isGoogleAuth) {
     email: email,
     password: password
   }
-  fetch("http://localhost:8080/v1/login", {
+  fetch(SERVER_URI + "/login", {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {

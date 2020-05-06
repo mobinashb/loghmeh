@@ -7,6 +7,7 @@ import FoodDetails from './FoodDetails'
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
+import {SERVER_URI} from "../Constants/Constants";
 
 class Restaurant extends CartBasedComponent {
   constructor(props) {
@@ -119,7 +120,7 @@ class Restaurant extends CartBasedComponent {
   }
 
   fetchRestaurant() {
-    fetch("http://localhost:8080/v1/restaurants/".concat(getQueryParams(this.props.location.search, 'id')))
+    fetch(SERVER_URI + "/restaurants/".concat(getQueryParams(this.props.location.search, 'id')))
       .then(res => res.json())
       .then(
         (result) => {

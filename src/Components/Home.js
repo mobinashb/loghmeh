@@ -12,6 +12,7 @@ import Timer from 'react-compound-timer';
 import InfiniteScroll from 'react-infinite-scroller';
 import SearchForm from '../Forms/SearchForm';
 import swal from "sweetalert";
+import {SERVER_URI} from "../Constants/Constants";
 
 function RestaurantList(props) {
   let restaurantList = [];
@@ -61,7 +62,7 @@ class Home extends CartBasedComponent {
       pageNum: 1,
       pageSize: 16,
       hasMore: true,
-      api: "http://localhost:8080/v1/restaurants?"
+      api: SERVER_URI + "/restaurants?"
     };
   }
   render() {
@@ -168,7 +169,7 @@ class Home extends CartBasedComponent {
 
   updateRestaurants(searchQuery) {
     const searchQueryString = toQueryParams(searchQuery);
-    const api = "http://localhost:8080/v1/search?";
+    const api = SERVER_URI + "/search?";
     this.setState({
       restaurants: [],
       pageNum: 1,
@@ -178,8 +179,8 @@ class Home extends CartBasedComponent {
   }
 
   fetchFoodParty() {
-    fetch("http://localhost:8080/v1/foodparty");
-    fetch("http://localhost:8080/v1/foodparty")
+    fetch(SERVER_URI + "/foodparty");
+    fetch(SERVER_URI + "/foodparty")
       .then(res => res.json())
       .then(
         (result) => {

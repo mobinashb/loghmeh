@@ -3,6 +3,7 @@ import {POST} from '../Utils/Utils';
 import swal from 'sweetalert';
 import Form from './Form';
 import PropTypes from "prop-types";
+import {SERVER_URI} from "../Constants/Constants";
 
 class CreditForm extends Form {
   constructor(props) {
@@ -16,7 +17,7 @@ class CreditForm extends Form {
 
   async mySubmitHandler(event) {
     event.preventDefault();
-    let response = POST(this.state, 'http://localhost:8080/v1/credit');
+    let response = POST(this.state, SERVER_URI + '/credit');
     const res = await response;
     if (res.ok) {
       this.props.update(this.state.amount);

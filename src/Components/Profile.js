@@ -8,6 +8,7 @@ import CartBasedComponent from './CartBasedComponent';
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
+import {SERVER_URI} from "../Constants/Constants";
 
 function Banner(props) {
   let name = props.firstname + ' ' + props.lastname;
@@ -222,7 +223,7 @@ class Profile extends CartBasedComponent {
   }
 
   fetchProfile() {
-    fetch("http://localhost:8080/v1/profile")
+    fetch(SERVER_URI + "/profile")
     .then(res => res.json())
     .then(
       (result) => {
@@ -246,7 +247,7 @@ class Profile extends CartBasedComponent {
   }
 
   fetchOrder(id) {
-    fetch("http://localhost:8080/v1/orders/".concat(id))
+    fetch(SERVER_URI + "/orders/".concat(id))
     .then(res => res.json())
     .then(
       (result) => {

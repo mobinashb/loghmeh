@@ -1,6 +1,7 @@
 import React from 'react';
 import {POST, PUT, toPersianNum} from '../Utils/Utils';
 import swal from 'sweetalert';
+import {SERVER_URI} from "../Constants/Constants";
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class CartBasedComponent extends React.Component {
       restaurantId: id,
       isParty: food.isParty
     };
-    let response = PUT(foodNew, 'http://localhost:8080/v1/cart');
+    let response = PUT(foodNew, SERVER_URI + '/cart');
     const res = await response;
     const text = await (res).text();
     if (res.ok) {
@@ -99,7 +100,7 @@ class CartBasedComponent extends React.Component {
       cartNew.orders = []
     }
     cartNew.orders = cartNew.orders.concat(food);
-    let response = POST(food, "http://localhost:8080/v1/cart");
+    let response = POST(food, SERVER_URI + "/cart");
     const res = await response;
     const text = await (res).text();
     if (res.ok) {
@@ -129,7 +130,7 @@ class CartBasedComponent extends React.Component {
   }
 
   async finalizeOrder() {
-    let response = POST("", "http://localhost:8080/v1/cart/finalize");
+    let response = POST("", SERVER_URI + "/cart/finalize");
     const res = await response;
     const text = await (res).text();
     if (res.ok) {
@@ -215,7 +216,7 @@ class CartBasedComponent extends React.Component {
 
   fetchCart() {
     const jwt = localStorage.getItem("jwt")
-    fetch("http://localhost:8080/v1/cart", {
+    fetch(SERVER_URI + "/cart", {
       headers: {
         Authorization: `Bearer ${jwt}`
       }
@@ -238,7 +239,7 @@ class CartBasedComponent extends React.Component {
   }
 
   fetchOrders() {
-    fetch("http://localhost:8080/v1/orders/")
+    fetch(SERVER_URI + "/orders")
     .then(res => res.json())
     .then(
       (result) => {
