@@ -29,7 +29,7 @@ public class UserManager {
 
     private UserManager() throws SQLException {
         this.userRepository = UserRepository.getInstance();
-        this.cartIdGenerator = FinalizedCartRepository.getInstance().getLastId()+1;
+        this.cartIdGenerator = Math.max(FinalizedCartRepository.getInstance().getLastId(), CartRepository.getInstance().getLastId()) +1;
     }
 
     public static UserManager getInstance() throws SQLException {
@@ -107,7 +107,11 @@ public class UserManager {
                 throw new CartValidationException(JsonStringCreator.msgCreator("رستوران مدنظر، شامل غذای درخواست‌شده نمی‌باشد"));
             price = food.getPrice();
         }
-        cartManager.addToCart(this.cartIdGenerator, userId, restaurantId, foodName, foodNum, price, isParty, isNew);
+        CartDAO cart = cartManager.getCartByUserId(userId);
+        if(cart != null) {
+            cartManager.addToCart(cart.getCartId(), userId, restaurantId, foodName, foodNum, price, isParty, isNew);
+        }
+        else cartManager.addToCart(this.cartIdGenerator++, userId, restaurantId, foodName, foodNum, price, isParty, isNew);
     }
 
     public Object[] getCart(String userId) throws SQLException{

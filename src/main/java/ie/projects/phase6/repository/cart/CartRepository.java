@@ -1,5 +1,7 @@
 package ie.projects.phase6.repository.cart;
 
+import ie.projects.phase6.repository.finalizedCart.delivered.DeliveredCartMapper;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -45,6 +47,16 @@ public class CartRepository {
         if(carts.size() == 0)
             return null;
         return carts.get(0);
+//        return this.getCartByUserId(userId);
+    }
+
+    public int getLastId(){
+        try {
+            return this.mapper.getMaxId();
+        }
+        catch (SQLException e1){
+            return 0;
+        }
     }
 
 }

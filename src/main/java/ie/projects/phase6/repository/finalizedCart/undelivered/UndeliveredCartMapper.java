@@ -109,11 +109,8 @@ public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, Str
             while (rs.next()) {
                 if(rs.getInt("orderStatus") == 1){
                     DeliveryMan deliveryMan = LoghmehManger.getInstance().selectDeliveryManForOrder(rs.getString("userId"), rs.getString("restaurantId"));
-//                    System.out.println(">");
                     if(deliveryMan == null)
                         continue;
-//                    System.out.println("???????????????????????????????????????????");
-//                    System.out.println(deliveryMan.getTimeToReach());
                     rs.updateInt("orderStatus", 2);
                     rs.updateString("deliveryManId", deliveryMan.getId());
                     rs.updateDouble("deliveryManTimeToReach", deliveryMan.getTimeToReach());

@@ -51,9 +51,9 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     @Override
     protected String getInsertStatement(UserDAO user) {
         return String.format(
-                "INSERT INTO %s (firstName, lastName, email, password) " +
-                "values ('%s','%s','%s','%s');",
-        TABLE_NAME, user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
+                "INSERT INTO %s (firstName, lastName, email, password, credit) " +
+                "values ('%s','%s','%s','%s', %f);",
+        TABLE_NAME, user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword(), 0.0);
     }
 
     public void addUserCredit(String email, float amount) throws SQLException {
@@ -112,7 +112,7 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
     @Override
     protected UserDAO convertResultSetToObject(ResultSet rs) throws SQLException {
         return new UserDAO(rs.getString("firstName"), rs.getString("lastName"),
-                rs.getString("password"), rs.getString("email"), rs.getFloat("credit"));
+                rs.getString("email"), rs.getString("password"), rs.getFloat("credit"));
     }
 
     @Override

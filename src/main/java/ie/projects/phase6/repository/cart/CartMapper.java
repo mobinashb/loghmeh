@@ -91,11 +91,30 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
                 if(rs.next())
                     return new CartDAO(rs.getInt("cartId"), rs.getString("userId"), rs.getString("restaurantId"));
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in get cart by id.");
                 throw ex;
             }
         }
         return null;
+    }
+
+    public int getMaxId() throws SQLException {
+        String sql = String.format("SELECT MAX(id) AS 'MAXIMUM' FROM %s;", TABLE_NAME);
+
+        try (Connection con = ConnectionPool.getConnection();
+             Statement st = con.createStatement()
+        ) {
+            ResultSet rs;
+            try {
+                rs = st.executeQuery(sql);
+                if(rs.next())
+                    return rs.getInt(1);
+            } catch (SQLException ex) {
+                System.out.println("error in getMazId query.");
+                throw ex;
+            }
+        }
+        return -1;
     }
 
     @Override

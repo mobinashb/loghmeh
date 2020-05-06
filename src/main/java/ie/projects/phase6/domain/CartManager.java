@@ -27,9 +27,6 @@ public class CartManager {
     }
 
     public void addToCart(int cartId, String userId, String restaurantId, String foodName, int foodNum, float price, boolean isParty, boolean isNew) throws SQLException, CartValidationException{
-        CartDAO cart = this.cartRepository.getCartByUserId(userId);
-        if(cart != null)
-            cartId = cart.getCartId();
         if(this.cartRepository.checkRestaurantEqualityForCart(cartId, restaurantId)){
             if(foodNum == 0)
                 throw new CartValidationException(JsonStringCreator.msgCreator("لطفا عدد مثبتی را وارد نمایید"));
