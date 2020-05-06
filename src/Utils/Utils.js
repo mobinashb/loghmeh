@@ -41,23 +41,33 @@ function toPersianNum(inp) {
   return res;
 }
 
-async function POST(body, path) {
+async function POST(body, path, auth = true) {
+  const jwt = localStorage.getItem("jwt");
+  const headers = {
+    "Content-type": "application/json; charset=UTF-8",
+  }
+  if (auth) {
+    headers['Authorization'] = `Bearer ${jwt}`;
+  }
   return await fetch(path, {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
+    headers: headers
   });
 }
 
-async function PUT(body, path) {
+async function PUT(body, path, auth = true) {
+  const jwt = localStorage.getItem("jwt");
+  const headers = {
+    "Content-type": "application/json; charset=UTF-8",
+  }
+  if (auth) {
+    headers['Authorization'] = `Bearer ${jwt}`;
+  }
   return await fetch(path, {
-    method: 'PUT',
+    method: 'POST',
     body: JSON.stringify(body),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
+    headers: headers
   });
 }
 

@@ -77,7 +77,7 @@ class Restaurant extends CartBasedComponent {
           color={"#ff6b6b"}
           loading={!this.state.isLoaded}
         />}>
-        <Navbar whereAmI="restaurant" cartCount={cartOrdersLen} func={this.handleShow}/>
+        <Navbar whereAmI="restaurant" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <header className="container-fluid banner row-sm-12">
         </header>
         <div className="restaurant-logo centered-flex">
@@ -120,7 +120,14 @@ class Restaurant extends CartBasedComponent {
   }
 
   fetchRestaurant() {
-    fetch(SERVER_URI + "/restaurants/".concat(getQueryParams(this.props.location.search, 'id')))
+    const jwt = localStorage.getItem("jwt");
+    const path = SERVER_URI + "/restaurants/".concat(getQueryParams(this.props.location.search, 'id'));
+    fetch(path,
+  {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       .then(res => res.json())
       .then(
         (result) => {

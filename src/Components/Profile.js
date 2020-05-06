@@ -223,7 +223,12 @@ class Profile extends CartBasedComponent {
   }
 
   fetchProfile() {
-    fetch(SERVER_URI + "/profile")
+    const jwt = localStorage.getItem("jwt");
+    fetch(SERVER_URI + "/user", {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
     .then(res => res.json())
     .then(
       (result) => {
@@ -247,7 +252,12 @@ class Profile extends CartBasedComponent {
   }
 
   fetchOrder(id) {
-    fetch(SERVER_URI + "/orders/".concat(id))
+    const jwt = localStorage.getItem("jwt");
+    fetch(SERVER_URI + "/orders/".concat(id), {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
     .then(res => res.json())
     .then(
       (result) => {

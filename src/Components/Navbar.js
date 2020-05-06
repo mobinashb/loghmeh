@@ -2,7 +2,6 @@ import React from 'react';
 import logo from '../Assets/LOGO.png';
 import {toPersianNum} from '../Utils/Utils';
 import PropTypes from "prop-types";
-import {LogoutButton} from '../Authentication/GoogleAuth';
 
 class Navbar extends React.Component {
   showCart() {
@@ -29,7 +28,8 @@ class Navbar extends React.Component {
           </li>
           {profileNavlink}
           <li className="nav-item">
-            <LogoutButton logout={this.props.logout}/>
+            {/* eslint-disable-next-line */}
+            <a className="nav-link logout" onClick={this.props.logout}>خروج</a>
           </li>
         </ul>
       </nav>

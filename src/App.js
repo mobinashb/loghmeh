@@ -7,6 +7,7 @@ import {Footer} from './Utils/Utils';
 import Restaurant from './Components/Restaurant';
 import Error from './Error/Error';
 import ProtectedRoute from './Authentication/ProtectedRoute';
+import PublicRoute from './Authentication/PublicRoute';
 
 class App extends React.Component {
   render() {
@@ -15,7 +16,7 @@ class App extends React.Component {
         <div>
             <Switch>
              <ProtectedRoute exact path="/" component={Home}/>
-             <Route path="/login" component={LoginSignup}/>
+             <PublicRoute path="/login" component={LoginSignup}/>
              <ProtectedRoute path="/profile" component={Profile}/>
              <ProtectedRoute path="/restaurant" component={Restaurant}/>
              <Route component={() => <Error code={404}/>} />

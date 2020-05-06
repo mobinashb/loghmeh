@@ -19,17 +19,16 @@ class LoginForm extends Form {
   login(googleUser) {
     const profile = googleUser.getBasicProfile();
     const email = profile.getEmail();
-    let [jwt, response] = authenticate(email, null, true);
+    let jwt = authenticate(email, null, true);
     if (jwt) {
       localStorage.setItem("jwt", jwt);
-      console.log(localStorage.getItem("jwt"));
       this.setState({
         loggedIn: true
       });
       this.props.redirect('/');
     }
     else {
-      const auth2 = window.gapi.auth2.getAuthInstance()
+      const auth2 = window.gapi.auth2.getAuthInstance();
       if (auth2 != null) {
         auth2.signOut().then(
             auth2.disconnect().then(swal({
@@ -48,34 +47,17 @@ class LoginForm extends Form {
     }
   }
 
-  mySubmitHandler = (event) => {
+  mySubmitHandler = async (event) => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
-    let [jwt, response] = authenticate(email, password, false);
+    let jwt = await authenticate(email, password, false);
     if (jwt) {
       localStorage.setItem("jwt", jwt);
-      console.log(localStorage.getItem("jwt"));
       this.setState({
         loggedIn: true
       });
       this.props.redirect('/');
-    }
-    else {
-      const text = response;
-      console.log(text)
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "error",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
     }
   }
 

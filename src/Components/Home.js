@@ -179,8 +179,17 @@ class Home extends CartBasedComponent {
   }
 
   fetchFoodParty() {
-    fetch(SERVER_URI + "/foodparty");
-    fetch(SERVER_URI + "/foodparty")
+    const jwt = localStorage.getItem("jwt");
+    fetch(SERVER_URI + "/foodparty", {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    fetch(SERVER_URI + "/foodparty", {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
       .then(res => res.json())
       .then(
         (result) => {
@@ -201,8 +210,13 @@ class Home extends CartBasedComponent {
   }
 
   fetchRestaurants(path) {
+    const jwt = localStorage.getItem("jwt");
     if (this.state.hasMore === false) return;
-    fetch(path)
+    fetch(path, {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
       .then(res => res.json())
       .then(
         (result) => {

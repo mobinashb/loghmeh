@@ -210,12 +210,20 @@ class CartBasedComponent extends React.Component {
 
   logout() {
     localStorage.removeItem("jwt");
-    console.log('logged out!');
+    const gauth = window.gapi;
+    if (gauth !== undefined) {
+      const auth2 = gauth.auth2.getAuthInstance();
+      if (auth2 != null) {
+        auth2.signOut().then(
+            auth2.disconnect()
+        )
+      }
+    }
     this.props.history.push('/login');
   }
 
   fetchCart() {
-    const jwt = localStorage.getItem("jwt")
+    const jwt = localStorage.getItem("jwt");
     fetch(SERVER_URI + "/cart", {
       headers: {
         Authorization: `Bearer ${jwt}`
@@ -239,7 +247,12 @@ class CartBasedComponent extends React.Component {
   }
 
   fetchOrders() {
-    fetch(SERVER_URI + "/orders")
+    const jwt = localStorage.getItem("jwt");
+    fetch(SERVER_URI + "/orders", {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
     .then(res => res.json())
     .then(
       (result) => {
