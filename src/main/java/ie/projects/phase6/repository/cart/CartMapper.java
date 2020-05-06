@@ -1,7 +1,7 @@
 package ie.projects.phase6.repository.cart;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.ConnectionPool;
-import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICartMapper {
     private static CartMapper instance;
-    private static final String TABLE_NAME = "CART";
+    private static final String TABLE_NAME = DatabaseTablesName.CART_TABLE;
 
     private CartMapper() {
     }

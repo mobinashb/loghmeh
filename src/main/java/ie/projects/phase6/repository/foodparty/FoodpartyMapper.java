@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.foodparty;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
@@ -13,7 +14,7 @@ public class FoodpartyMapper extends Mapper<FoodDAO, Object[], String> implement
 
     private static FoodpartyMapper instance;
 
-    private static final String TABLE_NAME = "FOODPARTY";
+    private static final String TABLE_NAME = DatabaseTablesName.FOODPARTY_TABLE;
 
     private FoodpartyMapper() {
 

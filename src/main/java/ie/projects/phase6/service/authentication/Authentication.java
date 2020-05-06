@@ -4,12 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import ie.projects.phase6.configs.AuthenticationConfig;
 
 import java.util.Date;
 
 public class Authentication {
-    public static final long EXP_MILLIS = 3600000;
-    public static final String SECRET = "loghme";
+    public static final long EXP_MILLIS = AuthenticationConfig.JWT_EXP_MILLIS;
+    public static final String SECRET = AuthenticationConfig.SECRET;
 
     public static String createToken(String email){
         long nowMillis = System.currentTimeMillis();

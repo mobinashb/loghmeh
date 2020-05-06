@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.order;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.mapper.Mapper;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class OrderMapper extends Mapper<OrderDAO, Object[], Integer> implements IOrderMapper {
     private static OrderMapper instance;
-    private static final String TABLE_NAME = "CART_ORDER";
+    private static final String TABLE_NAME = DatabaseTablesName.ORDERS_TABLE;
 
     private OrderMapper() {
     }

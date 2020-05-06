@@ -3,6 +3,8 @@ package ie.projects.phase6.domain;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ie.projects.phase6.configs.ForeignServicesAPI;
+import ie.projects.phase6.configs.RepeatedTasksPeriod;
 import ie.projects.phase6.domain.foreignServiceObjects.DeliveryMan;
 import ie.projects.phase6.domain.foreignServiceObjects.Restaurant;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
@@ -20,9 +22,7 @@ import java.util.Timer;
 public class LoghmehManger {
     private static LoghmehManger instance;
 
-    private boolean schedulerSet = false;
-
-    private static final long CHECK_ORDER_STATUS_PERIOD = 3000;
+    private static final long CHECK_ORDER_STATUS_PERIOD = RepeatedTasksPeriod.ORDER_STATUS_PERIOD;
 
     private LoghmehManger(){
         Timer timer = new Timer();
@@ -49,9 +49,9 @@ public class LoghmehManger {
     public ArrayList<Restaurant> getNewRestaurants(boolean isParty){
         String url;
         if(isParty)
-            url = "http://138.197.181.131:8080/foodparty";
+            url = ForeignServicesAPI.FOODPARTY_API;
         else
-            url = "http://138.197.181.131:8080/restaurants";
+            url = ForeignServicesAPI.RESTAURANT_API;
         String response = new HttpRequester().getRequest(url);
         ArrayList<String> strings = Utils.decodeJsonStrToList(response);
         ArrayList<Restaurant> restaurants = new ArrayList<>();
@@ -61,7 +61,7 @@ public class LoghmehManger {
     }
 
     public DeliveryMan selectDeliveryManForOrder(String userId, String restaurantId) throws SQLException, RestaurantNotFound{
-        String response = new HttpRequester().getRequest("http://138.197.181.131:8080/deliveries");
+        String response = new HttpRequester().getRequest(ForeignServicesAPI.DELIVERYMAN_API);
         ArrayList<String> strings = Utils.decodeJsonStrToList(response);
         if(strings.size() == 0)
             return null;

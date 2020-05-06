@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.finalizedCart.delivered;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.mapper.Mapper;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class DeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, String> implements IDeliveredCartMapper {
     private static DeliveredCartMapper instance;
-    private static final String TABLE_NAME = "DELIVERED_CART";
+    private static final String TABLE_NAME = DatabaseTablesName.DELIVERED_CART_TABLE;
 
     public static String getTableName() {
         return TABLE_NAME;

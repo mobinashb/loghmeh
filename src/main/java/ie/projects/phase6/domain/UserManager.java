@@ -1,6 +1,7 @@
 package ie.projects.phase6.domain;
 
 
+import ie.projects.phase6.configs.HashingConfig;
 import ie.projects.phase6.domain.exceptions.*;
 import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.cart.CartRepository;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 public class UserManager {
     private static UserManager instance;
 
-    private static final String SALT_FOR_HASH = "loghmeh-user";
+    private static final String SALT_FOR_HASH = HashingConfig.SALT_FOR_HASH;
 
     private UserRepository userRepository;
 
@@ -40,8 +41,8 @@ public class UserManager {
 
     private String hashGenerator(String name){
         try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(name.getBytes("UTF-8"));
+            MessageDigest digest = MessageDigest.getInstance(HashingConfig.HASH_FUNCTION);
+            byte[] hash = digest.digest(name.getBytes(HashingConfig.HASH_CHARSET));
             StringBuffer hexString = new StringBuffer();
 
             for (int i = 0; i < hash.length; i++) {

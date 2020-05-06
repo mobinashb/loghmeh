@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.restaurant;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.mapper.Mapper;
 import ie.projects.phase6.repository.user.UserDAO;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> implements IRestaurantMapper {
 
     private static RestaurantMapper instance;
-    private static final String TABLE_NAME = "RESTAURANT";
+    private static final String TABLE_NAME = DatabaseTablesName.RESTAURANT_TABLE;
 
     private RestaurantMapper() {
     }

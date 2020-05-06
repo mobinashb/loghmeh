@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.food;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.mapper.Mapper;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ public class FoodMapper extends Mapper<FoodDAO, Object[], String> implements IFo
 
     private static FoodMapper instance;
 
-    private static final String TABLE_NAME = "FOOD";
+    private static final String TABLE_NAME = DatabaseTablesName.FOOD_TABLE;
 
     private FoodMapper() {
     }

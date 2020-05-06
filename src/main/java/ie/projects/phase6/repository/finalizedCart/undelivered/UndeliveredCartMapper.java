@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.finalizedCart.undelivered;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.domain.LoghmehManger;
 import ie.projects.phase6.domain.foreignServiceObjects.DeliveryMan;
 import ie.projects.phase6.domain.exceptions.RestaurantNotFound;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 public class UndeliveredCartMapper extends Mapper<FinalizedCartDAO, Integer, String> implements IUndeliveredCartMapper {
     private static UndeliveredCartMapper instance;
-    private static final String TABLE_NAME = "UNDELIVERED_CART";
+    private static final String TABLE_NAME = DatabaseTablesName.UNDELIVERED_CART_TABLE;
 
     public static String getTableName() {
         return TABLE_NAME;

@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository;
 
+import ie.projects.phase6.configs.ConnectionPoolConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.sql.Connection;
@@ -15,13 +16,13 @@ public class ConnectionPool {
     private static BasicDataSource dataSource = new BasicDataSource();
 
     static {
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost/Loghmeh");
-        dataSource.setUsername("root");
-        dataSource.setPassword("omidomid");
-        dataSource.setMinIdle(5);
-        dataSource.setMaxIdle(10);
-        dataSource.setMaxOpenPreparedStatements(100);
+        dataSource.setDriverClassName(ConnectionPoolConfig.DRIVER_CLASS_NAME);
+        dataSource.setUrl(ConnectionPoolConfig.DATABASE_URL);
+        dataSource.setUsername(ConnectionPoolConfig.DATABASE_USERNAME);
+        dataSource.setPassword(ConnectionPoolConfig.DATABASE_PASSWORD);
+        dataSource.setMinIdle(ConnectionPoolConfig.DATABASE_MIN_IDLE);
+        dataSource.setMaxIdle(ConnectionPoolConfig.DATABASE_MAX_IDLE);
+        dataSource.setMaxOpenPreparedStatements(ConnectionPoolConfig.DATABASE_OPEN_PREPARED_STATEMENTS);
     }
 
     public static Connection getConnection() throws SQLException{

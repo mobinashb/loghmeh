@@ -1,5 +1,6 @@
 package ie.projects.phase6.domain;
 
+import ie.projects.phase6.configs.RepeatedTasksPeriod;
 import ie.projects.phase6.domain.repeatedTasks.UpdateFoodParty;
 import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.foodparty.FoodpartyRepository;
@@ -11,7 +12,7 @@ import java.util.Timer;
 
 public class FoodpartyManager {
     private static FoodpartyManager instance;
-    private static final long FOODPARTY_UPDATE_PERIOD = 1800000;
+    private static final long FOODPARTY_UPDATE_PERIOD = RepeatedTasksPeriod.FOODPARTY_UPDATE_PERIOD;
 
     private FoodpartyRepository foodpartyRepository;
     private long lastFoodpartyUpdateTime = 0;

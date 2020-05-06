@@ -1,7 +1,7 @@
 package ie.projects.phase6.service.authentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import ie.projects.phase6.utilities.JsonStringCreator;
+import ie.projects.phase6.configs.AuthenticationConfig;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.*;
@@ -13,8 +13,8 @@ import java.io.IOException;
 @WebFilter(filterName = "jwt", urlPatterns = "/*")
 public class JWTFilter implements Filter {
 
-    private final static String AUTH_HEADER_KEY = "Authorization";
-    private final static String AUTH_HEADER_PREFIX = "Bearer ";
+    private final static String AUTH_HEADER_KEY = AuthenticationConfig.AUTHENTICATION_HEADER_KEY;
+    private final static String AUTH_PREFIX_KEY = AuthenticationConfig.AUTHENTICATION_PREFIX_KEY;
 
     public JWTFilter(){
 
@@ -53,8 +53,8 @@ public class JWTFilter implements Filter {
 
     private String getBearerToken(HttpServletRequest request, HttpServletResponse response){
         String authHeader = request.getHeader(AUTH_HEADER_KEY);
-        if((authHeader != null) && (authHeader.startsWith(AUTH_HEADER_PREFIX))) {
-            return authHeader.substring(AUTH_HEADER_PREFIX.length());
+        if((authHeader != null) && (authHeader.startsWith(AUTH_PREFIX_KEY))) {
+            return authHeader.substring(AUTH_PREFIX_KEY.length());
         }
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return null;

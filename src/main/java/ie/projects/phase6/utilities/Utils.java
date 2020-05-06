@@ -20,16 +20,4 @@ public class Utils {
         catch(ParseException e) {e.printStackTrace(); }
         return restaurantsString;
     }
-
-    public static Food deepCopyFood(Food food){
-        Food newFood = new Food();
-        newFood.setName(food.getName());
-        newFood.setDescription(food.getDescription());
-        newFood.setImage(food.getImage());
-        newFood.setPopularity(food.getPopularity());
-        newFood.setRestaurantId(food.getRestaurantId());
-        newFood.setPrice(food.getPrice());
-        return newFood;
-    }
-
 }

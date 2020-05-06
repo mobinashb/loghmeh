@@ -1,5 +1,6 @@
 package ie.projects.phase6.repository.user;
 
+import ie.projects.phase6.configs.DatabaseTablesName;
 import ie.projects.phase6.repository.ConnectionPool;
 import ie.projects.phase6.repository.mapper.Mapper;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 
 public class UserMapper extends Mapper<UserDAO, String, String> implements IUserMapper {
     private static UserMapper instance;
-    private static final String TABLE_NAME = "USER";
+    private static final String TABLE_NAME = DatabaseTablesName.USER_TABLE;
 
     private UserMapper() {
     }
@@ -72,7 +73,7 @@ public class UserMapper extends Mapper<UserDAO, String, String> implements IUser
         statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getPassword());
-        statement.setFloat(5, 0);
+        statement.setFloat(5, user.getCredit());
     }
 
     public void addUserCredit(String email, float amount) throws SQLException {

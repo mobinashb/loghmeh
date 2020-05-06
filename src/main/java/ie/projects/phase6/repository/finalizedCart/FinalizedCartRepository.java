@@ -1,7 +1,5 @@
 package ie.projects.phase6.repository.finalizedCart;
 
-import ie.projects.phase6.domain.repeatedTasks.CheckOrderStatus;
-import ie.projects.phase6.domain.repeatedTasks.UpdateFoodParty;
 import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.finalizedCart.delivered.DeliveredCartMapper;
 import ie.projects.phase6.repository.finalizedCart.delivered.IDeliveredCartMapper;
@@ -10,16 +8,13 @@ import ie.projects.phase6.repository.finalizedCart.undelivered.UndeliveredCartMa
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class FinalizedCartRepository {
 
     private static FinalizedCartRepository instance;
-    private static final long CHECK_ORDER_STATUS_PERIOD = 3000;
 
     private IDeliveredCartMapper deliveredMapper;
     private IUndeliveredCartMapper undeliveredMapper;
-    private boolean schedulerSet = false;
 
     private FinalizedCartRepository() throws SQLException
     {
