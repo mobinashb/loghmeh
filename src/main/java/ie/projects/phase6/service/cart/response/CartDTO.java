@@ -1,16 +1,18 @@
-package ie.projects.phase6.service.cart;
+package ie.projects.phase6.service.cart.response;
 
-public class FinalizedCartsDTO {
+import java.util.ArrayList;
+
+public class CartDTO {
     Integer cartId;
     String restaurantId;
     String restaurantName;
-    int orderStatus;
+    ArrayList<OrderDTO> orders;
 
-    public FinalizedCartsDTO(Integer cartId, String restaurantId, String restaurantName, int orderStatus){
+    public CartDTO(Integer cartId, String restaurantId, String restaurantName, ArrayList<OrderDTO> orders){
         this.cartId = cartId;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
-        this.orderStatus = orderStatus;
+        this.orders = orders;
     }
 
     public Integer getCartId() {
@@ -25,7 +27,7 @@ public class FinalizedCartsDTO {
         return restaurantId;
     }
 
-    public int getOrderStatus() {
-        return orderStatus;
+    public ArrayList<OrderDTO> getOrders() {
+        return orders;
     }
 }

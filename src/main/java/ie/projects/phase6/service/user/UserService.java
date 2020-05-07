@@ -4,9 +4,12 @@ package ie.projects.phase6.service.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ie.projects.phase6.domain.UserManager;
 import ie.projects.phase6.domain.exceptions.DuplicateEmail;
+import ie.projects.phase6.domain.exceptions.LoginFailure;
 import ie.projects.phase6.domain.exceptions.NegativeCreditAmount;
 import ie.projects.phase6.repository.user.UserDAO;
-import ie.projects.phase6.service.authentication.Authentication;
+import ie.projects.phase6.service.user.request.AddCreditRequest;
+import ie.projects.phase6.service.user.request.LoginRequest;
+import ie.projects.phase6.service.user.request.SignupRequest;
 import ie.projects.phase6.utilities.ConvertDAOToDTO;
 import ie.projects.phase6.utilities.JsonStringCreator;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,7 @@ public class UserService {
     ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping(value = "/v1/login", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String loginUser(@RequestBody LoginRequest request) throws SQLException{
+    public String loginUser(@RequestBody LoginRequest request) throws SQLException, LoginFailure {
         return UserManager.getInstance().authenticateUser(request.getEmail(), request.getPassword());
     }
 

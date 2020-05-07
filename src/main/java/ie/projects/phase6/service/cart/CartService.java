@@ -11,6 +11,7 @@ import ie.projects.phase6.repository.cart.CartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartDAO;
 import ie.projects.phase6.repository.finalizedCart.FinalizedCartRepository;
 import ie.projects.phase6.repository.order.OrderDAO;
+import ie.projects.phase6.service.cart.request.CartRequest;
 import ie.projects.phase6.utilities.ConvertDAOToDTO;
 import ie.projects.phase6.utilities.JsonStringCreator;
 import org.springframework.web.bind.annotation.*;

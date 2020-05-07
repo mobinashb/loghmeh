@@ -1,4 +1,4 @@
-package ie.projects.phase6.service.cart;
+package ie.projects.phase6.service.cart.response;
 
 public class OrderDTO {
     String foodName;

@@ -7,12 +7,12 @@ import ie.projects.phase6.repository.food.FoodDAO;
 import ie.projects.phase6.repository.order.OrderDAO;
 import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.user.UserDAO;
-import ie.projects.phase6.service.cart.CartDTO;
-import ie.projects.phase6.service.cart.FinalizedCartsDTO;
-import ie.projects.phase6.service.cart.OrderDTO;
-import ie.projects.phase6.service.restaurant.FoodDTO;
-import ie.projects.phase6.service.restaurant.RestaurantDTO;
-import ie.projects.phase6.service.user.UserDTO;
+import ie.projects.phase6.service.cart.response.CartDTO;
+import ie.projects.phase6.service.cart.response.FinalizedCartsDTO;
+import ie.projects.phase6.service.cart.response.OrderDTO;
+import ie.projects.phase6.service.restaurant.response.FoodDTO;
+import ie.projects.phase6.service.restaurant.response.RestaurantDTO;
+import ie.projects.phase6.service.user.response.UserDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

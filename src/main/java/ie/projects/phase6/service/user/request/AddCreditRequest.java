@@ -1,4 +1,4 @@
-package ie.projects.phase6.service.user;
+package ie.projects.phase6.service.user.request;
 
 public class AddCreditRequest {
     float amount;

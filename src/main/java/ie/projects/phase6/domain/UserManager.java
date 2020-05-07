@@ -67,9 +67,9 @@ public class UserManager {
         return this.userRepository.validateUser(email, hashedPassword);
     }
 
-    public String authenticateUser(String email, String password) throws SQLException{
+    public String authenticateUser(String email, String password) throws SQLException, LoginFailure{
         if(!UserManager.getInstance().validateUser(email, password)){
-            return JsonStringCreator.msgCreator("رمز یا ایمیل وارد شده نادرست است");
+            throw new LoginFailure(JsonStringCreator.msgCreator("رمز یا ایمیل وارد شده نادرست است"));
         }
         return Authentication.createToken(email);
     }
