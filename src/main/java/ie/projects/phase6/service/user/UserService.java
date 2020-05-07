@@ -23,7 +23,7 @@ public class UserService {
 
     @RequestMapping(value = "/v1/login", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String loginUser(@RequestBody LoginRequest request) throws SQLException, LoginFailure {
-        return UserManager.getInstance().authenticateUser(request.getEmail(), request.getPassword());
+        return UserManager.getInstance().authenticateUser(request.getEmail(), request.getPassword(), request.getIsGoogleAuth(), request.getId_token());
     }
 
     @RequestMapping(value = "/v1/user", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")

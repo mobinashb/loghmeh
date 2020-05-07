@@ -3,6 +3,8 @@ package ie.projects.phase6.service.user.request;
 public class LoginRequest {
     String email;
     String password;
+    boolean isGoogleAuth;
+    String id_token;
 
     public String getEmail() {
         return email;
@@ -10,5 +12,13 @@ public class LoginRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean getIsGoogleAuth() {
+        return isGoogleAuth;
+    }
+
+    public String getId_token() {
+        return id_token;
     }
 }

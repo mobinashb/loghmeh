@@ -13,6 +13,7 @@ import ie.projects.phase6.repository.restaurant.RestaurantDAO;
 import ie.projects.phase6.repository.user.UserDAO;
 import ie.projects.phase6.repository.user.UserRepository;
 import ie.projects.phase6.service.authentication.Authentication;
+import ie.projects.phase6.service.authentication.GoogleAuthentication;
 import ie.projects.phase6.utilities.JsonStringCreator;
 
 import java.security.MessageDigest;
@@ -67,11 +68,22 @@ public class UserManager {
         return this.userRepository.validateUser(email, hashedPassword);
     }
 
-    public String authenticateUser(String email, String password) throws SQLException, LoginFailure{
-        if(!UserManager.getInstance().validateUser(email, password)){
-            throw new LoginFailure(JsonStringCreator.msgCreator("رمز یا ایمیل وارد شده نادرست است"));
+    public String authenticateUser(String email, String password, boolean isGoogleAuth, String googleToken) throws SQLException, LoginFailure{
+        if(!isGoogleAuth) {
+            if (!UserManager.getInstance().validateUser(email, password)) {
+                throw new LoginFailure(JsonStringCreator.msgCreator("رمز یا ایمیل وارد شده نادرست است"));
+            }
+            return Authentication.createToken(email);
         }
-        return Authentication.createToken(email);
+        String fetchedEmail = GoogleAuthentication.verifyGoogleToken(googleToken);
+        if((fetchedEmail == null) || (!fetchedEmail.equals(email))){
+            throw new LoginFailure(JsonStringCreator.msgCreator("توکن ارسالی درست نمی‌باشد"));
+        }
+        UserDAO user = this.userRepository.findUser(fetchedEmail);
+        if(user == null){
+            throw new LoginFailure(JsonStringCreator.msgCreator("کاربری با ایمیل درخواست شده ثبت‌نام نکرده‌است"));
+        }
+        return Authentication.createToken(fetchedEmail);
     }
 
     public UserDAO getUserById(String id) throws SQLException{
