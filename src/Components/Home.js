@@ -255,9 +255,9 @@ class Home extends CartBasedComponent {
     const path = this.state.api + params;
     this.fetchRestaurants(path);
     this.fetchFoodParty();
+    this.fetchFoodParty();
     this.fetchCart();
   }
-
 }
 
 export default Home;

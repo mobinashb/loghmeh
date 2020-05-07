@@ -2,11 +2,23 @@ import {SERVER_URI} from "../Constants/Constants";
 import axios from "axios";
 import swal from "sweetalert";
 
-function authenticate(email, password, isGoogleAuth) {
-  console.log(email, password, isGoogleAuth);
-  let body = {
-    email: email,
-    password: password
+function authenticate(email, pass, isGoogleAuth) {
+  let body;
+  if (isGoogleAuth) {
+    body = {
+      email: email,
+      password: "",
+      isGoogleAuth: true,
+      id_token: pass
+    }
+  }
+  else {
+    body = {
+      email: email,
+      password: pass,
+      isGoogleAuth: false,
+      id_token: ""
+    }
   }
   return axios.post(SERVER_URI + "/login", body)
     .then((response) => {

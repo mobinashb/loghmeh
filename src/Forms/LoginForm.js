@@ -19,32 +19,35 @@ class LoginForm extends Form {
   login(googleUser) {
     const profile = googleUser.getBasicProfile();
     const email = profile.getEmail();
-    let jwt = authenticate(email, null, true);
-    if (jwt) {
-      localStorage.setItem("jwt", jwt);
-      this.setState({
-        loggedIn: true
+    const id_token = googleUser.getAuthResponse().id_token;
+    authenticate(email, id_token, true)
+      .then((response) => {
+        if (response.status === 200) {
+          localStorage.setItem("jwt", response.data);
+          this.setState({
+            loggedIn: true
+          });
+          this.props.redirect('/');
+        }
+        else {
+          const auth2 = window.gapi.auth2.getAuthInstance();
+          if (auth2 != null) {
+            auth2.signOut().then(
+                auth2.disconnect().then(swal({
+                  text: "شما قبلا ثبت نام نکرده اید!",
+                  icon: "warning",
+                  dangerMode: true,
+                  button: {
+                    text: "بستن",
+                    value: null,
+                    visible: true,
+                    closeModal: true,
+                  },
+                }))
+            )
+          }
+        }
       });
-      this.props.redirect('/');
-    }
-    else {
-      const auth2 = window.gapi.auth2.getAuthInstance();
-      if (auth2 != null) {
-        auth2.signOut().then(
-            auth2.disconnect().then(swal({
-              text: "شما قبلا ثبت نام نکرده اید!",
-              icon: "warning",
-              dangerMode: true,
-              button: {
-                text: "بستن",
-                value: null,
-                visible: true,
-                closeModal: true,
-              },
-            }))
-        )
-      }
-    }
   }
 
   mySubmitHandler = (event) => {
