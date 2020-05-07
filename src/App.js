@@ -19,7 +19,8 @@ class App extends React.Component {
              <PublicRoute path="/login" component={LoginSignup}/>
              <ProtectedRoute path="/profile" component={Profile}/>
              <ProtectedRoute path="/restaurant" component={Restaurant}/>
-             <Route component={() => <Error code={404}/>} />
+             <Route path="/404" component={() => <Error code={404}/>}/>
+             <Route component={() => <Error code={404}/>}/>
            </Switch>
         </div>
         <Footer/>

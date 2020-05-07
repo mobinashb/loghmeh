@@ -36,13 +36,26 @@ class CartBasedComponent extends React.Component {
   }
 
   handleError(error) {
+    if (error.message === "Network Error") {
+      this.setState({
+        error: error.message,
+        isLoaded: true,
+      });
+      return;
+    }
+
     if (error.response.status === 401 || error.response.status === 403) {
       this.props.history.push('/login');
       return;
     }
 
+    if (error.response.status === 404) {
+      this.props.history.push('/404');
+      return;
+    }
+
     this.setState({
-      error: error.message,
+      error: error.response.data.msg,
       isLoaded: true,
     });
 
@@ -238,14 +251,7 @@ class CartBasedComponent extends React.Component {
             });
         },
         (error) => {
-          if (error.response.status === 401 || error.response.status === 403) {
-            this.props.history.push('/login');
-            return;
-          }
-          this.setState({
-            isLoaded: true,
-            error: error
-          });
+          this.handleError(error);
         }
       )
   }

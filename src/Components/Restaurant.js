@@ -140,10 +140,6 @@ class Restaurant extends CartBasedComponent {
         },
         (error) => {
           this.handleError(error);
-          this.setState({
-            isLoaded: true,
-            error: error
-          });
         }
       );
   }
