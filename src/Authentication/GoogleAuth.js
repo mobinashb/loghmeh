@@ -2,6 +2,7 @@ import React from "react";
 import {GoogleLogin} from 'react-google-login';
 import google from '../Assets/google.png';
 import swal from "sweetalert";
+import {CLIENT_ID} from '../Constants/Constants';
 
 function LoginButton(props) {
   return (
@@ -12,7 +13,7 @@ function LoginButton(props) {
                 <img src={google} alt="Google"/>
               </button>
           )}
-          clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
+          clientId={CLIENT_ID}
           buttonText= {props.text}
           onSuccess={props.login}
           onFailure={alertLoginFailure}
