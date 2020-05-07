@@ -45,6 +45,7 @@ class CartBasedComponent extends React.Component {
     }
 
     if (error.response.status === 401 || error.response.status === 403) {
+      localStorage.removeItem("jwt");
       this.props.history.push('/login');
       return;
     }
@@ -123,7 +124,7 @@ class CartBasedComponent extends React.Component {
     return food.number;
   }
 
-  async addToCart(food) {
+  addToCart(food) {
     var cartNew = JSON.parse(JSON.stringify(this.state.cart));
     cartNew.restaurantId = food.restaurantId;
     if (cartNew.orders === undefined || cartNew.orders === null) {
