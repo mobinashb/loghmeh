@@ -153,19 +153,26 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
         return  null;
     }
 
-    private String getRestaurantByPagingStatement(int pageNumber, int pageSize){
+    private String getRestaurantByPagingStatement(){
         return String.format("SELECT *" +
                         "FROM %s " +
-                        "LIMIT %d, %d;",
-                TABLE_NAME, (pageNumber-1) * pageSize, pageSize);
+                        "LIMIT ?, ?;",
+                TABLE_NAME);
+    }
+
+    private void fillRestaurantByPagingStatement(PreparedStatement statement, int pageNumber, int pageSize) throws SQLException{
+        statement.setInt(1, (pageNumber-1) * pageSize);
+        statement.setInt(2, pageSize);
     }
 
     public ArrayList<RestaurantDAO> getRestaurantsByPaging(int pageNumber, int pageSize){
         ArrayList<RestaurantDAO> fetchedRestaurants = new ArrayList<>();
 
         try (Connection conn = ConnectionPool.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(getRestaurantByPagingStatement(pageNumber, pageSize));) {
+             PreparedStatement stmt = conn.prepareStatement(getRestaurantByPagingStatement())
+             ) {
+            fillRestaurantByPagingStatement(stmt, pageNumber, pageSize);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 fetchedRestaurants.add(new RestaurantDAO(rs.getString(1), rs.getString(2),
                         rs.getString(3), rs.getFloat(4), rs.getFloat(5)));

@@ -102,14 +102,14 @@ public class CartMapper extends Mapper<CartDAO, Integer, String> implements ICar
     }
 
     public boolean checkRestaurantEqualityForCart(int cartId, String restaurantId) throws SQLException{
-        String sql = String.format("SELECT * FROM %s WHERE id = %d;", TABLE_NAME, cartId);
+        String sql = String.format("SELECT * FROM %s WHERE id = ?;", TABLE_NAME);
 
         try (Connection con = ConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(sql)
         ) {
-            ResultSet resultSet;
             try {
-                resultSet = st.executeQuery();
+                st.setInt(1, cartId);
+                ResultSet resultSet = st.executeQuery();
                 if(resultSet.next())
                     return resultSet.getString(3).equals(restaurantId);
                 return true;
