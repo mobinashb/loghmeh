@@ -1,9 +1,9 @@
 import React from 'react';
-import {POST} from '../Utils/Utils';
 import swal from 'sweetalert';
 import Form from './Form';
 import PropTypes from "prop-types";
 import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 class CreditForm extends Form {
   constructor(props) {
@@ -15,24 +15,32 @@ class CreditForm extends Form {
     this.mySubmitHandler = this.mySubmitHandler.bind(this);
   }
 
-  async mySubmitHandler(event) {
+  mySubmitHandler(event) {
     event.preventDefault();
-    let response = POST(this.state, SERVER_URI + '/credit');
-    const res = await response;
-    if (res.ok) {
-      this.props.update(this.state.amount);
-      this.setState({amount: ""});
-      swal({
-        text: "اعتبار شما با موفقیت افزایش یافت",
-        icon: "success",
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      });
-    }
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.post(SERVER_URI + "/credit", this.state, options)
+      .then((response) => {
+        if (response.status === 200) {
+          this.props.update(this.state.amount);
+          this.setState({amount: ""});
+          swal({
+            text: "اعتبار شما با موفقیت افزایش یافت",
+            icon: "success",
+            button: {
+              text: "بستن",
+              value: null,
+              visible: true,
+              closeModal: true,
+            },
+          });
+        }
+      }, (error) => {
+        this.props.handleError(error);
+      }
+    );
   }
 
   resetForm() {

@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import SearchForm from '../Forms/SearchForm';
 import swal from "sweetalert";
 import {SERVER_URI} from "../Constants/Constants";
+import axios from 'axios';
 
 function RestaurantList(props) {
   let restaurantList = [];
@@ -178,7 +179,7 @@ class Home extends CartBasedComponent {
     });
   }
 
-  fetchFoodParty() {
+  fetchFoodParty2() {
     const jwt = localStorage.getItem("jwt");
     fetch(SERVER_URI + "/foodparty", {
       headers: {
@@ -209,7 +210,7 @@ class Home extends CartBasedComponent {
       )
   }
 
-  fetchRestaurants(path) {
+  fetchRestaurants2(path) {
     const jwt = localStorage.getItem("jwt");
     if (this.state.hasMore === false) return;
     fetch(path, {
@@ -257,6 +258,72 @@ class Home extends CartBasedComponent {
             isLoaded: true,
           });
         }
+      )
+  }
+
+  fetchRestaurants(path) {
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    if (this.state.hasMore === false) return;
+    axios.get(path, options)
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.setState({
+              restaurants: this.state.restaurants.concat(response.data),
+              error: (!this.state.error) ? response.data.msg : this.state.error,
+              hasMore: true,
+              pageNum: this.state.pageNum + 1
+            });
+          }
+          else {
+            this.setState({
+              hasMore: false
+            });
+            if (typeof this.state.restaurants === "undefined" ||
+                this.state.restaurants === null ||
+                this.state.restaurants.length === null ||
+                this.state.restaurants.length === 0) {
+              swal({
+                title: "هشدار",
+                text: "رستورانی مطابق با جستجوی شما یافت نشد!",
+                icon: "warning",
+                dangerMode: true,
+                button: {
+                  text: "بستن",
+                  value: null,
+                  visible: true,
+                  closeModal: true,
+                },
+              });
+            }
+          }
+        },
+        (error) => {
+          this.handleError(error);
+        }
+      );
+  }
+
+  fetchFoodParty() {
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/foodparty", options)
+      .then(
+          (response) => {
+            this.setState({
+              foodParty: response.data.foodparty,
+              error: (!this.state.error) ? response.data.msg : this.state.error,
+              partyRemainingTime: response.data.remainingTime,
+              isLoaded: true
+            });
+          },
+          (error) => {
+            this.handleError(error);
+          }
       )
   }
 

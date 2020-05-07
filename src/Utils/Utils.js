@@ -41,46 +41,6 @@ function toPersianNum(inp) {
   return res;
 }
 
-async function POST(body, path, auth = true) {
-  const jwt = localStorage.getItem("jwt");
-  const headers = {
-    "Content-type": "application/json; charset=UTF-8",
-  }
-  if (auth) {
-    headers['Authorization'] = `Bearer ${jwt}`;
-  }
-  return await fetch(path, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: headers
-  });
-}
-
-async function PUT(body, path, auth = true) {
-  const jwt = localStorage.getItem("jwt");
-  const headers = {
-    "Content-type": "application/json; charset=UTF-8",
-  }
-  if (auth) {
-    headers['Authorization'] = `Bearer ${jwt}`;
-  }
-  return await fetch(path, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: headers
-  });
-}
-
-async function DELETE(body, path) {
-  return await fetch(path, {
-    method: 'DELETE',
-    body: JSON.stringify(body),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
-  });
-}
-
 function getQueryParams(url, name) {
   name = name.replace(/[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -98,9 +58,6 @@ export {
     Header,
     Footer,
     toPersianNum,
-    POST,
-    PUT,
-    DELETE,
     getQueryParams,
     toQueryParams
 }

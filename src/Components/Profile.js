@@ -9,6 +9,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
 import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 function Banner(props) {
   let name = props.firstname + ' ' + props.lastname;
@@ -70,6 +71,7 @@ class Profile extends CartBasedComponent {
     this.handleHide = this.handleHide.bind(this);
     this.updateCredit = this.updateCredit.bind(this);
     this.showOrder = this.showOrder.bind(this);
+    this.handleError = this.handleError.bind(this);
   }
 
   OrderList() {
@@ -199,7 +201,7 @@ class Profile extends CartBasedComponent {
               }
               </div>
               <div className="panel row-sm-5" id="two-panel">
-              <CreditForm update={this.updateCredit} />
+              <CreditForm update={this.updateCredit} handleError={this.handleError}/>
               </div>
           </div>
         </div>
@@ -224,46 +226,42 @@ class Profile extends CartBasedComponent {
 
   fetchProfile() {
     const jwt = localStorage.getItem("jwt");
-    fetch(SERVER_URI + "/user", {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        this.setState({
-          firstname: result.firstName,
-          lastname: result.lastName,
-          email: result.email,
-          phonenumber: result.phoneNumber,
-          credit: result.credit,
-          error: (!this.state.error) ? result.msg : this.state.error,
-          isLoaded: true,
-        });
-      },
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/user", options)
+    .then((response) => {
+      this.setState({
+        firstname: response.data.firstName,
+        lastname: response.data.lastName,
+        email: response.data.email,
+        phonenumber: response.data.phoneNumber,
+        credit: response.data.credit,
+        error: (!this.state.error) ? response.data.msg : this.state.error,
+        isLoaded: true,
+      });
+    },
       (error) => {
+        this.handleError(error);
         this.setState({
           isLoaded: true,
           error: error
         });
       }
-    )
+    );
   }
 
   fetchOrder(id) {
     const jwt = localStorage.getItem("jwt");
-    fetch(SERVER_URI + "/orders/".concat(id), {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
-    })
-    .then(res => res.json())
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/orders/".concat(id), options)
     .then(
-      (result) => {
+      (response) => {
         this.setState({
-          orderToShow: result,
-          error: (!this.state.error) ? result.msg : this.state.error
+          orderToShow: response.data,
+          error: (!this.state.error) ? response.data.msg : this.state.error
         });
       },
       (error) => {

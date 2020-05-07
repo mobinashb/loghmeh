@@ -3,21 +3,6 @@ import {GoogleLogin} from 'react-google-login';
 import google from '../Assets/google.png';
 import swal from "sweetalert";
 
-// function LogoutButton(props) {
-//   return (
-//       // <GoogleLogout
-//       //     render={renderProps => (
-//       //         // eslint-disable-next-line
-//       //         <a className="nav-link logout" onClick={renderProps.onClick}>خروج</a>
-//       //     )}
-//       //     clientId="568052004069-80istmajegjol2dd97o4mt67imfemads.apps.googleusercontent.com"
-//       //     buttonText="Logout"
-//       //     onLogoutSuccess={props.logout}
-//       // >
-//       // </GoogleLogout>
-//   );
-// }
-
 function LoginButton(props) {
   return (
       <GoogleLogin

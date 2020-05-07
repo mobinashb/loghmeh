@@ -1,7 +1,8 @@
 import React from 'react';
-import {POST, PUT, toPersianNum} from '../Utils/Utils';
+import {toPersianNum} from '../Utils/Utils';
 import swal from 'sweetalert';
 import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
@@ -34,7 +35,32 @@ class CartBasedComponent extends React.Component {
     }, 0);
   }
 
-  async changeCart(food, num) {
+  handleError(error) {
+    if (error.response.status === 401 || error.response.status === 403) {
+      this.props.history.push('/login');
+      return;
+    }
+
+    this.setState({
+      error: error.message,
+      isLoaded: true,
+    });
+
+    swal({
+      title: "خطا",
+      text: error.response.data.msg,
+      icon: "warning",
+      dangerMode: true,
+      button: {
+        text: "بستن",
+        value: null,
+        visible: true,
+        closeModal: true,
+      },
+    })
+  }
+
+  changeCart(food, num) {
     const id = this.state.cart.restaurantId;
     const foodNew = {
       foodName: food.foodName,
@@ -42,44 +68,35 @@ class CartBasedComponent extends React.Component {
       restaurantId: id,
       isParty: food.isParty
     };
-    let response = PUT(foodNew, SERVER_URI + '/cart');
-    const res = await response;
-    const text = await (res).text();
-    if (res.ok) {
-      var cartNew = JSON.parse(JSON.stringify(this.state.cart));
-      this.setState(this.state.cart.orders.reduce( (current, item) => {
-        if (item.foodName === food.foodName) {
-          item.number = item.number + num;
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.put(SERVER_URI + '/cart', foodNew, options)
+      .then((response) => {
+        if (response.status === 200) {
+          var cartNew = JSON.parse(JSON.stringify(this.state.cart));
+          this.setState(this.state.cart.orders.reduce((current, item) => {
+            if (item.foodName === food.foodName) {
+              item.number = item.number + num;
+            }
+            current.push(item);
+            return current;
+          }, []));
+          if (this.getFoodCount(food.foodName) === 0) {
+            cartNew.orders = this.state.cart.orders.slice(0).filter(item => item.foodName !== food.foodName);
+            if (this.state.cart.orders.length === 0) {
+              cartNew.restaurantId = null;
+              cartNew.name = null;
+            }
+            this.setState({
+              cart: cartNew
+            });
+          }
         }
-        current.push( item );
-        return current;
-      }, [] ) );
-      if (this.getFoodCount(food.foodName) === 0) {
-        cartNew.orders = this.state.cart.orders.slice(0).filter(item => item.foodName !== food.foodName);
-        if (this.state.cart.orders.length === 0) {
-          cartNew.restaurantId = null;
-          cartNew.name = null;
-        }
-        this.setState({
-          cart: cartNew
-        });
-      }
-    }
-    else {
-      this.fetchCart();
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "warning",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
-    }
+      }, (error) => {
+        this.handleError(error);
+      });
 
   }
 
@@ -100,75 +117,60 @@ class CartBasedComponent extends React.Component {
       cartNew.orders = []
     }
     cartNew.orders = cartNew.orders.concat(food);
-    let response = POST(food, SERVER_URI + "/cart");
-    const res = await response;
-    const text = await (res).text();
-    if (res.ok) {
-      let count = this.getFoodCount(food.foodName);
-      if (count !== 0) {
-        this.changeCart(food, food.number);
-        return;
-      }
-      this.setState({
-        cart: cartNew
-      })
-    }
-    else {
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "warning",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
-    }
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.post(SERVER_URI + "/cart", food, options)
+      .then((response) => {
+        if (response.status === 200) {
+          let count = this.getFoodCount(food.foodName);
+          if (count !== 0) {
+            this.changeCart(food, food.number);
+            return;
+          }
+          this.setState({
+            cart: cartNew
+          })
+        }
+      }, (error) => {
+        this.handleError(error);
+      });
   }
 
-  async finalizeOrder() {
-    let response = POST("", SERVER_URI + "/cart/finalize");
-    const res = await response;
-    const text = await (res).text();
-    if (res.ok) {
-      this.setState({
-        cart: {
-          restaurantId: null,
-          name: null
+  finalizeOrder() {
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.post(SERVER_URI + "/cart/finalize", "", options)
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            cart: {
+              restaurantId: null,
+              name: null
+            }
+          });
+          swal({
+            text: "سفارش شما با موفقیت ثبت شد",
+            icon: "success",
+            button: {
+              text: "بستن",
+              value: null,
+              visible: true,
+              closeModal: true,
+            },
+          });
+          if (this.constructor.name === "Profile") {
+            this.fetchOrders();
+          }
         }
-      });
-      swal({
-        text: "سفارش شما با موفقیت ثبت شد",
-        icon: "success",
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      });
-      if (this.constructor.name === "Profile") {
-        this.fetchOrders();
+      }, (error) => {
+        this.handleError(error);
+        this.fetchCart();
       }
-    }
-    else {
-      this.fetchCart();
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "warning",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
-    }
+    );
     this.handleHide();
   }
 
@@ -224,20 +226,22 @@ class CartBasedComponent extends React.Component {
 
   fetchCart() {
     const jwt = localStorage.getItem("jwt");
-    fetch(SERVER_URI + "/cart", {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            cart: result,
-            error: (!this.state.error) ? result.msg : this.state.error
-          });
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/cart", options)
+        .then(
+            (response) => {
+            this.setState({
+              cart: response.data,
+              error: (!this.state.error) ? response.data.msg : this.state.error
+            });
         },
         (error) => {
+          if (error.response.status === 401 || error.response.status === 403) {
+            this.props.history.push('/login');
+            return;
+          }
           this.setState({
             isLoaded: true,
             error: error
@@ -248,20 +252,19 @@ class CartBasedComponent extends React.Component {
 
   fetchOrders() {
     const jwt = localStorage.getItem("jwt");
-    fetch(SERVER_URI + "/orders", {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
-    })
-    .then(res => res.json())
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/orders", options)
     .then(
-      (result) => {
+      (response) => {
         this.setState({
-          orders: result,
-          error: (!this.state.error) ? result.msg : this.state.error
+          orders: response.data,
+          error: (!this.state.error) ? response.data.msg : this.state.error
         });
       },
       (error) => {
+        this.handleError(error);
         this.setState({
           isLoaded: true,
           error: error

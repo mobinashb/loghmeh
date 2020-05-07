@@ -51,13 +51,27 @@ class LoginForm extends Form {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
-    let jwt = await authenticate(email, password, false);
-    if (jwt) {
-      localStorage.setItem("jwt", jwt);
+    let response = await authenticate(email, password, false);
+    if (response.status === 200) {
+      console.log(response)
+      localStorage.setItem("jwt", response.data);
       this.setState({
         loggedIn: true
       });
       this.props.redirect('/');
+    } else {
+      swal({
+        title: "خطا",
+        text: response.data.msg,
+        icon: "error",
+        dangerMode: true,
+        button: {
+          text: "بستن",
+          value: null,
+          visible: true,
+          closeModal: true,
+        },
+      })
     }
   }
 

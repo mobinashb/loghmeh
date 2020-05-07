@@ -8,6 +8,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
 import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 class Restaurant extends CartBasedComponent {
   constructor(props) {
@@ -121,26 +122,24 @@ class Restaurant extends CartBasedComponent {
 
   fetchRestaurant() {
     const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
     const path = SERVER_URI + "/restaurants/".concat(getQueryParams(this.props.location.search, 'id'));
-    fetch(path,
-  {
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        }
-      })
-      .then(res => res.json())
+    axios.get(path, options)
       .then(
-        (result) => {
+        (response) => {
           this.setState({
             isLoaded: true,
-            menu: result.menu,
-            name: result.name,
-            logo: result.logo,
-            id: result.id,
-            error: (!this.state.error) ? result.msg : this.state.error
+            menu: response.data.menu,
+            name: response.data.name,
+            logo: response.data.logo,
+            id: response.data.id,
+            error: (!this.state.error) ? response.data.msg : this.state.error
           });
         },
         (error) => {
+          this.handleError(error);
           this.setState({
             isLoaded: true,
             error: error
