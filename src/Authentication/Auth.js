@@ -13,6 +13,7 @@ function authenticate(email, password, isGoogleAuth) {
       return response;
     })
     .catch((error) => {
+      if (!isGoogleAuth)
       swal({
         title: "خطا",
         text: error.response.data.msg,
@@ -30,7 +31,7 @@ function authenticate(email, password, isGoogleAuth) {
 }
 
 function isAuthenticated() {
-  return localStorage.getItem("jwt");
+  return localStorage.getItem("jwt") !== null;
 }
 
 export {authenticate, isAuthenticated};
