@@ -22,7 +22,7 @@ class LoginForm extends Form {
     const id_token = googleUser.getAuthResponse().id_token;
     authenticate(email, id_token, true)
       .then((response) => {
-        if (response.status === 200) {
+        if (response !== null && response.status === 200) {
           localStorage.setItem("jwt", response.data);
           this.setState({
             loggedIn: true
@@ -33,17 +33,20 @@ class LoginForm extends Form {
           const auth2 = window.gapi.auth2.getAuthInstance();
           if (auth2 != null) {
             auth2.signOut().then(
-                auth2.disconnect().then(swal({
-                  text: "شما قبلا ثبت نام نکرده اید!",
-                  icon: "warning",
-                  dangerMode: true,
-                  button: {
-                    text: "بستن",
-                    value: null,
-                    visible: true,
-                    closeModal: true,
-                  },
-                }))
+                auth2.disconnect().then(() => {
+                  if (response.status !== null && response.status !== undefined && response.status !== 500)
+                    swal({
+                      text: response.data.msg,
+                      icon: "warning",
+                      dangerMode: true,
+                      button: {
+                        text: "بستن",
+                        value: null,
+                        visible: true,
+                        closeModal: true,
+                      },
+                    })
+                  })
             )
           }
         }
