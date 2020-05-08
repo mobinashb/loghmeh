@@ -42,7 +42,7 @@ public abstract class Mapper<T, I, S> implements IMapper<T, I, S> {
     public void createTable() throws SQLException{
         Connection con = ConnectionPool.getConnection();
         Statement statement = con.createStatement();
-        statement.executeUpdate(getDeleteTableStatement());
+//        statement.executeUpdate(getDeleteTableStatement());
         statement.executeUpdate(getCreateTableStatement());
         statement.close();
         con.close();

@@ -79,8 +79,10 @@ public class UserManager {
         if((fetchedEmail == null) || (!fetchedEmail.equals(email))){
             throw new LoginFailure(JsonStringCreator.msgCreator("توکن ارسالی درست نمی‌باشد"));
         }
-        UserDAO user = this.userRepository.findUser(fetchedEmail);
-        if(user == null){
+        try {
+            this.userRepository.findUser(fetchedEmail);
+        }
+        catch (SQLException e1){
             throw new LoginFailure(JsonStringCreator.msgCreator("کاربری با ایمیل درخواست شده ثبت‌نام نکرده‌است"));
         }
         return Authentication.createToken(fetchedEmail);

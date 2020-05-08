@@ -41,7 +41,7 @@ public class RestaurantService {
         FoodpartyManager foodpartyManager = FoodpartyManager.getInstance();
         foodpartyManager.setupScheduler();
         try{
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(3);
         }catch (InterruptedException e1){
             e1.printStackTrace();
         }
