@@ -3,6 +3,7 @@ import {toPersianNum} from '../Utils/Utils';
 import swal from 'sweetalert';
 import {SERVER_URI} from "../Constants/Constants";
 import axios from "axios";
+import {googleLoginVar} from "../Globals/Globals";
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
@@ -18,7 +19,6 @@ class CartBasedComponent extends React.Component {
     this.addToCart = this.addToCart.bind(this);
     this.finalizeOrder = this.finalizeOrder.bind(this);
     this.logout = this.logout.bind(this);
-    window.addEventListener('storage', this.logout);
   }
 
   handleShow(id) {
@@ -229,6 +229,7 @@ class CartBasedComponent extends React.Component {
     if (gauth !== undefined) {
       const auth2 = gauth.auth2.getAuthInstance();
       if (auth2 != null) {
+        googleLoginVar.hasLoggedIn = false;
         auth2.signOut().then(() => {
           auth2.disconnect().then(() => {
             localStorage.removeItem("jwt");

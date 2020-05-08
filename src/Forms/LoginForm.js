@@ -5,6 +5,7 @@ import React from "react";
 import swal from "sweetalert";
 import ClipLoader from "react-spinners/ClipLoader";
 import LoadingOverlay from "react-loading-overlay";
+import {googleLoginVar} from "../Globals/Globals";
 
 class LoginForm extends Form {
   constructor(props) {
@@ -20,6 +21,10 @@ class LoginForm extends Form {
   }
 
   login(googleUser) {
+    if (googleLoginVar.hasLoggedIn === true) {
+      return;
+    }
+    googleLoginVar.hasLoggedIn = true;
     this.setState({
       isLoaded: false
     });
