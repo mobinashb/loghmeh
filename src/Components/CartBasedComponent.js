@@ -225,6 +225,7 @@ class CartBasedComponent extends React.Component {
   }
 
   logout() {
+    this.props.history.push('/login');
     localStorage.removeItem("jwt");
     const gauth = window.gapi;
     if (gauth !== undefined) {
@@ -235,7 +236,6 @@ class CartBasedComponent extends React.Component {
         )
       }
     }
-    this.props.history.push('/login');
   }
 
   fetchCart() {

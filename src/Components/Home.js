@@ -1,6 +1,5 @@
 import React from 'react';
-import {Header, toPersianNum, toQueryParams} from '../Utils/Utils';
-import FoodDetails from './FoodDetails';
+import {Header, toQueryParams} from '../Utils/Utils';
 import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
@@ -8,12 +7,12 @@ import Modal from "react-bootstrap/Modal";
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
-import Timer from 'react-compound-timer';
 import InfiniteScroll from 'react-infinite-scroller';
 import SearchForm from '../Forms/SearchForm';
 import swal from "sweetalert";
 import {SERVER_URI} from "../Constants/Constants";
 import axios from 'axios';
+import FoodParty from './FoodParty';
 
 function RestaurantList(props) {
   let restaurantList = [];
@@ -57,8 +56,6 @@ class Home extends CartBasedComponent {
       error: null,
       isLoaded: false,
       restaurants: [],
-      foodParty: [],
-      partyRemainingTime: null,
       cart: {},
       pageNum: 1,
       pageSize: 16,
@@ -67,7 +64,7 @@ class Home extends CartBasedComponent {
     };
   }
   render() {
-    const { error, isLoaded, restaurants, foodParty, partyRemainingTime, toShow, cart} = this.state;
+    const { error, isLoaded, restaurants, toShow, cart} = this.state;
     let cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length;
@@ -86,40 +83,7 @@ class Home extends CartBasedComponent {
         <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <Header/>
         <SearchForm updateRestaurants={this.updateRestaurants.bind(this)}/>
-        <div className="menu">
-          <div className="title">
-            جشن غذا!
-          </div>
-          <div className="centered-flex">
-            <div className="timer">
-              {isLoaded &&
-              <Timer
-              initialTime={parseInt(partyRemainingTime)*1000}
-              direction="backward"
-              >
-                زمان باقی مانده: &nbsp;<b><Timer.Minutes formatValue={value => toPersianNum(`${value}`)}/>:<Timer.Seconds formatValue={value => toPersianNum(`${value}`)}/></b>
-              </Timer>
-              }
-              </div>
-          </div>
-          <div className="scrolling-wrapper shadow-box">
-            {foodParty.map(item => (
-              <div className="card shadow-box" key={item.restaurantId+'-'+item.name}>
-                <FoodDetails whereAmI="foodparty"
-                name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
-                description={item.description}
-                price={item.price}
-                popularity={item.popularity}
-                count={item.count}
-                oldPrice={item.oldPrice}
-                showFunc={this.handleShow}
-                hideFunc={this.handleHide}
-                addToCart={this.addToCart}
-                image={item.image} />
-              </div>
-          ))}
-          </div>
-        </div>
+        <FoodParty setLoaded={this.setLoaded.bind(this)}/>
         <div className="menu container" id="restaurants">
           <div className="title">
             رستوران ها
@@ -224,25 +188,10 @@ class Home extends CartBasedComponent {
       );
   }
 
-  fetchFoodParty() {
-    const jwt = localStorage.getItem("jwt");
-    const options = {
-      headers: {Authorization: `Bearer ${jwt}`}
-    };
-    axios.get(SERVER_URI + "/foodparty", options)
-      .then(
-          (response) => {
-            this.setState({
-              foodParty: response.data.foodparty,
-              error: (!this.state.error) ? response.data.msg : this.state.error,
-              partyRemainingTime: response.data.remainingTime,
-              isLoaded: true
-            });
-          },
-          (error) => {
-            this.handleError(error);
-          }
-      )
+  setLoaded() {
+    this.setState({
+      isLoaded: true
+    });
   }
 
   componentDidMount() {
@@ -253,9 +202,8 @@ class Home extends CartBasedComponent {
       pageSize: pageSize
     });
     const path = this.state.api + params;
-    this.fetchRestaurants(path);
-    this.fetchFoodParty();
-    this.fetchFoodParty();
+    this.fetchRestaurants(path)
+    // this.fetchFoodParty();
     this.fetchCart();
   }
 }
