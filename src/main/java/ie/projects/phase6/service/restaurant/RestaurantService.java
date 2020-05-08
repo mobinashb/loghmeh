@@ -39,12 +39,11 @@ public class RestaurantService {
     @RequestMapping(value = "/v1/foodparty", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getFoodParty() throws IOException, SQLException {
         FoodpartyManager foodpartyManager = FoodpartyManager.getInstance();
-        if(foodpartyManager.setupScheduler()){
-            try{
-                TimeUnit.SECONDS.sleep(2);
-            }catch (InterruptedException e1){
-                e1.printStackTrace();
-            }
+        foodpartyManager.setupScheduler();
+        try{
+            TimeUnit.SECONDS.sleep(5);
+        }catch (InterruptedException e1){
+            e1.printStackTrace();
         }
         double remainingTime = foodpartyManager.getFoodpartyRemainingTime();
         ArrayList<FoodDAO> foods = foodpartyManager.getParty();

@@ -14,6 +14,7 @@ import java.util.TimerTask;
 public class UpdateFoodParty extends TimerTask {
     public void run() {
         try {
+            System.out.println("Im in run method");
             FoodpartyManager foodpartyManager = FoodpartyManager.getInstance();
             foodpartyManager.deleteTable();
             foodpartyManager.createTable();
