@@ -18,7 +18,6 @@ function LoginButton(props) {
           onSuccess={props.login}
           onFailure={alertLoginFailure}
           cookiePolicy={'single_host_origin'}
-          isSignedIn={true}
       />
   );
 }
