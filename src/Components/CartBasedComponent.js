@@ -45,7 +45,6 @@ class CartBasedComponent extends React.Component {
     }
 
     this.setState({
-      error: error.response.data.msg,
       isLoaded: true,
     });
 
@@ -55,7 +54,7 @@ class CartBasedComponent extends React.Component {
       return;
     }
 
-    if (error.response.status === 404) {
+    if (error.response.status === 404 && !error.response.data.msg) {
       this.props.history.push('/404');
       return;
     }
@@ -229,23 +228,17 @@ class CartBasedComponent extends React.Component {
     if (gauth !== undefined) {
       const auth2 = gauth.auth2.getAuthInstance();
       if (auth2 != null) {
-        auth2.signOut().then(() =>
-            {
-              auth2.disconnect();
-              localStorage.removeItem("jwt");
-              this.props.history.push('/login');
-            }
-        )
-      }
-      else {
-        localStorage.removeItem("jwt");
-        this.props.history.push('/login');
+        auth2.signOut().then(() => {
+          auth2.disconnect().then(() => {
+            localStorage.removeItem("jwt");
+            this.props.history.push('/login');
+            return;
+          })
+        })
       }
     }
-    else {
-      localStorage.removeItem("jwt");
-      this.props.history.push('/login');
-    }
+    localStorage.removeItem("jwt");
+    this.props.history.push('/login');
   }
 
   fetchCart() {

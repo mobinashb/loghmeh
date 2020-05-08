@@ -83,7 +83,7 @@ class Home extends CartBasedComponent {
         <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <Header/>
         <SearchForm updateRestaurants={this.updateRestaurants.bind(this)}/>
-        <FoodParty setLoaded={this.setLoaded.bind(this)}/>
+        <FoodParty setLoaded={this.setLoaded.bind(this)} handleShow={this.handleShow.bind(this)} handleHide={this.handleHide.bind(this)} addToCart={this.addToCart.bind(this)}/>
         <div className="menu container" id="restaurants">
           <div className="title">
             رستوران ها

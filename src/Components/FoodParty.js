@@ -47,9 +47,9 @@ class FoodParty extends CartBasedComponent {
                                popularity={item.popularity}
                                count={item.count}
                                oldPrice={item.oldPrice}
-                               showFunc={this.handleShow}
-                               hideFunc={this.handleHide}
-                               addToCart={this.addToCart}
+                               showFunc={this.props.handleShow}
+                               hideFunc={this.props.handleHide}
+                               addToCart={this.props.addToCart}
                                image={item.image} />
                 </div>
             ))}
