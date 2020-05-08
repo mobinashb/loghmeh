@@ -3,6 +3,8 @@ import swal from "sweetalert";
 import React from "react";
 import {SERVER_URI} from "../Constants/Constants";
 import axios from "axios";
+import LoadingOverlay from "react-loading-overlay";
+import ClipLoader from "react-spinners/ClipLoader";
 
 class SignupForm extends Form {
   constructor(props) {
@@ -12,6 +14,7 @@ class SignupForm extends Form {
       lastName: '',
       email: '',
       password: '',
+      isLoaded: true
     };
     this.myChangeHandler = this.myChangeHandler.bind(this);
   }
@@ -52,9 +55,15 @@ class SignupForm extends Form {
         },
       });
     } else {
+      this.setState({
+        isLoaded: false
+      });
       let body = this.state;
       axios.post(SERVER_URI + "/user", body)
         .then((response) => {
+          this.setState({
+            isLoaded: true
+          });
           if (response.status === 200) {
             this.setState({
               firstName: '',
@@ -80,6 +89,9 @@ class SignupForm extends Form {
             this.props.redirect("/login");
           }
         }, (error) => {
+          this.setState({
+            isLoaded: true
+          });
           swal({
             title: "خطا",
             text: error.response.data.msg,
@@ -97,16 +109,25 @@ class SignupForm extends Form {
   }
 
   render() {
-    return (
-        <form className="text-center p-5" id="signup" onSubmit={this.mySubmitHandler}>
-          <p className="h4 mb-4">ثبت نام</p>
-          <input type="text" required name="firstName" className="form-control mb-4" placeholder="نام" onChange={this.myChangeHandler}/>
-          <input type="text" required name="lastName" className="form-control mb-4" placeholder="نام خانوادگی" onChange={this.myChangeHandler}/>
-          <input type="email" required name="email" className="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
-          <input type="password" required name="password" className="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
-          <input type="password" required name="passwordrepeat" className="form-control mb-4" placeholder="تکرار رمز عبور"/>
-          <button className="btn cyan-btn" type="submit">ثبت نام</button>
-        </form>
+    const isLoaded = this.state.isLoaded;
+    return(
+        <LoadingOverlay
+        active={!isLoaded}
+        spinner={<ClipLoader
+            size={40}
+            color={"#ff6b6b"}
+            loading={!isLoaded}
+        />}>
+          <form className="text-center p-5" id="signup" onSubmit={this.mySubmitHandler}>
+            <p className="h4 mb-4">ثبت نام</p>
+            <input type="text" required name="firstName" className="form-control mb-4" placeholder="نام" onChange={this.myChangeHandler}/>
+            <input type="text" required name="lastName" className="form-control mb-4" placeholder="نام خانوادگی" onChange={this.myChangeHandler}/>
+            <input type="email" required name="email" className="form-control mb-4" placeholder="ایمیل" onChange={this.myChangeHandler}/>
+            <input type="password" required name="password" className="form-control mb-4" placeholder="رمز عبور" onChange={this.myChangeHandler}/>
+            <input type="password" required name="passwordrepeat" className="form-control mb-4" placeholder="تکرار رمز عبور"/>
+            <button className="btn cyan-btn" type="submit">ثبت نام</button>
+          </form>
+        </LoadingOverlay>
     );
   }
 }

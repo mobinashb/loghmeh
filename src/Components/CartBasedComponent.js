@@ -44,6 +44,11 @@ class CartBasedComponent extends React.Component {
       return;
     }
 
+    this.setState({
+      error: error.response.data.msg,
+      isLoaded: true,
+    });
+
     if (error.response.status === 401 || error.response.status === 403) {
       localStorage.removeItem("jwt");
       this.props.history.push('/login');
@@ -54,11 +59,6 @@ class CartBasedComponent extends React.Component {
       this.props.history.push('/404');
       return;
     }
-
-    this.setState({
-      error: error.response.data.msg,
-      isLoaded: true,
-    });
 
     swal({
       title: "خطا",
@@ -225,16 +225,26 @@ class CartBasedComponent extends React.Component {
   }
 
   logout() {
-    this.props.history.push('/login');
-    localStorage.removeItem("jwt");
     const gauth = window.gapi;
     if (gauth !== undefined) {
       const auth2 = gauth.auth2.getAuthInstance();
       if (auth2 != null) {
-        auth2.signOut().then(
-            auth2.disconnect()
+        auth2.signOut().then(() =>
+            {
+              auth2.disconnect();
+              localStorage.removeItem("jwt");
+              this.props.history.push('/login');
+            }
         )
       }
+      else {
+        localStorage.removeItem("jwt");
+        this.props.history.push('/login');
+      }
+    }
+    else {
+      localStorage.removeItem("jwt");
+      this.props.history.push('/login');
     }
   }
 
