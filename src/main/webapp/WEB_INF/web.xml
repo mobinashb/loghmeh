@@ -6,7 +6,7 @@
     <display-name>Loghmeh Spring</display-name>
     <filter>
         <filter-name>cors</filter-name>
-        <filter-class>ie.projects.phase6.service.CORSFilter</filter-class>
+        <filter-class>ie.projects.phase7.service.CORSFilter</filter-class>
         <init-param>
             <param-name>requestEncoding</param-name>
             <param-value>UTF-8</param-value>
