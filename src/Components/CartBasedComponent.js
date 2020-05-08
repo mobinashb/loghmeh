@@ -177,6 +177,7 @@ class CartBasedComponent extends React.Component {
           });
           if (this.constructor.name === "Profile") {
             this.fetchOrders();
+            this.fetchProfile();
           }
         }
       }, (error) => {
