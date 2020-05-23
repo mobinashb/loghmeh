@@ -1,0 +1,17 @@
+version: '1'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    links:
+      - "db:Loghmeh"
+  db:
+    user: root
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 2213
+      MYSQL_DATABASE: Loghmeh
+
+    ports:
+      - "3306:3306"
