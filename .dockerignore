@@ -1,0 +1,6 @@
+.dockerignore
+Dockerfile
+Dockerfile.prod
+.git
+.gitignore
+.idea
