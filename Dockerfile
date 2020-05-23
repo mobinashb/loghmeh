@@ -1,8 +1,10 @@
 FROM maven AS build
 WORKDIR /loghmeh
-COPY . .
+COPY src/ /loghmeh/src/
+COPY pom.xml /loghmeh/pom.xml
 RUN mvn package
+VOLUME /loghmeh
 FROM tomcat
-COPY --from=build /loghmeh/target/loghmeh-1.0.war ./webapps/ROOT.war
-CMD ["bin/catalina.sh", "run"]
-EXPOSE 80
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
+COPY --from=build /loghmeh/target/loghmeh-1.0.war /usr/local/tomcat/webapps/ROOT.war
+EXPOSE 8080
