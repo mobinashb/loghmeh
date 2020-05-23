@@ -2,7 +2,7 @@ package ie.projects.phase7.configs;
 
 public class ConnectionPoolConfig {
     public static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
-    public static final String DATABASE_URL = "jdbc:mysql://localhost/Loghmeh";
+    public static final String DATABASE_URL = "jdbc:mysql://db:3306/Loghmeh";
     public static final String DATABASE_USERNAME = "root";
     public static final String DATABASE_PASSWORD = "2213";
     public static final int DATABASE_MIN_IDLE = 5;

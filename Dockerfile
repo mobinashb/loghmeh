@@ -1,7 +1,8 @@
 FROM maven AS build
 WORKDIR /loghmeh
-COPY src/ /loghmeh/src/
 COPY pom.xml /loghmeh/pom.xml
+RUN mvn dependency:go-offline -B
+COPY src/ /loghmeh/src/
 RUN mvn package
 VOLUME /loghmeh
 FROM tomcat
