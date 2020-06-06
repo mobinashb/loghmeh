@@ -11,4 +11,4 @@ docker-build-master:
     - docker build --pull -t "registry.gitlab.com/mobina/loghmeh" .
     - docker push "registry.gitlab.com/mobina/loghmeh"
   only:
-    - frontend
+    - front-end
