@@ -1,6 +1,8 @@
 import React from 'react';
-import {POST, PUT, toPersianNum} from '../Utils/Utils';
+import {toPersianNum} from '../Utils/Utils';
 import swal from 'sweetalert';
+import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 class CartBasedComponent extends React.Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class CartBasedComponent extends React.Component {
     this.handleHide = this.handleHide.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.finalizeOrder = this.finalizeOrder.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   handleShow(id) {
@@ -27,11 +30,49 @@ class CartBasedComponent extends React.Component {
 
   getSum(orders) {
     return orders.reduce(function(prev, current) {
-      return prev + +(current.price * current.number)
+      return prev +(current.price * current.number)
     }, 0);
   }
 
-  async changeCart(food, num) {
+  handleError(error) {
+    if (error.message === "Network Error") {
+      this.setState({
+        error: error.message,
+        isLoaded: true,
+      });
+      return;
+    }
+
+    this.setState({
+      isLoaded: true,
+    });
+
+    if (error.response.status === 401 || error.response.status === 403) {
+      localStorage.removeItem("jwt");
+      this.props.history.push('/login');
+      return;
+    }
+
+    if (error.response.status === 404 && !error.response.data.msg) {
+      this.props.history.push('/404');
+      return;
+    }
+
+    swal({
+      title: "خطا",
+      text: error.response.data.msg,
+      icon: "warning",
+      dangerMode: true,
+      button: {
+        text: "بستن",
+        value: null,
+        visible: true,
+        closeModal: true,
+      },
+    })
+  }
+
+  changeCart(food, num) {
     const id = this.state.cart.restaurantId;
     const foodNew = {
       foodName: food.foodName,
@@ -39,43 +80,35 @@ class CartBasedComponent extends React.Component {
       restaurantId: id,
       isParty: food.isParty
     };
-    let response = PUT(foodNew, 'http://localhost:8080/v1/cart');
-    const res = await response;
-    const text = await (res).text();
-    if (res.ok) {
-      var cartNew = JSON.parse(JSON.stringify(this.state.cart));
-      this.setState(this.state.cart.orders.reduce( (current, item) => {
-        if (item.foodName === food.foodName) {
-          item.number = item.number + num;
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.put(SERVER_URI + '/cart', foodNew, options)
+      .then((response) => {
+        if (response.status === 200) {
+          var cartNew = JSON.parse(JSON.stringify(this.state.cart));
+          this.setState(this.state.cart.orders.reduce((current, item) => {
+            if (item.foodName === food.foodName) {
+              item.number = item.number + num;
+            }
+            current.push(item);
+            return current;
+          }, []));
+          if (this.getFoodCount(food.foodName) === 0) {
+            cartNew.orders = this.state.cart.orders.slice(0).filter(item => item.foodName !== food.foodName);
+            if (this.state.cart.orders.length === 0) {
+              cartNew.restaurantId = null;
+              cartNew.name = null;
+            }
+            this.setState({
+              cart: cartNew
+            });
+          }
         }
-        current.push( item );
-        return current;
-      }, [] ) );
-      if (this.getFoodCount(food.foodName) === 0) {
-        cartNew.orders = this.state.cart.orders.slice(0).filter(item => item.foodName !== food.foodName);
-        if (this.state.cart.orders.length === 0) {
-          cartNew.restaurantId = null;
-          cartNew.name = null;
-        }
-        this.setState({
-          cart: cartNew
-        });
-      }
-    }
-    else {
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "warning",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
-    }
+      }, (error) => {
+        this.handleError(error);
+      });
 
   }
 
@@ -89,81 +122,68 @@ class CartBasedComponent extends React.Component {
     return food.number;
   }
 
-  async addToCart(food) {
+  addToCart(food) {
     var cartNew = JSON.parse(JSON.stringify(this.state.cart));
     cartNew.restaurantId = food.restaurantId;
-    if (cartNew.orders === undefined) {
+    if (cartNew.orders === undefined || cartNew.orders === null) {
       cartNew.orders = []
     }
     cartNew.orders = cartNew.orders.concat(food);
-    let response = POST(food, "http://localhost:8080/v1/cart");
-    const res = await response;
-    const text = await (res).text();
-    if (res.ok) {
-      let count = this.getFoodCount(food.foodName);
-      if (count !== 0) {
-        this.changeCart(food, food.number);
-        return;
-      }
-      this.setState({
-        cart: cartNew
-      })
-    }
-    else {
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "warning",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
-    }
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.post(SERVER_URI + "/cart", food, options)
+      .then((response) => {
+        if (response.status === 200) {
+          let count = this.getFoodCount(food.foodName);
+          if (count !== 0) {
+            this.changeCart(food, food.number);
+            return;
+          }
+          this.setState({
+            cart: cartNew
+          })
+        }
+      }, (error) => {
+        this.handleError(error);
+      });
   }
 
-  async finalizeOrder() {
-    let response = POST("", "http://localhost:8080/v1/cart/finalize");
-    const res = await response;
-    const text = await (res).text();
-    if (res.ok) {
-      this.setState({
-        cart: {
-          restaurantId: null,
-          name: null
+  finalizeOrder() {
+    const jwt = localStorage.getItem("jwt");
+    let options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.post(SERVER_URI + "/cart/finalize", "", options)
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            cart: {
+              restaurantId: null,
+              name: null
+            }
+          });
+          swal({
+            text: "سفارش شما با موفقیت ثبت شد",
+            icon: "success",
+            button: {
+              text: "بستن",
+              value: null,
+              visible: true,
+              closeModal: true,
+            },
+          });
+          if (this.constructor.name === "Profile") {
+            this.fetchOrders();
+            this.fetchProfile();
+          }
         }
-      });
-      swal({
-        text: "سفارش شما با موفقیت ثبت شد",
-        icon: "success",
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      });
-      if (this.constructor.name === "Profile") {
-        this.fetchOrders();
+      }, (error) => {
+        this.handleError(error);
+        this.fetchCart();
       }
-    }
-    else {
-      swal({
-        title: "خطا",
-        text: JSON.parse(text).msg,
-        icon: "warning",
-        dangerMode: true,
-        button: {
-          text: "بستن",
-          value: null,
-          visible: true,
-          closeModal: true,
-        },
-      })
-    }
+    );
     this.handleHide();
   }
 
@@ -203,36 +223,54 @@ class CartBasedComponent extends React.Component {
     );
   }
 
+  logout() {
+    const gauth = window.gapi;
+    if (gauth !== undefined) {
+      const auth2 = gauth.auth2.getAuthInstance();
+      if (auth2 != null) {
+        auth2.signOut().then(() => {
+          auth2.disconnect()
+        })
+      }
+    }
+    localStorage.removeItem("jwt");
+    this.props.history.push('/login');
+  }
+
   fetchCart() {
-    fetch("http://localhost:8080/v1/cart")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            cart: result,
-            error: (!this.state.error) ? result.msg : this.state.error
-          });
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/cart", options)
+        .then(
+            (response) => {
+            this.setState({
+              cart: response.data,
+              error: (!this.state.error) ? response.data.msg : this.state.error
+            });
         },
         (error) => {
-          this.setState({
-            isLoaded: true,
-            error: error
-          });
+          this.handleError(error);
         }
       )
   }
 
   fetchOrders() {
-    fetch("http://localhost:8080/v1/orders/")
-    .then(res => res.json())
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/orders", options)
     .then(
-      (result) => {
+      (response) => {
         this.setState({
-          orders: result,
-          error: (!this.state.error) ? result.msg : this.state.error
+          orders: response.data,
+          error: (!this.state.error) ? response.data.msg : this.state.error
         });
       },
       (error) => {
+        this.handleError(error);
         this.setState({
           isLoaded: true,
           error: error

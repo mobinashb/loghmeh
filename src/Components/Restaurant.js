@@ -7,6 +7,8 @@ import FoodDetails from './FoodDetails'
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
+import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 class Restaurant extends CartBasedComponent {
   constructor(props) {
@@ -65,7 +67,7 @@ class Restaurant extends CartBasedComponent {
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length;
     if (error) {
-      if (error.includes("یافت")) return <Error code={404}/>;
+      if (error.includes("یافت نشد")) return <Error code={404}/>;
       return <Error code={500}/>;
     } else {
       return (
@@ -76,7 +78,7 @@ class Restaurant extends CartBasedComponent {
           color={"#ff6b6b"}
           loading={!this.state.isLoaded}
         />}>
-        <Navbar whereAmI="restaurant" cartCount={cartOrdersLen} func={this.handleShow}/>
+        <Navbar whereAmI="restaurant" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <header className="container-fluid banner row-sm-12">
         </header>
         <div className="restaurant-logo centered-flex">
@@ -119,24 +121,25 @@ class Restaurant extends CartBasedComponent {
   }
 
   fetchRestaurant() {
-    fetch("http://localhost:8080/v1/restaurants/".concat(getQueryParams(this.props.location.search, 'id')))
-      .then(res => res.json())
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    const path = SERVER_URI + "/restaurants/".concat(getQueryParams(this.props.location.search, 'id'));
+    axios.get(path, options)
       .then(
-        (result) => {
+        (response) => {
           this.setState({
             isLoaded: true,
-            menu: result.menu,
-            name: result.name,
-            logo: result.logo,
-            id: result.id,
-            error: (!this.state.error) ? result.msg : this.state.error
+            menu: response.data.menu,
+            name: response.data.name,
+            logo: response.data.logo,
+            id: response.data.id,
+            error: (!this.state.error) ? response.data.msg : this.state.error
           });
         },
         (error) => {
-          this.setState({
-            isLoaded: true,
-            error: error
-          });
+          this.handleError(error);
         }
       );
   }

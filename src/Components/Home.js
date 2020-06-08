@@ -1,6 +1,5 @@
 import React from 'react';
-import {Header, toPersianNum} from '../Utils/Utils';
-import FoodDetails from './FoodDetails';
+import {Header, toQueryParams} from '../Utils/Utils';
 import CartBasedComponent from './CartBasedComponent';
 import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
@@ -8,21 +7,12 @@ import Modal from "react-bootstrap/Modal";
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
-import Timer from 'react-compound-timer';
-
-function Search() {
-  return (
-    <div className="search centered-flex">
-      <form className="form-inline justify-content-center shadow-box" action="">
-        <div className="form-group">
-          <input type="text" className="form-control bg-light" id="foodname" placeholder="نـــام غـــذا" />
-          <input type="text" className="form-control bg-light" id="restaurantname" placeholder="نـــام رســـتـــوران" />
-        </div>
-        <button type="submit" className="btn btn-default">جســـت‌و‌جـــو</button>
-      </form>
-    </div>
-  );
-}
+import InfiniteScroll from 'react-infinite-scroller';
+import SearchForm from '../Forms/SearchForm';
+import swal from "sweetalert";
+import {SERVER_URI} from "../Constants/Constants";
+import axios from 'axios';
+import FoodParty from './FoodParty';
 
 function RestaurantList(props) {
   let restaurantList = [];
@@ -66,25 +56,18 @@ class Home extends CartBasedComponent {
       error: null,
       isLoaded: false,
       restaurants: [],
-      restaurantsInParty: [],
-      partyRemainingTime: null,
-      cart: {}
+      cart: {},
+      pageNum: 1,
+      pageSize: 16,
+      hasMore: true,
+      api: SERVER_URI + "/restaurants?"
     };
   }
   render() {
-    const { error, isLoaded, restaurants, restaurantsInParty, partyRemainingTime, toShow, cart} = this.state;
+    const { error, isLoaded, restaurants, toShow, cart} = this.state;
     let cartOrdersLen = 0;
     if (cart.orders !== undefined && cart.orders !== null && cart.orders.length > 0)
       cartOrdersLen = cart.orders.length;
-    var foodPartyList = [];
-    restaurantsInParty.map((restaurant) => {
-      restaurant.menu.map((food) => {
-        food.restaurantName = restaurant.name;
-        foodPartyList.push(food);
-        return food;
-      });
-      return restaurant;
-    });
     if (error) {
       return <Error code={500}/>;
     }
@@ -97,48 +80,24 @@ class Home extends CartBasedComponent {
           color={"#ff6b6b"}
           loading={!isLoaded}
         />}>
-        <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow}/>
+        <Navbar whereAmI="home" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
         <Header/>
-        <Search/>
-        <div className="menu">
-          <div className="title">
-            جشن غذا!
-          </div>
-          <div className="centered-flex">
-            <div className="timer">
-              {isLoaded &&
-              <Timer
-              initialTime={parseInt(partyRemainingTime)*1000}
-              direction="backward"
-              >
-                زمان باقی مانده: &nbsp;<b><Timer.Minutes formatValue={value => toPersianNum(`${value}`)}/>:<Timer.Seconds formatValue={value => toPersianNum(`${value}`)}/></b>
-              </Timer>
-              }
-              </div>
-          </div>
-          <div className="scrolling-wrapper shadow-box">
-            {foodPartyList.map(item => (
-              <div className="card shadow-box" key={item.restaurantId+'-'+item.name}>
-                <FoodDetails whereAmI="foodparty"
-                name={item.name} restaurantName={item.restaurantName} restaurantId={item.restaurantId}
-                description={item.description}
-                price={item.price}
-                popularity={item.popularity}
-                count={item.count}
-                oldPrice={item.oldPrice}
-                showFunc={this.handleShow}
-                hideFunc={this.handleHide}
-                addToCart={this.addToCart}
-                image={item.image} />
-              </div>
-          ))}
-          </div>
-        </div>
+        <SearchForm updateRestaurants={this.updateRestaurants.bind(this)}/>
+        <FoodParty setLoaded={this.setLoaded.bind(this)} handleShow={this.handleShow.bind(this)} handleHide={this.handleHide.bind(this)} addToCart={this.addToCart.bind(this)}/>
         <div className="menu container" id="restaurants">
           <div className="title">
             رستوران ها
           </div>
-          <RestaurantList restaurants={restaurants}/>
+          {isLoaded &&
+          <InfiniteScroll
+              pageStart={1}
+              loadMore={this.loadMoreRestaurants.bind(this)}
+              hasMore={this.state.hasMore}
+              loader={<div className="loader" key={0}>در حال بارگذاری ...</div>}
+          >
+            <RestaurantList restaurants={restaurants}/>
+          </InfiniteScroll>
+          }
         </div>
         <Modal className="modal fade" role="dialog"
           show={toShow === "cart"}
@@ -160,51 +119,92 @@ class Home extends CartBasedComponent {
     }
   }
 
-  fetchFoodParty() {
-    fetch("http://localhost:8080/v1/foodparty")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            restaurantsInParty: result.restaurants,
-            error: (!this.state.error) ? result.msg : this.state.error,
-            partyRemainingTime: result.remainingTime,
-            isLoaded: true
-          });
-        },
-        (error) => {
-          this.setState({
-            error: error,
-            isLoaded: true,
-          });
-        }
-      )
+  loadMoreRestaurants() {
+    const pageNum = this.state.pageNum;
+    const pageSize = this.state.pageSize;
+    const params = toQueryParams({
+      pageNum: pageNum,
+      pageSize: pageSize
+    });
+    const path = this.state.api + params;
+    setTimeout( () => {
+      this.fetchRestaurants(path);
+    }, 1000);
   }
 
-  fetchRestaurants() {
-    fetch("http://localhost:8080/v1/restaurants")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            restaurants: result,
-            error: (!this.state.error) ? result.msg : this.state.error,
-          });
-        },
-        (error) => {
-          this.setState({
-            error: error,
-            isLoaded: true,
-          });
-        }
-      )
+  updateRestaurants(searchQuery) {
+    const searchQueryString = toQueryParams(searchQuery);
+    const api = SERVER_URI + "/search?";
+    this.setState({
+      restaurants: [],
+      pageNum: 1,
+      api: api + searchQueryString + "&",
+      hasMore: true
+    });
   }
 
+  fetchRestaurants(path) {
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    if (this.state.hasMore === false) return;
+    axios.get(path, options)
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.setState({
+              restaurants: this.state.restaurants.concat(response.data),
+              error: (!this.state.error) ? response.data.msg : this.state.error,
+              hasMore: true,
+              pageNum: this.state.pageNum + 1
+            });
+          }
+          else {
+            this.setState({
+              hasMore: false
+            });
+            if (typeof this.state.restaurants === "undefined" ||
+                this.state.restaurants === null ||
+                this.state.restaurants.length === null ||
+                this.state.restaurants.length === 0) {
+              swal({
+                title: "هشدار",
+                text: "رستورانی مطابق با جستجوی شما یافت نشد!",
+                icon: "warning",
+                dangerMode: true,
+                button: {
+                  text: "بستن",
+                  value: null,
+                  visible: true,
+                  closeModal: true,
+                },
+              });
+            }
+          }
+        },
+        (error) => {
+          this.handleError(error);
+        }
+      );
+  }
+
+  setLoaded() {
+    this.setState({
+      isLoaded: true
+    });
+  }
 
   componentDidMount() {
-    this.fetchFoodParty();
+    const pageNum = this.state.pageNum;
+    const pageSize = this.state.pageSize;
+    const params = toQueryParams({
+      pageNum: pageNum,
+      pageSize: pageSize
+    });
+    const path = this.state.api + params;
+    this.fetchRestaurants(path)
+    // this.fetchFoodParty();
     this.fetchCart();
-    this.fetchRestaurants();
   }
 }
 

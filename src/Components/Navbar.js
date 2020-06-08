@@ -28,7 +28,8 @@ class Navbar extends React.Component {
           </li>
           {profileNavlink}
           <li className="nav-item">
-            <a className="nav-link logout" href="/">خروج</a>
+            {/* eslint-disable-next-line */}
+            <a className="nav-link logout" onClick={this.props.logout}>خروج</a>
           </li>
         </ul>
       </nav>

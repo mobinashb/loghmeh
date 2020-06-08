@@ -3,16 +3,17 @@ import {toPersianNum} from '../Utils/Utils'
 import PropTypes from 'prop-types';
 import Navbar from './Navbar';
 import Modal from "react-bootstrap/Modal";
-import CreditForm from './CreditForm';
+import CreditForm from '../Forms/CreditForm';
 import CartBasedComponent from './CartBasedComponent';
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay';
 import Error from '../Error/Error';
+import {SERVER_URI} from "../Constants/Constants";
+import axios from "axios";
 
 function Banner(props) {
   let name = props.firstname + ' ' + props.lastname;
   let email = props.email;
-  let phonenumber = props.phonenumber;
   let credit = props.credit;
   return (
     <header className="container-fluid banner row-sm-12">
@@ -22,10 +23,6 @@ function Banner(props) {
       </div>
       <div className="col-sm-6">
           <ul>
-          <li>
-              <i dir="ltr" className="flaticon-phone"/>
-              {phonenumber}
-          </li>
           <li>
               <i dir="ltr" className="flaticon-mail"/>
               {email}
@@ -45,7 +42,6 @@ Banner.propTypes = {
   firstname: PropTypes.string,
   lastname: PropTypes.string,
   email: PropTypes.string,
-  phonenumber: PropTypes.string,
   credit: PropTypes.number
 };
 
@@ -53,7 +49,6 @@ Banner.defaultProps = {
   firstname: '',
   lastname: '',
   email: '',
-  phonenumber: '',
   credit: 0
 };
 
@@ -64,7 +59,6 @@ class Profile extends CartBasedComponent {
       firstname: '',
       lastname: '',
       email: '',
-      phonenumber: '',
       credit: 0,
       orders: [],
       toShow: null,
@@ -77,13 +71,14 @@ class Profile extends CartBasedComponent {
     this.handleHide = this.handleHide.bind(this);
     this.updateCredit = this.updateCredit.bind(this);
     this.showOrder = this.showOrder.bind(this);
+    this.handleError = this.handleError.bind(this);
   }
 
   OrderList() {
     return (
       <div className="multiple-rows">
       {this.state.orders.slice(0).reverse().map((order, i) => (
-        <div className="row" key={order.id}>
+        <div className="row" key={order.cartId}>
           <div className="col-1 col-bordered bg-light">
             {toPersianNum(i+1)}
           </div>
@@ -91,17 +86,17 @@ class Profile extends CartBasedComponent {
             {order.restaurantName}
           </div>
           <div className="col-4 col-bordered bg-light">
-            {order.orderStatus === "delivering" &&
+            {order.orderStatus === 1 &&
+            <button disabled className="blue-btn small-btn">در جست‌و‌جوی پیک</button>
+            }
+            {order.orderStatus === 2 &&
               <button disabled className="green-btn small-btn">پیک در مسیر</button>
             }
-            {order.orderStatus === "finding delivery" &&
-              <button disabled className="blue-btn small-btn">در جست‌و‌جوی پیک</button>
-            }
-            {order.orderStatus === "delivered" &&
-              <button className="yellow-btn small-btn" onClick={() => this.showOrder(order.id)}>مشاهده فاکتور</button>
+            {order.orderStatus === 3 &&
+              <button className="yellow-btn small-btn" onClick={() => this.showOrder(order.cartId)}>مشاهده فاکتور</button>
             }
           </div>
-            {this.OrderDetails(order.id)}
+            {this.OrderDetails(order.cartId)}
         </div>
       ))}
     </div>
@@ -116,7 +111,7 @@ class Profile extends CartBasedComponent {
   OrderDetails(id) {
     const toShow = this.state.toShow;
     const order = this.state.orderToShow;
-    if (order === null || order.id !== id) return;
+    if (order === null || id !== order.id) return;
     if (toShow === id)
     return (
       <Modal className="modal fade" role="dialog"
@@ -166,7 +161,6 @@ class Profile extends CartBasedComponent {
     const {firstname,
     lastname,
     email,
-    phonenumber,
     credit,
     orders,
     toShow,
@@ -190,8 +184,8 @@ class Profile extends CartBasedComponent {
           color={"#ff6b6b"}
           loading={!this.state.isLoaded}
         />}>
-        <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow}/>
-        <Banner firstname={firstname} lastname={lastname} email={email} phonenumber={toPersianNum(phonenumber)} credit={credit}/>
+        <Navbar whereAmI="profile" cartCount={cartOrdersLen} func={this.handleShow} logout={this.logout}/>
+        <Banner firstname={firstname} lastname={lastname} email={email} credit={credit}/>
         <div className="warpper">
           <input className="radio" id="one" name="group" type="radio" defaultChecked={true}/>
           <input className="radio" id="two" name="group" type="radio"/>
@@ -207,7 +201,7 @@ class Profile extends CartBasedComponent {
               }
               </div>
               <div className="panel row-sm-5" id="two-panel">
-              <CreditForm update={this.updateCredit} />
+              <CreditForm update={this.updateCredit} handleError={this.handleError}/>
               </div>
           </div>
         </div>
@@ -231,37 +225,43 @@ class Profile extends CartBasedComponent {
   }
 
   fetchProfile() {
-    fetch("http://localhost:8080/v1/profile")
-    .then(res => res.json())
-    .then(
-      (result) => {
-        this.setState({
-          firstname: result.firstName,
-          lastname: result.lastName,
-          email: result.email,
-          phonenumber: result.phoneNumber,
-          credit: result.credit,
-          error: (!this.state.error) ? result.msg : this.state.error,
-          isLoaded: true,
-        });
-      },
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/user", options)
+    .then((response) => {
+      this.setState({
+        firstname: response.data.firstName,
+        lastname: response.data.lastName,
+        email: response.data.email,
+        phonenumber: response.data.phoneNumber,
+        credit: response.data.credit,
+        error: (!this.state.error) ? response.data.msg : this.state.error,
+        isLoaded: true,
+      });
+    },
       (error) => {
+        this.handleError(error);
         this.setState({
           isLoaded: true,
           error: error
         });
       }
-    )
+    );
   }
 
   fetchOrder(id) {
-    fetch("http://localhost:8080/v1/orders/".concat(id))
-    .then(res => res.json())
+    const jwt = localStorage.getItem("jwt");
+    const options = {
+      headers: {Authorization: `Bearer ${jwt}`}
+    };
+    axios.get(SERVER_URI + "/orders/".concat(id), options)
     .then(
-      (result) => {
+      (response) => {
         this.setState({
-          orderToShow: result,
-          error: (!this.state.error) ? result.msg : this.state.error
+          orderToShow: response.data,
+          error: (!this.state.error) ? response.data.msg : this.state.error
         });
       },
       (error) => {
