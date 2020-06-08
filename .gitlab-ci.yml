@@ -1,0 +1,13 @@
+docker-build-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "ieca8" -p "omid.omid1111" $CI_REGISTRY
+  script:
+    - docker build --pull -t "registry.gitlab.com/mobina/loghmeh" .
+    - docker push "registry.gitlab.com/mobina/loghmeh"
+  only:
+    - back-end
