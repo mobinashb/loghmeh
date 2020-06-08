@@ -1,6 +1,6 @@
 docker-build-master:
   # Official docker image.
-  image: docker:latest
+  image: docker:back
   stage: build
   services:
     - docker:dind
