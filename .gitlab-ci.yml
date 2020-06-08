@@ -5,9 +5,9 @@ docker-build-master:
   services:
     - docker:dind
   before_script:
-    - docker login "registry.gitlab.com"
+    - docker login registry.gitlab.com
   script:
-    - docker build --pull -t "registry.gitlab.com/mobina/loghmeh" .
-    - docker push "registry.gitlab.com/mobina/loghmeh"
+    - docker build --pull -t registry.gitlab.com/mobina/loghmeh .
+    - docker push registry.gitlab.com/mobina/loghmeh
   only:
     - back-end
