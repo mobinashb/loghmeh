@@ -1,14 +1,14 @@
 docker-build-master:
   # Official docker image.
-  image: docker:back
+  image: docker:latest
   stage: build
   services:
     - docker:dind
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   script:
-    - docker build -t registry.gitlab.com/mobina/loghmeh .
-    - docker push registry.gitlab.com/mobina/loghmeh
+    - docker build -t registry.gitlab.com/mobina/loghmeh:back .
+    - docker push registry.gitlab.com/mobina/loghmeh:back
 
   only:
     - back-end
