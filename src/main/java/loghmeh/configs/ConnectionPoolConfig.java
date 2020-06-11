@@ -6,6 +6,7 @@ public class ConnectionPoolConfig {
 //    public static final String DATABASE_URL = "jdbc:mysql://localhost:3306/Loghmeh?useUnicode=true&characterEncoding=utf-8";
     public static final String DATABASE_USERNAME = "root";
     public static final String DATABASE_PASSWORD = "2213";
+//    public static final String DATABASE_PASSWORD = "omidomid";
     public static final int DATABASE_MIN_IDLE = 5;
     public static final int DATABASE_MAX_IDLE = 10;
     public static final int DATABASE_OPEN_PREPARED_STATEMENTS = 100;
