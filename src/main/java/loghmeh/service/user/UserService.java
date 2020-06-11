@@ -26,6 +26,11 @@ public class UserService {
         return UserManager.getInstance().authenticateUser(request.getEmail(), request.getPassword(), request.getIsGoogleAuth(), request.getId_token());
     }
 
+    @RequestMapping(value = "/v1/omid", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String omid() {
+        return "سلام امید";
+    }
+
     @RequestMapping(value = "/v1/user", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String registerUser(@RequestBody SignupRequest request) throws DuplicateEmail, SQLException {
         UserManager.getInstance().registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword());
