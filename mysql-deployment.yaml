@@ -47,8 +47,6 @@ spec:
       containers:
       - image: mysql:5.6
         name: mysql
-        command: [ "sleep" ]
-        args: [ "infinity" ]
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -60,23 +58,13 @@ spec:
             configMapKeyRef:
               name: db-conf
               key: name
-        # - name: MYSQL_USER
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: mysql-user-pass
-        #       key: username
-        # - name: MYSQL_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: mysql-user-pass
-        #       key: password
         ports:
         - containerPort: 3306
           name: mysql
         resources:
           limits:
             cpu: 0.2
-            memory: "300Mi"
+            memory: "500Mi"
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
