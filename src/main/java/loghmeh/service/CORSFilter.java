@@ -39,8 +39,8 @@ public class CORSFilter implements Filter {
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers","Authorization");
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
-//        servletResponse.setContentType("application/json; charset=UTF-8");
-//        servletResponse.setCharacterEncoding("UTF-8");
+        servletResponse.setContentType("application/json; charset=UTF-8");
+        servletResponse.setCharacterEncoding("UTF-8");
 
         if (request.getMethod().equals("OPTIONS")) {
             resp.setStatus(HttpServletResponse.SC_ACCEPTED);
@@ -50,7 +50,7 @@ public class CORSFilter implements Filter {
     }
 
     public void init(FilterConfig fConfig) throws ServletException {
-//        encoding = fConfig.getInitParameter("requestEncoding");
-//        if (encoding == null) encoding = "UTF-8";
+        encoding = fConfig.getInitParameter("requestEncoding");
+        if (encoding == null) encoding = "UTF-8";
     }
 }
