@@ -22,22 +22,10 @@ public class RestaurantService {
     ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ArrayList<RestaurantDTO> getRestaurants(@RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws SQLException, IOException {
+    public String getRestaurants(@RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws SQLException, IOException {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         ArrayList<RestaurantDAO> restaurants = restaurantManager.getRestaurants(pageNumber, pageSize);
-//        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
-        String res = restaurants.get(0).getName();
-        System.out.println(res);
-        if(res.charAt(0) == '?') {
-            System.out.println("000000000");
-        }
-        if(res.charAt(1) == '?') {
-            System.out.println("!11111111");
-        }
-        if(res.charAt(2) == '?') {
-            System.out.println("222222222");
-        }
-        return ConvertDAOToDTO.restaurantDAO_DTO(restaurants);
+        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
     }
 
     @RequestMapping(value = "/v1/restaurants/{restaurantId}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")

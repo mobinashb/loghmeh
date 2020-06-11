@@ -9,13 +9,16 @@ import loghmeh.domain.foreignServiceObjects.DeliveryMan;
 import loghmeh.domain.foreignServiceObjects.Restaurant;
 import loghmeh.domain.exceptions.RestaurantNotFound;
 import loghmeh.domain.repeatedTasks.CheckOrderStatus;
+import loghmeh.repository.ConnectionPool;
 import loghmeh.repository.restaurant.RestaurantDAO;
 import loghmeh.repository.user.UserDAO;
 import loghmeh.utilities.HttpRequester;
 import loghmeh.utilities.Utils;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Timer;
 
@@ -27,6 +30,17 @@ public class LoghmehManger {
     private LoghmehManger(){
         Timer timer = new Timer();
         timer.schedule(new CheckOrderStatus(), 0, this.CHECK_ORDER_STATUS_PERIOD);
+        try{
+            String sqlCommand = "ALTER DATABASE Loghmeh CHARACTER SET utf8 COLLATE utf8_general_ci;";
+            Connection con = ConnectionPool.getConnection();
+            Statement statement = con.createStatement();
+            statement.executeUpdate(sqlCommand);
+            statement.close();
+            con.close();
+        }
+        catch (SQLException e1){
+            System.out.println("Can't set utf-8");
+        }
     }
 
     public static LoghmehManger getInstance(){
