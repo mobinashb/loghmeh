@@ -82,7 +82,7 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String, String> impl
     protected PreparedStatement fillInsertAllStatement(PreparedStatement statement, RestaurantDAO restaurant){
         try {
             statement.setString(1, restaurant.getId());
-            statement.setString(2, restaurant.getName());
+            statement.setNString(2, restaurant.getName());
             statement.setString(3, restaurant.getLogo());
             statement.setFloat(4, restaurant.getLocationX());
             statement.setFloat(5, restaurant.getLocationY());
