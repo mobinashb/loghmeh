@@ -7,6 +7,7 @@ import loghmeh.domain.RestaurantManager;
 import loghmeh.domain.exceptions.RestaurantNotFound;
 import loghmeh.repository.food.FoodDAO;
 import loghmeh.repository.restaurant.RestaurantDAO;
+import loghmeh.service.restaurant.response.RestaurantDTO;
 import loghmeh.utilities.ConvertDAOToDTO;
 import loghmeh.utilities.JsonStringCreator;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,11 @@ public class RestaurantService {
     ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public String getRestaurants(@RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws SQLException, IOException {
+    public ArrayList<RestaurantDTO> getRestaurants(@RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws SQLException, IOException {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         ArrayList<RestaurantDAO> restaurants = restaurantManager.getRestaurants(pageNumber, pageSize);
-        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
+//        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
+        return ConvertDAOToDTO.restaurantDAO_DTO(restaurants);
     }
 
     @RequestMapping(value = "/v1/restaurants/{restaurantId}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
