@@ -20,14 +20,14 @@ import java.util.concurrent.TimeUnit;
 public class RestaurantService {
     ObjectMapper mapper = new ObjectMapper();
 
-    @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/restaurants", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String getRestaurants(@RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws SQLException, IOException {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         ArrayList<RestaurantDAO> restaurants = restaurantManager.getRestaurants(pageNumber, pageSize);
         return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
     }
 
-    @RequestMapping(value = "/v1/restaurants/{restaurantId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/restaurants/{restaurantId}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String getRestaurant(@PathVariable(value = "restaurantId") String restaurantId) throws IOException, SQLException, RestaurantNotFound {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         FoodManager foodManager = FoodManager.getInstance();
@@ -36,7 +36,7 @@ public class RestaurantService {
         return mapper.writeValueAsString(ConvertDAOToDTO.singleRestaurantDAO_DTO(restaurant, foods));
     }
 
-    @RequestMapping(value = "/v1/foodparty", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/foodparty", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String getFoodParty() throws IOException, SQLException {
         FoodpartyManager foodpartyManager = FoodpartyManager.getInstance();
         foodpartyManager.setupScheduler();
@@ -51,7 +51,7 @@ public class RestaurantService {
         return JsonStringCreator.foodpartyJson(mapper.readTree(foodpartyStr), remainingTime);
     }
 
-    @RequestMapping(value = "/v1/search", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/v1/search", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String searchRestaurants(@RequestParam(value = "restaurantName", required = false) String restaurantName, @RequestParam(value = "foodName", required = false) String foodName,
                                     @RequestParam(value = "pageNum") int pageNumber, @RequestParam(value = "pageSize") int pageSize) throws IOException, SQLException {
         if((restaurantName == null) && (foodName == null))
