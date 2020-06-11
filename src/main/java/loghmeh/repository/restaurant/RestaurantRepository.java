@@ -25,6 +25,7 @@ public class RestaurantRepository {
 
     public void addRestaurants(ArrayList<Restaurant> restaurants) throws SQLException{
         ArrayList<RestaurantDAO> restaurantsDAO = Converter.convertToRestaurantDAO(restaurants);
+        System.out.println("FETCHED RESTAURANT: " + restaurantsDAO.get(0).getName());
         mapper.insertAll(restaurantsDAO);
     }
 
