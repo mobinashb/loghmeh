@@ -26,7 +26,17 @@ public class RestaurantService {
         RestaurantManager restaurantManager = RestaurantManager.getInstance();
         ArrayList<RestaurantDAO> restaurants = restaurantManager.getRestaurants(pageNumber, pageSize);
 //        return mapper.writeValueAsString(ConvertDAOToDTO.restaurantDAO_DTO(restaurants));
-        System.out.println("Name:  " + restaurants.get(0).getName());
+        String res = restaurants.get(0).getName();
+        System.out.println(res);
+        if(res.charAt(0) == '?') {
+            System.out.println("000000000");
+        }
+        if(res.charAt(1) == '?') {
+            System.out.println("!11111111");
+        }
+        if(res.charAt(2) == '?') {
+            System.out.println("222222222");
+        }
         return ConvertDAOToDTO.restaurantDAO_DTO(restaurants);
     }
 
