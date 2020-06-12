@@ -28,6 +28,7 @@ public class UserRepository {
             mapper.insert(user);
         }
         catch (SQLException e1){
+            e1.printStackTrace();
             throw new DuplicateEmail(JsonStringCreator.msgCreator("کاربری با ایمیل وارد شده قبلا در سایت ثبت نام کرده‌است"));
         }
     }
